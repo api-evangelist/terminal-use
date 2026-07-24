@@ -1,0 +1,764 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Logs API
+  version: 0.1.0
+tags:
+- name: Logs
+paths:
+  /logs:
+    get:
+      description: Query logs for an agent. Requires user authentication.
+      operationId: logs_list
+      parameters:
+      - description: 'Name of the agent (format: namespace/name or agent ID)'
+        in: query
+        name: agent_name
+        required: true
+        schema:
+          description: 'Name of the agent (format: namespace/name or agent ID)'
+          title: Agent Name
+          type: string
+      - description: Filter by branch/deployment ID
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by branch/deployment ID
+          title: Branch Id
+      - description: Filter by task ID
+        in: query
+        name: task_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by task ID
+          title: Task Id
+      - description: Filter by OTEL trace ID (32 lowercase hex chars)
+        in: query
+        name: trace_id
+        required: false
+        schema:
+          anyOf:
+          - maxLength: 32
+            minLength: 32
+            type: string
+          - type: 'null'
+          description: Filter by OTEL trace ID (32 lowercase hex chars)
+          title: Trace Id
+      - description: Filter by log level
+        in: query
+        name: level
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/LogLevel'
+          - type: 'null'
+          description: Filter by log level
+          title: Level
+      - description: Filter by source (stdout, stderr, server)
+        in: query
+        name: source
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/LogSource'
+          - type: 'null'
+          description: Filter by source (stdout, stderr, server)
+          title: Source
+      - description: Start timestamp filter (ISO 8601)
+        in: query
+        name: since
+        required: false
+        schema:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Start timestamp filter (ISO 8601)
+          title: Since
+      - description: End timestamp filter (ISO 8601)
+        in: query
+        name: until
+        required: false
+        schema:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: End timestamp filter (ISO 8601)
+          title: Until
+      - description: Full-text search in message (case-insensitive)
+        in: query
+        name: search
+        required: false
+        schema:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Full-text search in message (case-insensitive)
+          title: Search
+      - description: Return logs after this log_id (cursor-based pagination)
+        in: query
+        name: after_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Return logs after this log_id (cursor-based pagination)
+          title: After Id
+      - description: Maximum number of results
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Maximum number of results
+          maximum: 1000
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Number of results to skip
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: Number of results to skip
+          maximum: 10000
+          minimum: 0
+          title: Offset
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Agent Logs
+      tags:
+      - Logs
+  /logs/otlp:
+    post:
+      description: Ingest OpenTelemetry logs from an agent. Requires agent API key authentication.
+      operationId: logs_ingest_otlp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTLPLogIngestionRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTLPLogIngestionResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Ingest Agent Logs (OTLP Format)
+      tags:
+      - Logs
+  /logs/stream:
+    get:
+      description: Stream logs for an agent in real-time using Server-Sent Events (SSE). Emits multiple event types (connected, log, error) discriminated by 'type' field. Only streams NEW logs after connection (like tail -f). Auto-disconnects after 5 minutes for cost control.
+      operationId: logs_stream
+      parameters:
+      - description: 'Name of the agent (format: namespace/name or agent ID)'
+        in: query
+        name: agent_name
+        required: true
+        schema:
+          description: 'Name of the agent (format: namespace/name or agent ID)'
+          title: Agent Name
+          type: string
+      - description: Filter by task ID
+        in: query
+        name: task_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by task ID
+          title: Task Id
+      - description: Minimum log level
+        in: query
+        name: level
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/LogLevel'
+          - type: 'null'
+          description: Minimum log level
+          title: Level
+      - description: Filter by source (stdout, stderr, server)
+        in: query
+        name: source
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/LogSource'
+          - type: 'null'
+          description: Filter by source (stdout, stderr, server)
+          title: Source
+      - description: Filter by branch/version ID
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by branch/version ID
+          title: Branch Id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogStreamEvent'
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/LogStreamEvent'
+          description: SSE stream of log events
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Stream Agent Logs
+      tags:
+      - Logs
+      x-fern-sdk-group-name:
+      - logs
+      x-fern-sdk-method-name: stream
+      x-fern-streaming:
+        format: sse
+components:
+  schemas:
+    OTLPResource:
+      description: OTLP resource with attributes.
+      properties:
+        attributes:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPAttribute'
+          maxItems: 32
+          title: Attributes
+          type: array
+      title: OTLPResource
+      type: object
+    OTLPAttribute:
+      description: OTLP key-value attribute.
+      properties:
+        key:
+          maxLength: 256
+          title: Key
+          type: string
+        value:
+          $ref: '#/components/schemas/OTLPAttributeValue'
+      required:
+      - key
+      - value
+      title: OTLPAttribute
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    LogQueryEntry:
+      description: A log entry returned from queries.
+      properties:
+        agent_id:
+          title: ID of the agent that generated this log
+          type: string
+        environment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deployment environment (e.g., production, staging)
+        level:
+          $ref: '#/components/schemas/LogLevel'
+          title: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+        log_id:
+          title: Unique log ID (ULID) for cursor-based pagination
+          type: string
+        logger:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logger/module name that produced this log
+        message:
+          title: The log message content
+          type: string
+        method:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: RPC method that was called
+        source:
+          $ref: '#/components/schemas/LogSource'
+          title: Source of the log entry (stdout, stderr, or server)
+        span_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: OTEL span ID for distributed tracing correlation
+        task_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: ID of the task that generated this log
+        timestamp:
+          title: ISO 8601 timestamp when the log was generated
+          type: string
+        trace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: OTEL trace ID for distributed tracing correlation
+        version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent version from deployment
+      required:
+      - log_id
+      - timestamp
+      - agent_id
+      - source
+      - level
+      - message
+      title: LogQueryEntry
+      type: object
+    OTLPBodyValue:
+      description: 'OTLP body value for log record messages.
+
+
+        Unlike OTLPAttributeValue, this class does NOT have max_length constraints
+
+        on stringValue. This allows the OTLPLogRecord.validate_body_size validator
+
+        to handle truncation for messages between 4KB and 64KB, rather than having
+
+        Pydantic reject them outright due to the 4KB attribute limit.
+
+
+        Messages exceeding MAX_MESSAGE_LENGTH (64KB) are truncated with a marker.'
+      properties:
+        arrayValue:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Arrayvalue
+        boolValue:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Boolvalue
+        bytesValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bytesvalue
+        doubleValue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Doublevalue
+        intValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intvalue
+        stringValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stringvalue
+      title: OTLPBodyValue
+      type: object
+    OTLPScope:
+      description: OTLP instrumentation scope.
+      properties:
+        name:
+          default: ''
+          title: Name
+          type: string
+        version:
+          default: ''
+          title: Version
+          type: string
+      title: OTLPScope
+      type: object
+    OTLPScopeLogs:
+      description: OTLP scope logs containing log records.
+      properties:
+        logRecords:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPLogRecord'
+          maxItems: 1000
+          title: Logrecords
+          type: array
+        scope:
+          anyOf:
+          - $ref: '#/components/schemas/OTLPScope'
+          - type: 'null'
+      title: OTLPScopeLogs
+      type: object
+    LogStreamEvent:
+      description: 'Union of all possible log stream SSE events.
+
+
+        Use the ''type'' field to discriminate between event types:
+
+        - "connected": Stream connection established
+
+        - "log": A log entry
+
+        - "error": An error occurred in the stream'
+      discriminator:
+        mapping:
+          connected: '#/components/schemas/LogStreamConnectedEvent'
+          error: '#/components/schemas/LogStreamErrorEvent'
+          log: '#/components/schemas/LogStreamLogEvent'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/LogStreamConnectedEvent'
+      - $ref: '#/components/schemas/LogStreamLogEvent'
+      - $ref: '#/components/schemas/LogStreamErrorEvent'
+      title: LogStreamEvent
+    LogStreamLogEvent:
+      description: 'A log entry in the SSE stream.
+
+
+        Wraps LogQueryEntry fields with a type discriminator for SDK parsing.'
+      properties:
+        agent_id:
+          title: Agent Id
+          type: string
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch Id
+        environment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Environment
+        level:
+          title: Level
+          type: string
+        log_id:
+          title: Log Id
+          type: string
+        logger:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Logger
+        message:
+          title: Message
+          type: string
+        source:
+          title: Source
+          type: string
+        task_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Id
+        timestamp:
+          title: Timestamp
+          type: string
+        type:
+          const: log
+          default: log
+          title: Type
+          type: string
+        version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Version
+      required:
+      - log_id
+      - timestamp
+      - agent_id
+      - level
+      - source
+      - message
+      title: LogStreamLogEvent
+      type: object
+    OTLPLogIngestionResponse:
+      description: Response from OTLP log ingestion endpoint.
+      properties:
+        logs_count:
+          description: Number of log records ingested
+          title: Logs Count
+          type: integer
+        status:
+          default: accepted
+          title: Status
+          type: string
+      required:
+      - logs_count
+      title: OTLPLogIngestionResponse
+      type: object
+    LogListResponse:
+      description: Response from logs list endpoint.
+      properties:
+        has_more:
+          title: Whether there are more logs available beyond the current page
+          type: boolean
+        logs:
+          items:
+            $ref: '#/components/schemas/LogQueryEntry'
+          title: List of log entries
+          type: array
+        total:
+          title: Total number of logs matching the query
+          type: integer
+      required:
+      - logs
+      - total
+      - has_more
+      title: LogListResponse
+      type: object
+    LogStreamErrorEvent:
+      description: 'Sent when an error occurs in the log stream.
+
+
+        After this event, the stream may close or attempt recovery.'
+      properties:
+        message:
+          description: Error description
+          title: Message
+          type: string
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - message
+      title: LogStreamErrorEvent
+      type: object
+    LogSource:
+      description: Source of the log entry.
+      enum:
+      - stdout
+      - stderr
+      - server
+      title: LogSource
+      type: string
+    LogStreamConnectedEvent:
+      description: 'Sent when SSE log stream connection is established.
+
+
+        Indicates the client is now subscribed and will receive new logs.
+
+        Only logs generated AFTER this event will be streamed (tail -f behavior).'
+      properties:
+        agent_id:
+          description: Agent ID this stream is subscribed to
+          title: Agent Id
+          type: string
+        type:
+          const: connected
+          default: connected
+          title: Type
+          type: string
+      required:
+      - agent_id
+      title: LogStreamConnectedEvent
+      type: object
+    LogLevel:
+      description: Log level for entries.
+      enum:
+      - DEBUG
+      - INFO
+      - WARNING
+      - ERROR
+      - CRITICAL
+      title: LogLevel
+      type: string
+    OTLPAttributeValue:
+      description: 'OTLP attribute value supporting multiple types.
+
+
+        Per OTLP JSON spec, intValue is transmitted as a string to avoid JSON number
+
+        precision issues with int64 values. We validate that the string represents
+
+        a valid integer and provide a helper property to get the actual int value.
+
+
+        String values are limited to MAX_ATTRIBUTE_VALUE_LENGTH (4KB) to prevent
+
+        memory exhaustion and ClickHouse insert failures.'
+      properties:
+        arrayValue:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Arrayvalue
+        boolValue:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Boolvalue
+        bytesValue:
+          anyOf:
+          - maxLength: 4096
+            type: string
+          - type: 'null'
+          title: Bytesvalue
+        doubleValue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Doublevalue
+        intValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intvalue
+        stringValue:
+          anyOf:
+          - maxLength: 4096
+            type: string
+          - type: 'null'
+          title: Stringvalue
+      title: OTLPAttributeValue
+      type: object
+    OTLPLogRecord:
+      description: 'OTLP log record.
+
+
+        The body field (message content) is limited to MAX_MESSAGE_LENGTH (64KB).
+
+        Messages exceeding this limit are truncated with a "[TRUNCATED]" indicator.
+
+        Attributes are limited to MAX_ATTRIBUTES_PER_LOG (32) per log record.'
+      properties:
+        attributes:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPAttribute'
+          maxItems: 32
+          title: Attributes
+          type: array
+        body:
+          anyOf:
+          - $ref: '#/components/schemas/OTLPBodyValue'
+          - type: 'null'
+        severityNumber:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severitynumber
+        severityText:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severitytext
+        spanId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Spanid
+        timeUnixNano:
+          default: ''
+          title: Timeunixnano
+          type: string
+        traceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Traceid
+      title: OTLPLogRecord
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OTLPResourceLogs:
+      description: OTLP resource logs container.
+      properties:
+        resource:
+          anyOf:
+          - $ref: '#/components/schemas/OTLPResource'
+          - type: 'null'
+        scopeLogs:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPScopeLogs'
+          maxItems: 100
+          title: Scopelogs
+          type: array
+      title: OTLPResourceLogs
+      type: object
+    OTLPLogIngestionRequest:
+      description: OTLP log data in JSON format.
+      properties:
+        resourceLogs:
+          description: Array of ResourceLogs per OTLP spec
+          items:
+            $ref: '#/components/schemas/OTLPResourceLogs'
+          maxItems: 100
+          title: Resourcelogs
+          type: array
+      required:
+      - resourceLogs
+      title: OTLPLogIngestionRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

@@ -1,0 +1,464 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Namespaces API
+  version: 0.1.0
+tags:
+- name: Namespaces
+paths:
+  /namespaces:
+    get:
+      description: List all namespaces the user has access to, optionally filtered by org.
+      operationId: namespaces_list
+      parameters:
+      - description: Filter by owner organization ID
+        in: query
+        name: org_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by owner organization ID
+          title: Org Id
+      - description: Maximum number of results
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Maximum number of results
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          description: Page number
+          minimum: 1
+          title: Page Number
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Namespace'
+                title: Response Namespaces List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Namespaces
+      tags:
+      - Namespaces
+    post:
+      description: Create a new namespace for multi-tenant isolation.
+      operationId: namespaces_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNamespaceRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Namespace
+      tags:
+      - Namespaces
+  /namespaces/slug-availability/{slug}:
+    get:
+      description: Check if a namespace slug is available for use.
+      operationId: namespaces_check_slug_availability
+      parameters:
+      - in: path
+        name: slug
+        required: true
+        schema:
+          title: Slug
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlugAvailabilityResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Check Slug Availability
+      tags:
+      - Namespaces
+  /namespaces/slug/{slug}:
+    get:
+      description: Get a namespace by its slug.
+      operationId: namespaces_retrieve_by_slug
+      parameters:
+      - in: path
+        name: slug
+        required: true
+        schema:
+          title: Slug
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Namespace by Slug
+      tags:
+      - Namespaces
+  /namespaces/{namespace_id}:
+    delete:
+      description: Delete a namespace (must be empty).
+      operationId: namespaces_delete
+      parameters:
+      - in: path
+        name: namespace_id
+        required: true
+        schema:
+          title: Namespace Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Namespace
+      tags:
+      - Namespaces
+    get:
+      description: Get a namespace by ID.
+      operationId: namespaces_retrieve
+      parameters:
+      - in: path
+        name: namespace_id
+        required: true
+        schema:
+          title: Namespace Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Namespace
+      tags:
+      - Namespaces
+    patch:
+      description: Update a namespace's properties.
+      operationId: namespaces_update
+      parameters:
+      - in: path
+        name: namespace_id
+        required: true
+        schema:
+          title: Namespace Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNamespaceRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Namespace
+      tags:
+      - Namespaces
+  /namespaces/{namespace_id}/retry-provisioning:
+    post:
+      description: Retry provisioning for a namespace that failed or is stuck.
+      operationId: namespaces_retry_provisioning
+      parameters:
+      - in: path
+        name: namespace_id
+        required: true
+        schema:
+          title: Namespace Id
+          type: string
+      - description: Force retry even if status is PENDING (for stuck namespaces)
+        in: query
+        name: force
+        required: false
+        schema:
+          default: false
+          description: Force retry even if status is PENDING (for stuck namespaces)
+          title: Force
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Retry Namespace Provisioning
+      tags:
+      - Namespaces
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    Namespace:
+      description: Response model for namespace.
+      properties:
+        artifact_registry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Artifact Registry repository name.
+          title: Artifact Registry
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the namespace was created.
+          title: Created At
+        created_by:
+          description: member_id of the creator.
+          title: Created By
+          type: string
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message if provisioning failed.
+          title: Error
+        error_step:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Which provisioning step failed (e.g., 'create_gcs_bucket').
+          title: Error Step
+        gcp_sa_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: GCP service account email.
+          title: Gcp Sa Email
+        gcs_bucket:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: GCS bucket name.
+          title: Gcs Bucket
+        id:
+          description: The unique identifier of the namespace.
+          title: Id
+          type: string
+        k8s_namespace:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: K8s namespace name.
+          title: K8S Namespace
+        name:
+          description: Human-readable name for the namespace.
+          title: Name
+          type: string
+        owner_org_id:
+          description: WorkOS organization ID that owns this namespace.
+          title: Owner Org Id
+          type: string
+        registry_sa_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Registry service account email for token generation.
+          title: Registry Sa Email
+        slug:
+          description: URL-friendly unique identifier.
+          title: Slug
+          type: string
+        status:
+          $ref: '#/components/schemas/NamespaceStatus'
+          default: READY
+          description: 'Namespace status: pending, ready, or failed.'
+      required:
+      - id
+      - slug
+      - name
+      - owner_org_id
+      - created_by
+      title: Namespace
+      type: object
+    CreateNamespaceRequest:
+      description: Request model for creating a namespace.
+      properties:
+        name:
+          description: Human-readable name.
+          maxLength: 255
+          minLength: 1
+          title: Name
+          type: string
+        owner_org_id:
+          description: WorkOS organization ID that owns this namespace.
+          title: Owner Org Id
+          type: string
+        slug:
+          description: URL-friendly unique identifier (lowercase alphanumeric and hyphens).
+          maxLength: 63
+          minLength: 3
+          pattern: ^[a-z0-9][a-z0-9-]*[a-z0-9]$
+          title: Slug
+          type: string
+      required:
+      - slug
+      - name
+      - owner_org_id
+      title: CreateNamespaceRequest
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SlugAvailabilityResponse:
+      description: Response for slug availability check.
+      properties:
+        available:
+          description: Whether the slug is available for use.
+          title: Available
+          type: boolean
+        slug:
+          description: The slug that was checked.
+          title: Slug
+          type: string
+      required:
+      - available
+      - slug
+      title: SlugAvailabilityResponse
+      type: object
+    NamespaceStatus:
+      description: Status of namespace infrastructure provisioning.
+      enum:
+      - PENDING
+      - READY
+      - FAILED
+      title: NamespaceStatus
+      type: string
+    UpdateNamespaceRequest:
+      description: 'Request model for updating a namespace.
+
+
+        Infrastructure fields (k8s_namespace, gcs_bucket, gcp_sa_email) are NOT
+
+        exposed here — they are set exclusively by the provisioning workflow via
+
+        the repository layer.'
+      properties:
+        name:
+          anyOf:
+          - maxLength: 255
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Human-readable name.
+          title: Name
+      title: UpdateNamespaceRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

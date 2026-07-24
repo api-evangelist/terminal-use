@@ -1,0 +1,940 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Branches API
+  version: 0.1.0
+tags:
+- name: Branches
+paths:
+  /agents/deploy:
+    post:
+      description: "Deploy an agent to the platform.\n\n    Called by CLI after pushing the container image to the registry.\n    Creates or updates agent, branch, and version records.\n\n    The deployment is asynchronous - poll GET /branches/{branch_id}\n    for status updates until status is READY or FAILED.\n\n    **Flow:**\n    1. CLI builds and pushes image to registry (using /registry/auth)\n    2. CLI calls POST /agents/deploy with image details\n    3. Platform creates records and triggers K8s deployment\n    4. Container starts and calls POST /versions/register\n    5. CLI polls GET /branches/{id} for status"
+      operationId: deploy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeployResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Deploy Agent
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: deploy
+  /agents/{namespace_slug}/{agent_name}/branch:
+    get:
+      description: "Get a specific branch by agent name and git branch.\n\n    The git branch name will be normalized (lowercased, slashes converted to hyphens).\n    For example, \"feature/new-tool\" becomes \"feature-new-tool\"."
+      operationId: agents_branches_retrieve
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - description: Target branch (e.g., 'main', 'feature/login')
+        in: query
+        name: branch
+        required: true
+        schema:
+          description: Target branch (e.g., 'main', 'feature/login')
+          title: Branch
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Branch by Agent and Git Branch
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - agents
+      - branches
+      x-fern-sdk-method-name: retrieve
+  /agents/{namespace_slug}/{agent_name}/branches:
+    get:
+      description: "List all branches for an agent.\n\n    Each branch represents a git branch (e.g., main, staging, feature-x).\n    By default, retired branches are excluded."
+      operationId: agents_branches_list
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - description: Include retired branches in results
+        in: query
+        name: include_retired
+        required: false
+        schema:
+          default: false
+          description: Include retired branches in results
+          title: Include Retired
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Branches by Agent
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - agents
+      - branches
+      x-fern-sdk-method-name: list
+  /agents/{namespace_slug}/{agent_name}/branches/{branch}/rollback:
+    post:
+      description: "Roll back a branch to a previous version by namespace, agent, and git branch name.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state"
+      operationId: agents_branches_rollback
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: branch
+        required: true
+        schema:
+          title: Branch
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RollbackRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Rollback Branch by Git Branch Name
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - agents
+      - branches
+      x-fern-sdk-method-name: rollback
+  /agents/{namespace_slug}/{agent_name}/environments/{env_name}/rollback:
+    post:
+      description: "Roll back an environment to a previous version.\n\n    Resolves environment to branch via branch rules.\n    Only works for environments with a single, literal branch rule (no wildcards).\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state for next deploy)\n    - Uses Version.secrets_snapshot as deployed state"
+      operationId: agents_environments_rollback_create
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: env_name
+        required: true
+        schema:
+          title: Env Name
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RollbackRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Rollback Environment
+      tags:
+      - Branches
+  /branches/{branch_id}:
+    get:
+      description: "Get branch details by ID.\n\n    Used by CLI to poll for branch status after calling POST /agents/deploy.\n    Poll until status is READY (success) or FAILED/TIMEOUT (failure)."
+      operationId: branches_retrieve
+      parameters:
+      - in: path
+        name: branch_id
+        required: true
+        schema:
+          title: Branch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Branch
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - branches
+      x-fern-sdk-method-name: retrieve
+  /branches/{branch_id}/redeploy:
+    post:
+      description: "Redeploy a branch with the current secrets from the EnvVar table.\n\n    Creates a new Version with:\n    - Same image as current version\n    - Fresh secrets_snapshot from current EnvVars\n\n    Use this after updating secrets to apply them to a running branch."
+      operationId: branches_redeploy
+      parameters:
+      - in: path
+        name: branch_id
+        required: true
+        schema:
+          title: Branch Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RedeployResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Redeploy with Updated Secrets
+      tags:
+      - Branches
+  /branches/{branch_id}/rollback:
+    post:
+      description: "Roll back a branch to a previous version by branch ID.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state"
+      operationId: branches_rollback
+      parameters:
+      - in: path
+        name: branch_id
+        required: true
+        schema:
+          title: Branch Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RollbackRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RollbackResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Rollback Branch
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - branches
+      x-fern-sdk-method-name: rollback
+  /branches/{branch_id}/versions:
+    get:
+      description: "List all versions for a branch.\n\n    Versions are ordered by deployed_at descending (most recent first).\n    Each version represents a git commit that was deployed."
+      operationId: branches_versions_list
+      parameters:
+      - in: path
+        name: branch_id
+        required: true
+        schema:
+          title: Branch Id
+          type: string
+      - description: Maximum versions to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          description: Maximum versions to return
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Versions
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - branches
+      - versions
+      x-fern-sdk-method-name: list
+  /versions/{version_id}:
+    get:
+      description: Get version details by ID.
+      operationId: retrieve
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Version
+      tags:
+      - Branches
+      x-fern-sdk-group-name:
+      - versions
+      x-fern-sdk-method-name: retrieve
+components:
+  schemas:
+    DeployResponse:
+      description: 'Immediate response from deploy request.
+
+
+        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
+      properties:
+        agent_id:
+          description: Agent ID (created or existing)
+          title: Agent Id
+          type: string
+        branch_id:
+          description: Branch ID for this git branch
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        tasks_migrated:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated from old version (if any)
+          title: Tasks Migrated
+        version_id:
+          description: New version ID
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Initial version status
+      required:
+      - agent_id
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: DeployResponse
+      type: object
+    VersionListResponse:
+      description: Response for listing versions of a branch.
+      properties:
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID
+          title: Branch Id
+        total:
+          description: Total count
+          title: Total
+          type: integer
+        versions:
+          description: List of versions
+          items:
+            $ref: '#/components/schemas/VersionResponse'
+          title: Versions
+          type: array
+      required:
+      - versions
+      - total
+      title: VersionListResponse
+      type: object
+    BranchResponse:
+      description: Full branch details including current version.
+      properties:
+        agent_id:
+          description: Parent agent ID
+          title: Agent Id
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        current_version:
+          anyOf:
+          - $ref: '#/components/schemas/VersionSummary'
+          - type: 'null'
+          description: Currently active version (includes status)
+        git_branch:
+          description: Original git branch name
+          title: Git Branch
+          type: string
+        git_branch_normalized:
+          description: DNS-safe branch name
+          title: Git Branch Normalized
+          type: string
+        id:
+          description: Branch ID
+          title: Id
+          type: string
+        replicas:
+          description: Desired replica count
+          title: Replicas
+          type: integer
+        retired_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When branch was retired
+          title: Retired At
+        retired_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Reason for retirement
+          title: Retired Reason
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - agent_id
+      - git_branch
+      - git_branch_normalized
+      - replicas
+      title: BranchResponse
+      type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    VersionResponse:
+      description: Full version details.
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          description: Type of ACP server (sync or async)
+        author_email:
+          description: Commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Commit author name
+          title: Author Name
+          type: string
+        branch_id:
+          description: Parent branch ID
+          title: Branch Id
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        failure_diagnostics:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          description: User-facing failure diagnostics with 'title', 'description', and 'action' fields
+          title: Failure Diagnostics
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Classified failure reason when status is FAILED (e.g., 'image_pull_failed', 'crash_loop', 'scheduling_failed')
+          title: Failure Reason
+        git_branch:
+          description: Git branch name
+          title: Git Branch
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        image_expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When image expires (for rollback window)
+          title: Image Expires At
+        image_url:
+          description: Container image URL
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the commit had uncommitted changes
+          title: Is Dirty
+          type: boolean
+        last_rollback_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was last rolled back TO
+          title: Last Rollback At
+        replicas:
+          default: 0
+          description: Current pod count for this version
+          title: Replicas
+          type: integer
+        retired_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When version was retired
+          title: Retired At
+        rollback_count:
+          default: 0
+          description: Number of rollbacks to this version
+          title: Rollback Count
+          type: integer
+        rolled_back_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was rolled back FROM
+          title: Rolled Back At
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - branch_id
+      - git_hash
+      - git_branch
+      - author_name
+      - author_email
+      - image_url
+      - status
+      - deployed_at
+      - sdk_type
+      - acp_type
+      title: VersionResponse
+      type: object
+    RollbackResponse:
+      description: Response from a rollback operation.
+      properties:
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        from_git_hash:
+          description: Git hash of the previous version
+          title: From Git Hash
+          type: string
+        from_version_id:
+          description: Version ID that was rolled back FROM
+          title: From Version Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        to_git_hash:
+          description: Git hash of the target version
+          title: To Git Hash
+          type: string
+        to_version_id:
+          description: Version ID that was rolled back TO
+          title: To Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Target version status
+      required:
+      - branch_id
+      - from_version_id
+      - to_version_id
+      - from_git_hash
+      - to_git_hash
+      - version_status
+      - message
+      title: RollbackResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    RollbackRequest:
+      description: Request model for rolling back a branch.
+      properties:
+        target_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Version ID to rollback to (defaults to previous version if not specified)
+          title: Target Version Id
+      title: RollbackRequest
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    VersionSummary:
+      description: Abbreviated version info for embedding in branch responses.
+      properties:
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+      required:
+      - id
+      - git_hash
+      - status
+      - deployed_at
+      title: VersionSummary
+      type: object
+    RedeployResponse:
+      description: Response from a redeploy operation.
+      properties:
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        version_id:
+          description: New version ID created for redeploy
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version status after redeploy
+      required:
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: RedeployResponse
+      type: object
+    BranchListResponse:
+      description: Response for listing branches.
+      properties:
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - branches
+      - total
+      title: BranchListResponse
+      type: object
+    DeployRequest:
+      description: 'Request model for deploying an agent.
+
+
+        Called by CLI after pushing the container image to the registry.'
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          default: async
+          description: ACP server type (sync or async)
+        agent_name:
+          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
+          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
+          title: Agent Name
+          type: string
+        are_tasks_sticky:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
+          title: Are Tasks Sticky
+        author_email:
+          description: Git commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Git commit author name
+          title: Author Name
+          type: string
+        branch:
+          description: Git branch name (e.g., 'main', 'feature/new-tool')
+          title: Branch
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent description (used when creating new agent)
+          title: Description
+        git_hash:
+          description: Git commit hash (short or full)
+          maxLength: 40
+          minLength: 7
+          title: Git Hash
+          type: string
+        git_message:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Git commit message (truncated if too long)
+          title: Git Message
+        image_url:
+          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the working directory had uncommitted changes at deploy time
+          title: Is Dirty
+          type: boolean
+        replicas:
+          default: 1
+          description: Desired replica count (1-10)
+          maximum: 10
+          minimum: 1
+          title: Replicas
+          type: integer
+        resources:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
+          title: Resources
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          default: claude_agent_sdk
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot containing the deploy source for Builder reopenability
+          title: Source Filesystem Id
+      required:
+      - agent_name
+      - branch
+      - git_hash
+      - image_url
+      - author_name
+      - author_email
+      title: DeployRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

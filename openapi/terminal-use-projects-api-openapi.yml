@@ -1,0 +1,482 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Projects API
+  version: 0.1.0
+tags:
+- name: Projects
+paths:
+  /projects:
+    get:
+      description: List all projects the user has access to.
+      operationId: projects_list
+      parameters:
+      - description: Filter by namespace ID
+        in: query
+        name: namespace_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by namespace ID
+          title: Namespace Id
+      - description: Maximum number of results
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Maximum number of results
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          description: Page number
+          minimum: 1
+          title: Page Number
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ProjectListItem'
+                title: Response Projects List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Projects
+      tags:
+      - Projects
+    post:
+      description: Create a new project within a namespace.
+      operationId: projects_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Project
+      tags:
+      - Projects
+  /projects/{project_id}:
+    delete:
+      description: Delete a project (must be empty).
+      operationId: projects_delete
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Project
+      tags:
+      - Projects
+    get:
+      description: Get a project by ID.
+      operationId: projects_retrieve
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Project
+      tags:
+      - Projects
+    patch:
+      description: Update a project's properties.
+      operationId: projects_update
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Project
+      tags:
+      - Projects
+  /projects/{project_id}/collaborators:
+    get:
+      description: List explicit collaborator roles on a project.
+      operationId: projects_list_collaborators
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCollaboratorsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Project Collaborators
+      tags:
+      - Projects
+  /projects/{project_id}/collaborators/{member_id}:
+    delete:
+      description: Remove explicit collaborator role tuples from a project.
+      operationId: projects_remove_collaborator
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Remove Project Collaborator
+      tags:
+      - Projects
+    put:
+      description: Create or update an explicit collaborator role on a project.
+      operationId: projects_upsert_collaborator
+      parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          title: Project Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertProjectCollaboratorRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCollaboratorResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Set Project Collaborator Role
+      tags:
+      - Projects
+components:
+  schemas:
+    ProjectListItem:
+      description: 'Minimal project shape for discovery/listing.
+
+
+        The /projects list endpoint is authorized via `discover` and must not leak
+
+        read-level fields (e.g. description).'
+      properties:
+        id:
+          description: The unique identifier of the project.
+          title: Id
+          type: string
+        name:
+          description: Project name.
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      title: ProjectListItem
+      type: object
+    CreateProjectRequest:
+      description: Request model for creating a project.
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        name:
+          description: Project name (unique within namespace).
+          maxLength: 255
+          minLength: 1
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - namespace_id
+      - name
+      title: CreateProjectRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    Project:
+      description: Response model for project.
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the project was created.
+          title: Created At
+        created_by:
+          description: member_id of the creator.
+          title: Created By
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        id:
+          description: The unique identifier of the project.
+          title: Id
+          type: string
+        name:
+          description: Project name.
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      - created_by
+      title: Project
+      type: object
+    ProjectCollaboratorResponse:
+      description: Response model for project collaborator.
+      properties:
+        member_id:
+          description: The WorkOS user ID of the collaborator.
+          title: Member Id
+          type: string
+        role:
+          description: Collaborator role.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - member_id
+      - role
+      title: ProjectCollaboratorResponse
+      type: object
+    UpsertProjectCollaboratorRequest:
+      description: Request model for setting/updating a project collaborator role.
+      properties:
+        role:
+          description: Role to assign.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - role
+      title: UpsertProjectCollaboratorRequest
+      type: object
+    ProjectCollaboratorsResponse:
+      description: Response model for project collaborators list.
+      properties:
+        can_manage:
+          description: Whether the current user can manage collaborators.
+          title: Can Manage
+          type: boolean
+        collaborators:
+          description: Project collaborators with explicit direct roles.
+          items:
+            $ref: '#/components/schemas/ProjectCollaboratorResponse'
+          title: Collaborators
+          type: array
+      required:
+      - can_manage
+      title: ProjectCollaboratorsResponse
+      type: object
+    UpdateProjectRequest:
+      description: Request model for updating a project.
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        name:
+          anyOf:
+          - maxLength: 255
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Project name.
+          title: Name
+      title: UpdateProjectRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

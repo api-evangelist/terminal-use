@@ -1,0 +1,173 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys OAuth API
+  version: 0.1.0
+tags:
+- name: OAuth
+paths:
+  /v1/oauth/initiate:
+    get:
+      description: Generate authorization URL for OAuth authentication.
+      operationId: initiate_oauth_v1_oauth_initiate_get
+      parameters:
+      - description: URI to redirect after authentication
+        in: query
+        name: redirect_uri
+        required: true
+        schema:
+          description: URI to redirect after authentication
+          title: Redirect Uri
+          type: string
+      - description: PKCE code challenge (S256)
+        in: query
+        name: code_challenge
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: PKCE code challenge (S256)
+          title: Code Challenge
+      - description: Optional WorkOS connection ID for SSO
+        in: query
+        name: connection_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional WorkOS connection ID for SSO
+          title: Connection Id
+      - description: Organization ID to scope the authentication to
+        in: query
+        name: organization_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization ID to scope the authentication to
+          title: Organization Id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthInitiateResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Initiate Oauth
+      tags:
+      - OAuth
+  /v1/oauth/token:
+    post:
+      description: Exchange authorization code for access token.
+      operationId: exchange_token_v1_oauth_token_post
+      parameters:
+      - description: Authorization code from OAuth callback
+        in: query
+        name: code
+        required: true
+        schema:
+          description: Authorization code from OAuth callback
+          title: Code
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Exchange Token
+      tags:
+      - OAuth
+components:
+  schemas:
+    OAuthTokenResponse:
+      description: Response for token exchange.
+      properties:
+        access_token:
+          description: WorkOS access token
+          title: Access Token
+          type: string
+        expires_in:
+          description: Token expiration in seconds
+          title: Expires In
+          type: integer
+        refresh_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Refresh token (if available)
+          title: Refresh Token
+        token_type:
+          default: Bearer
+          description: Token type
+          title: Token Type
+          type: string
+      required:
+      - access_token
+      - expires_in
+      title: OAuthTokenResponse
+      type: object
+    OAuthInitiateResponse:
+      description: Response for OAuth initiation.
+      properties:
+        authorization_url:
+          description: URL to redirect user for authentication
+          title: Authorization Url
+          type: string
+        state:
+          description: State parameter for CSRF protection
+          title: State
+          type: string
+      required:
+      - authorization_url
+      - state
+      title: OAuthInitiateResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

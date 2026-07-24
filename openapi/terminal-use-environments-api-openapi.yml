@@ -1,0 +1,603 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Environments API
+  version: 0.1.0
+tags:
+- name: Environments
+paths:
+  /agents/{namespace_slug}/{agent_name}/environments:
+    get:
+      description: "List all environments for an agent.\n\n    Environments define deployment targets (e.g., production, staging, preview)."
+      operationId: agents_environments_list
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Environments
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: list
+    post:
+      description: "Create a new environment for an agent.\n\n    Environments define deployment targets with branch matching rules.\n    The is_prod flag cannot be set via API - production environment is protected.\n\n    **Branch Rules:**\n    - Exact match: [\"main\"] or [\"develop\"]\n    - Wildcard: [\"feature/*\"] matches feature/foo, feature/bar\n    - Catch-all: [\"*\"] matches any branch"
+      operationId: agents_environments_create
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEnvRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Environment
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: create
+  /agents/{namespace_slug}/{agent_name}/environments/{env_name}:
+    delete:
+      description: "Delete an environment.\n\n    **Note:** Production environments (is_prod=True) cannot be deleted."
+      operationId: agents_environments_delete
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: env_name
+        required: true
+        schema:
+          title: Env Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteEnvResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Environment
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: delete
+    get:
+      description: Get environment details by name.
+      operationId: agents_environments_retrieve
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: env_name
+        required: true
+        schema:
+          title: Env Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Environment
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: retrieve
+    put:
+      description: "Update an existing environment.\n\n    All fields are optional - only provided fields will be updated.\n\n    **Production Environment Constraints:**\n    - branch_rules must be exactly one literal string (no wildcards)\n    - is_prod cannot be changed via API"
+      operationId: agents_environments_update
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: env_name
+        required: true
+        schema:
+          title: Env Name
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEnvRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Environment
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: update
+  /agents/{namespace_slug}/{agent_name}/environments/{env_name}/branches:
+    get:
+      description: "List all branches that match this environment's branch rules.\n\n    For wildcard environments (like preview with [\"*\"]),\n    returns all non-retired branches for the agent.\n\n    For specific branch rules (like production with [\"main\"]),\n    returns only the matching branch(es).\n\n    Branches are sorted by updated_at descending (most recent first)."
+      operationId: agents_environments_branches_list
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: env_name
+        required: true
+        schema:
+          title: Env Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Branches for Environment
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      - branches
+      x-fern-sdk-method-name: list
+  /agents/{namespace_slug}/{agent_name}/resolve-env:
+    get:
+      description: "Resolve which environment matches a given branch.\n\n    Uses specificity-based matching:\n    - Exact match wins over wildcards (e.g., \"main\" matches production before preview)\n    - Prefix wildcards match by length (e.g., \"feature/*\" beats \"*\")\n    - Catch-all \"*\" has lowest priority\n\n    Returns 404 if no environment matches the branch."
+      operationId: agents_resolve_env
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: query
+        name: branch
+        required: true
+        schema:
+          title: Branch
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResolveEnvResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Resolve Environment for Branch
+      tags:
+      - Environments
+      x-fern-sdk-group-name:
+      - agents
+      - environments
+      x-fern-sdk-method-name: resolve_env
+components:
+  schemas:
+    ResolveEnvResponse:
+      description: Response for resolving which environment matches a branch.
+      properties:
+        branch:
+          description: The branch that was resolved
+          title: Branch
+          type: string
+        environment:
+          $ref: '#/components/schemas/EnvResponse'
+          description: The environment that matches the branch
+      required:
+      - environment
+      - branch
+      title: ResolveEnvResponse
+      type: object
+    BranchResponse:
+      description: Full branch details including current version.
+      properties:
+        agent_id:
+          description: Parent agent ID
+          title: Agent Id
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        current_version:
+          anyOf:
+          - $ref: '#/components/schemas/VersionSummary'
+          - type: 'null'
+          description: Currently active version (includes status)
+        git_branch:
+          description: Original git branch name
+          title: Git Branch
+          type: string
+        git_branch_normalized:
+          description: DNS-safe branch name
+          title: Git Branch Normalized
+          type: string
+        id:
+          description: Branch ID
+          title: Id
+          type: string
+        replicas:
+          description: Desired replica count
+          title: Replicas
+          type: integer
+        retired_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When branch was retired
+          title: Retired At
+        retired_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Reason for retirement
+          title: Retired Reason
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - agent_id
+      - git_branch
+      - git_branch_normalized
+      - replicas
+      title: BranchResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    EnvListResponse:
+      description: Response for listing environments.
+      properties:
+        environments:
+          description: List of environments
+          items:
+            $ref: '#/components/schemas/EnvResponse'
+          title: Environments
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - environments
+      - total
+      title: EnvListResponse
+      type: object
+    CreateEnvRequest:
+      description: Request to create a new environment.
+      properties:
+        branch_rules:
+          description: Branch patterns for matching (e.g., ['feature/*'], ['develop'])
+          items:
+            type: string
+          minItems: 1
+          title: Branch Rules
+          type: array
+        name:
+          description: Environment name (lowercase alphanumeric and hyphens only)
+          maxLength: 100
+          minLength: 1
+          pattern: ^[a-z0-9-]+$
+          title: Name
+          type: string
+      required:
+      - name
+      - branch_rules
+      title: CreateEnvRequest
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    DeleteEnvResponse:
+      description: Response after deleting an environment.
+      properties:
+        deleted:
+          description: Whether the environment was deleted
+          title: Deleted
+          type: boolean
+        name:
+          description: The name of the deleted environment
+          title: Name
+          type: string
+      required:
+      - deleted
+      - name
+      title: DeleteEnvResponse
+      type: object
+    UpdateEnvRequest:
+      description: Request to update an environment (partial update).
+      properties:
+        branch_rules:
+          anyOf:
+          - items:
+              type: string
+            minItems: 1
+            type: array
+          - type: 'null'
+          description: Branch patterns for matching
+          title: Branch Rules
+      title: UpdateEnvRequest
+      type: object
+    EnvResponse:
+      description: Full environment details.
+      properties:
+        agent_id:
+          description: Parent agent ID
+          title: Agent Id
+          type: string
+        branch_rules:
+          description: Branch patterns for matching (e.g., ['main'], ['feature/*'])
+          items:
+            type: string
+          title: Branch Rules
+          type: array
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        id:
+          description: Unique identifier
+          title: Id
+          type: string
+        is_prod:
+          description: Whether this is the production environment (protected)
+          title: Is Prod
+          type: boolean
+        name:
+          description: Environment name (e.g., 'production', 'staging')
+          title: Name
+          type: string
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - agent_id
+      - name
+      - branch_rules
+      - is_prod
+      title: EnvResponse
+      type: object
+    VersionSummary:
+      description: Abbreviated version info for embedding in branch responses.
+      properties:
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+      required:
+      - id
+      - git_hash
+      - status
+      - deployed_at
+      title: VersionSummary
+      type: object
+    BranchListResponse:
+      description: Response for listing branches.
+      properties:
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - branches
+      - total
+      title: BranchListResponse
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

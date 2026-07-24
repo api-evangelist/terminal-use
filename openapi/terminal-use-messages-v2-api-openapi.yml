@@ -1,0 +1,484 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Messages v2 API
+  version: 0.1.0
+tags:
+- name: Messages v2
+paths:
+  /v2/messages:
+    get:
+      description: "List messages for a task in Vercel AI SDK UIMessage format.\n\n    This endpoint returns messages transformed from raw SDK events into\n    a normalized UIMessage format suitable for frontend consumption.\n\n    Features:\n    - Tool merging: tool_use and tool_result are combined into single tool parts\n    - Complete-units pagination: Never splits tool request/result pairs across pages\n    - Runtime transformation: Raw SDK messages are transformed on-demand\n\n    Args:\n        task_id: The task ID to filter messages by\n        limit: Maximum number of complete messages to return (default: 50)\n        cursor: Opaque cursor string for pagination\n        direction: Pagination direction - \"older\" (default) or \"newer\"\n        parent_tool_use_id: Filter messages by parent tool use ID (for subagent context)\n\n    Returns:\n        ListMessagesV2Response with UIMessages and pagination info"
+      operationId: messages_v2_list
+      parameters:
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          title: Limit
+          type: integer
+      - in: query
+        name: cursor
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cursor
+      - in: query
+        name: direction
+        required: false
+        schema:
+          default: older
+          enum:
+          - older
+          - newer
+          title: Direction
+          type: string
+      - in: query
+        name: parent_tool_use_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Tool Use Id
+      - description: The task ID
+        in: query
+        name: task_id
+        required: true
+        schema:
+          description: The task ID
+          title: Task Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMessagesV2Response'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Messages (v2 - UIMessage format)
+      tags:
+      - Messages v2
+      x-fern-pagination:
+        cursor: $request.cursor
+        next_cursor: $response.nextCursor
+        results: $response.data
+  /v2/messages/{message_id}:
+    get:
+      description: "Get a single message by ID in UIMessage format.\n\n    Returns the transformed UIMessage or null if not found."
+      operationId: messages_v2_retrieve
+      parameters:
+      - in: path
+        name: message_id
+        required: true
+        schema:
+          title: Message Id
+          type: string
+      - description: The task ID
+        in: query
+        name: task_id
+        required: true
+        schema:
+          description: The task ID
+          title: Task Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/UIMessage'
+                - type: 'null'
+                title: Response Messages V2 Retrieve
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Message (v2 - UIMessage format)
+      tags:
+      - Messages v2
+components:
+  schemas:
+    ToolPart:
+      description: Tool invocation and result part.
+      properties:
+        errorText:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message if tool failed
+          title: Errortext
+        input:
+          additionalProperties: true
+          description: Input arguments for the tool
+          title: Input
+          type: object
+        output:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Output from the tool
+          title: Output
+        state:
+          $ref: '#/components/schemas/ToolPartState'
+          description: Current state of the tool execution
+        toolCallId:
+          description: Unique ID for this tool call
+          title: Toolcallid
+          type: string
+        toolName:
+          description: Name of the tool
+          title: Toolname
+          type: string
+        type:
+          const: tool
+          default: tool
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - toolCallId
+      - toolName
+      - state
+      - input
+      title: ToolPart
+      type: object
+    ListMessagesV2Response:
+      description: Response for list messages v2 endpoint.
+      properties:
+        data:
+          description: List of UIMessages
+          items:
+            $ref: '#/components/schemas/UIMessage'
+          title: Data
+          type: array
+        hasMore:
+          default: false
+          description: Whether there are more messages to fetch
+          title: Hasmore
+          type: boolean
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cursor for fetching the next page
+          title: Nextcursor
+      required:
+      - data
+      title: ListMessagesV2Response
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    Usage:
+      description: Token usage statistics.
+      properties:
+        inputTokens:
+          description: Input tokens used
+          title: Inputtokens
+          type: integer
+        outputTokens:
+          description: Output tokens used
+          title: Outputtokens
+          type: integer
+        totalTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Total tokens (input + output)
+          title: Totaltokens
+      required:
+      - inputTokens
+      - outputTokens
+      title: Usage
+      type: object
+    TextPart:
+      description: Text content part.
+      properties:
+        text:
+          description: The text content
+          title: Text
+          type: string
+        type:
+          const: text
+          default: text
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: TextPart
+      type: object
+    SourceUrlPart:
+      description: Source URL reference part.
+      properties:
+        sourceId:
+          description: Unique source ID
+          title: Sourceid
+          type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Title of the source
+          title: Title
+        type:
+          const: source-url
+          default: source-url
+          description: Part type discriminator
+          title: Type
+          type: string
+        url:
+          description: URL of the source
+          title: Url
+          type: string
+      required:
+      - sourceId
+      - url
+      title: SourceUrlPart
+      type: object
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
+      properties:
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - data
+      title: DataPart
+      type: object
+    UIMessageRole:
+      description: Role of the message author.
+      enum:
+      - system
+      - user
+      - assistant
+      title: UIMessageRole
+      type: string
+    ErrorPart:
+      description: Error part for transformation failures.
+      properties:
+        error:
+          description: Error message
+          title: Error
+          type: string
+        rawContent:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Original content that failed to transform
+          title: Rawcontent
+        type:
+          const: error
+          default: error
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - error
+      title: ErrorPart
+      type: object
+    UIMessagePartWrapper:
+      description: Wrapper for UIMessagePart union for proper serialization.
+      discriminator:
+        mapping:
+          data: '#/components/schemas/DataPart'
+          error: '#/components/schemas/ErrorPart'
+          file: '#/components/schemas/FilePart'
+          reasoning: '#/components/schemas/ReasoningPart'
+          source-url: '#/components/schemas/SourceUrlPart'
+          text: '#/components/schemas/TextPart'
+          tool: '#/components/schemas/ToolPart'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/TextPart'
+      - $ref: '#/components/schemas/ReasoningPart'
+      - $ref: '#/components/schemas/ToolPart'
+      - $ref: '#/components/schemas/SourceUrlPart'
+      - $ref: '#/components/schemas/FilePart'
+      - $ref: '#/components/schemas/DataPart'
+      - $ref: '#/components/schemas/ErrorPart'
+      title: UIMessagePartWrapper
+    UIMessageMetadata:
+      description: Metadata for a UIMessage.
+      properties:
+        costUsd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Cost in USD for this message
+          title: Costusd
+        durationMs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Duration in milliseconds
+          title: Durationms
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Model used to generate message
+          title: Model
+        parentToolUseId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Parent tool use ID for subagent context
+          title: Parenttooluseid
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/Usage'
+          - type: 'null'
+          description: Token usage for this message
+      title: UIMessageMetadata
+      type: object
+    ReasoningPart:
+      description: Reasoning/thinking content part (Claude's extended thinking).
+      properties:
+        providerMetadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Provider-specific metadata (e.g., Claude's thinking.signature)
+          title: Providermetadata
+        text:
+          description: The reasoning text content
+          title: Text
+          type: string
+        type:
+          const: reasoning
+          default: reasoning
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: ReasoningPart
+      type: object
+    ToolPartState:
+      description: State of a tool part.
+      enum:
+      - input-streaming
+      - input-available
+      - output-available
+      - output-error
+      title: ToolPartState
+      type: string
+    FilePart:
+      description: File attachment part.
+      properties:
+        mediaType:
+          description: MIME type of the file
+          title: Mediatype
+          type: string
+        type:
+          const: file
+          default: file
+          description: Part type discriminator
+          title: Type
+          type: string
+        url:
+          description: URL to the file
+          title: Url
+          type: string
+      required:
+      - url
+      - mediaType
+      title: FilePart
+      type: object
+    UIMessage:
+      description: 'Vercel AI SDK compatible message format.
+
+
+        Based on: https://ai-sdk.dev/docs/reference/ai-sdk-core/ui-message
+
+        with extensions for our use case.'
+      examples:
+      - createdAt: '2024-01-01T00:00:00Z'
+        id: msg_01ABC
+        parts:
+        - text: Hello, how can I help?
+          type: text
+        role: assistant
+      properties:
+        createdAt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: ISO timestamp when created
+          title: Createdat
+        id:
+          description: Unique message ID
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/UIMessageMetadata'
+          - type: 'null'
+          description: Message metadata
+        parts:
+          description: Content parts of the message
+          items:
+            $ref: '#/components/schemas/UIMessagePartWrapper'
+          minItems: 1
+          title: Parts
+          type: array
+        role:
+          $ref: '#/components/schemas/UIMessageRole'
+          description: Role of the message author
+      required:
+      - id
+      - role
+      - parts
+      title: UIMessage
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

@@ -1,0 +1,75 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Authentication API
+  version: 0.1.0
+tags:
+- name: Authentication
+paths:
+  /v1/authn:
+    post:
+      description: Validate a WorkOS JWT and return the principal context.
+      operationId: authenticate_v1_authn_post
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalContextEntity'
+          description: Successful Response
+      summary: Authenticate Token
+      tags:
+      - Authentication
+components:
+  schemas:
+    PrincipalContextEntity:
+      description: 'Principal context representing an authenticated user or service user.
+
+
+        The member_id is:
+
+        - For human users: WorkOS user ID (e.g., "user_xyz")
+
+        - For service users: Service user ID (e.g., "svc_abc123")
+
+
+        This is the primary identifier used for authorization checks in OpenFGA.'
+      properties:
+        api_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Api Key Id
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        is_service_user:
+          default: false
+          title: Is Service User
+          type: boolean
+        member_id:
+          title: Member Id
+          type: string
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org Id
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+      required:
+      - member_id
+      title: PrincipalContextEntity
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

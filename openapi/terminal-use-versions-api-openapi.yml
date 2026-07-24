@@ -1,0 +1,986 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Versions API
+  version: 0.1.0
+tags:
+- name: Versions
+paths:
+  /versions/register:
+    post:
+      description: "Register an agent container that has started up.\n\n    Called by the agent container on startup to:\n    1. Register its ACP URL with the platform\n    2. Receive its API key for authenticating subsequent requests\n\n    This endpoint should be called from within the container's entrypoint\n    after the ACP server is ready to receive traffic."
+      operationId: versions_register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterContainerRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterContainerResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Register Container
+      tags:
+      - Versions
+  /versions/{version_id}:
+    get:
+      description: Get version details by ID.
+      operationId: retrieve
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Version
+      tags:
+      - Versions
+      x-fern-sdk-group-name:
+      - versions
+      x-fern-sdk-method-name: retrieve
+  /versions/{version_id}/deploy/events:
+    get:
+      description: SSE endpoint for real-time deployment progress events.
+      operationId: versions_deploy_stream
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeployStreamEvent'
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/DeployStreamEvent'
+          description: SSE stream of deployment events
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Stream Deployment Progress
+      tags:
+      - Versions
+      x-fern-sdk-group-name:
+      - versions
+      x-fern-sdk-method-name: deploy_stream
+      x-fern-streaming:
+        format: sse
+  /versions/{version_id}/metrics:
+    get:
+      description: "Get deployment metrics for a specific version.\n\n    Returns metrics related to the deployment process for this version,\n    including average and P95 deployment durations queried from ClickHouse traces."
+      operationId: versions_metrics
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionMetricsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Version Metrics
+      tags:
+      - Versions
+  /versions/{version_id}/pod-logs:
+    get:
+      description: "Get Kubernetes pod/container logs for a specific deployment version.\n\n    Data is sourced from ClickHouse `otel.pod_logs`, populated by the dedicated\n    pod-log collector DaemonSet. This endpoint has no Kubernetes or event-snapshot\n    fallback path."
+      operationId: versions_pod_logs
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      - description: Filter by pod name
+        in: query
+        name: pod
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by pod name
+          title: Pod
+      - description: Filter by container name
+        in: query
+        name: container
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by container name
+          title: Container
+      - description: Filter by log stream (stdout/stderr)
+        in: query
+        name: stream
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by log stream (stdout/stderr)
+          title: Stream
+      - description: Start timestamp filter (ISO 8601)
+        in: query
+        name: since
+        required: false
+        schema:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Start timestamp filter (ISO 8601)
+          title: Since
+      - description: End timestamp filter (ISO 8601)
+        in: query
+        name: until
+        required: false
+        schema:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: End timestamp filter (ISO 8601)
+          title: Until
+      - description: Full-text search in log message
+        in: query
+        name: search
+        required: false
+        schema:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Full-text search in log message
+          title: Search
+      - description: Maximum number of results
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: Maximum number of results
+          maximum: 1000
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Cursor for the next page, using the previous log_id
+        in: query
+        name: after
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cursor for the next page, using the previous log_id
+          title: After
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionPodLogsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Version Pod Logs
+      tags:
+      - Versions
+      x-fern-sdk-group-name:
+      - versions
+      x-fern-sdk-method-name: pod_logs
+  /versions/{version_id}/pod-metrics:
+    get:
+      description: "Get pod-level resource metrics (CPU and memory) for a specific version.\n\n    Data is sourced from ClickHouse `otel_metrics_*` tables populated by the\n    OpenTelemetry Collector's Prometheus receiver scraping kubelet cAdvisor metrics."
+      operationId: versions_pod_metrics
+      parameters:
+      - in: path
+        name: version_id
+        required: true
+        schema:
+          title: Version Id
+          type: string
+      - in: query
+        name: window_minutes
+        required: false
+        schema:
+          default: 60
+          title: Window Minutes
+          type: integer
+      - in: query
+        name: step_seconds
+        required: false
+        schema:
+          default: 60
+          title: Step Seconds
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionPodMetricsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Version Pod Metrics
+      tags:
+      - Versions
+      x-fern-sdk-group-name:
+      - versions
+      x-fern-sdk-method-name: pod_metrics
+components:
+  schemas:
+    VersionResponse:
+      description: Full version details.
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          description: Type of ACP server (sync or async)
+        author_email:
+          description: Commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Commit author name
+          title: Author Name
+          type: string
+        branch_id:
+          description: Parent branch ID
+          title: Branch Id
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        failure_diagnostics:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          description: User-facing failure diagnostics with 'title', 'description', and 'action' fields
+          title: Failure Diagnostics
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Classified failure reason when status is FAILED (e.g., 'image_pull_failed', 'crash_loop', 'scheduling_failed')
+          title: Failure Reason
+        git_branch:
+          description: Git branch name
+          title: Git Branch
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        image_expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When image expires (for rollback window)
+          title: Image Expires At
+        image_url:
+          description: Container image URL
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the commit had uncommitted changes
+          title: Is Dirty
+          type: boolean
+        last_rollback_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was last rolled back TO
+          title: Last Rollback At
+        replicas:
+          default: 0
+          description: Current pod count for this version
+          title: Replicas
+          type: integer
+        retired_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When version was retired
+          title: Retired At
+        rollback_count:
+          default: 0
+          description: Number of rollbacks to this version
+          title: Rollback Count
+          type: integer
+        rolled_back_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was rolled back FROM
+          title: Rolled Back At
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - branch_id
+      - git_hash
+      - git_branch
+      - author_name
+      - author_email
+      - image_url
+      - status
+      - deployed_at
+      - sdk_type
+      - acp_type
+      title: VersionResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    VersionPodMetricsResponse:
+      description: Pod-level CPU + memory metrics for a deployed version (last N minutes).
+      properties:
+        cpu_cores:
+          description: CPU usage rate in cores (derived from container_cpu_usage_seconds_total)
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+          title: Cpu Cores
+          type: array
+        k8s_namespace:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Kubernetes namespace containing the version pods
+          title: K8S Namespace
+        memory_working_set_bytes:
+          description: Memory working set in bytes (container_memory_working_set_bytes)
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+          title: Memory Working Set Bytes
+          type: array
+        pod_name_prefix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Pod name prefix (Helm release name) used for filtering
+          title: Pod Name Prefix
+        pods:
+          description: Pods observed in window
+          items:
+            type: string
+          title: Pods
+          type: array
+        step_seconds:
+          description: Bucket size in seconds
+          title: Step Seconds
+          type: integer
+        window_minutes:
+          description: Lookback window in minutes
+          title: Window Minutes
+          type: integer
+      required:
+      - window_minutes
+      - step_seconds
+      title: VersionPodMetricsResponse
+      type: object
+    DeployStreamRollingBackEvent:
+      description: Deployment is being rolled back.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: rolling_back
+          default: rolling_back
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being rolled back
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamRollingBackEvent
+      type: object
+    DeployStreamErrorEvent:
+      description: 'Sent when an error occurs in the deploy stream.
+
+
+        After this event, the stream may close.'
+      properties:
+        message:
+          description: Error description
+          title: Message
+          type: string
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - message
+      title: DeployStreamErrorEvent
+      type: object
+    DeployStreamHelmWaitingEvent:
+      description: Waiting for Helm deployment to complete (pods becoming ready).
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: helm_waiting
+          default: helm_waiting
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamHelmWaitingEvent
+      type: object
+    DeployStreamReadyEvent:
+      description: Deployment completed successfully.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: ready
+          default: ready
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamReadyEvent
+      type: object
+    DeployStreamFailedEvent:
+      description: Deployment failed.
+      properties:
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Detailed failure reason
+          title: Failure Reason
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: failed
+          default: failed
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamFailedEvent
+      type: object
+    DeployStreamQueuedEvent:
+      description: Deployment has been queued for processing.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: queued
+          default: queued
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamQueuedEvent
+      type: object
+    VersionMetricsResponse:
+      description: Response model for version deployment metrics.
+      properties:
+        deployment_duration_p95_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: P95 deployment duration in seconds for this version
+          title: Deployment Duration P95 Seconds
+        deployment_duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Average deployment duration in seconds for this version
+          title: Deployment Duration Seconds
+      title: VersionMetricsResponse
+      type: object
+    RegisterContainerResponse:
+      description: Response from container registration.
+      properties:
+        agent_api_key:
+          description: API key for the agent
+          title: Agent Api Key
+          type: string
+        agent_id:
+          description: Agent ID
+          title: Agent Id
+          type: string
+        agent_name:
+          description: Agent name
+          title: Agent Name
+          type: string
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version status after registration
+      required:
+      - agent_id
+      - agent_name
+      - agent_api_key
+      - branch_id
+      - version_status
+      title: RegisterContainerResponse
+      type: object
+    DeployStreamHelmStartedEvent:
+      description: Helm deployment has started.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: helm_started
+          default: helm_started
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamHelmStartedEvent
+      type: object
+    DeployStreamEvent:
+      description: 'Union of all possible deploy stream SSE events.
+
+
+        Use the ''type'' field to discriminate between event types:
+
+        - "connected": Stream connection established
+
+        - "queued": Deployment queued
+
+        - "helm_started": Helm deployment started
+
+        - "helm_waiting": Waiting for pods to be ready
+
+        - "ready": Deployment successful
+
+        - "failed": Deployment failed
+
+        - "rolling_back": Rolling back deployment
+
+        - "complete": Stream complete, terminal state reached
+
+        - "error": An error occurred in the stream'
+      discriminator:
+        mapping:
+          complete: '#/components/schemas/DeployStreamCompleteEvent'
+          connected: '#/components/schemas/DeployStreamConnectedEvent'
+          error: '#/components/schemas/DeployStreamErrorEvent'
+          failed: '#/components/schemas/DeployStreamFailedEvent'
+          helm_started: '#/components/schemas/DeployStreamHelmStartedEvent'
+          helm_waiting: '#/components/schemas/DeployStreamHelmWaitingEvent'
+          queued: '#/components/schemas/DeployStreamQueuedEvent'
+          ready: '#/components/schemas/DeployStreamReadyEvent'
+          rolling_back: '#/components/schemas/DeployStreamRollingBackEvent'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/DeployStreamConnectedEvent'
+      - $ref: '#/components/schemas/DeployStreamQueuedEvent'
+      - $ref: '#/components/schemas/DeployStreamHelmStartedEvent'
+      - $ref: '#/components/schemas/DeployStreamHelmWaitingEvent'
+      - $ref: '#/components/schemas/DeployStreamReadyEvent'
+      - $ref: '#/components/schemas/DeployStreamFailedEvent'
+      - $ref: '#/components/schemas/DeployStreamRollingBackEvent'
+      - $ref: '#/components/schemas/DeployStreamCompleteEvent'
+      - $ref: '#/components/schemas/DeployStreamErrorEvent'
+      title: DeployStreamEvent
+    DeployStreamCompleteEvent:
+      description: 'Stream is complete - deployment has reached a terminal state.
+
+
+        Sent by the SSE endpoint when the version status is terminal (ACTIVE, FAILED, etc.).'
+      properties:
+        status:
+          description: Final version status (e.g., 'active', 'failed')
+          title: Status
+          type: string
+        type:
+          const: complete
+          default: complete
+          title: Type
+          type: string
+      required:
+      - status
+      title: DeployStreamCompleteEvent
+      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    VersionPodLogEntry:
+      description: A single pod log entry returned for a deployment version.
+      properties:
+        agent_id:
+          description: Agent ID associated with this log
+          title: Agent Id
+          type: string
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID associated with this log
+          title: Branch Id
+        cluster:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cluster name
+          title: Cluster
+        container_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Container name
+          title: Container Name
+        k8s_namespace:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Kubernetes namespace containing the pod
+          title: K8S Namespace
+        log_id:
+          description: Stable pod log identifier for pagination
+          title: Log Id
+          type: string
+        message:
+          description: Pod log message
+          title: Message
+          type: string
+        pod_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Kubernetes pod name
+          title: Pod Name
+        stream:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Container log stream (stdout/stderr)
+          title: Stream
+        timestamp:
+          description: ISO 8601 log timestamp
+          title: Timestamp
+          type: string
+        version_id:
+          description: Version ID associated with this log
+          title: Version Id
+          type: string
+      required:
+      - log_id
+      - timestamp
+      - version_id
+      - agent_id
+      - message
+      title: VersionPodLogEntry
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    DeployStreamConnectedEvent:
+      description: 'Sent when SSE deploy stream connection is established.
+
+
+        Indicates the client is now subscribed and will receive deployment progress events.'
+      properties:
+        type:
+          const: connected
+          default: connected
+          title: Type
+          type: string
+        version_id:
+          description: Version ID this stream is subscribed to
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      title: DeployStreamConnectedEvent
+      type: object
+    RegisterContainerRequest:
+      description: 'Request model for container registration.
+
+
+        Called by agent container on startup to register its ACP URL.
+
+        Includes a registration token for security (CVE-2026-0001 fix).'
+      properties:
+        acp_url:
+          description: ACP server URL (e.g., 'http://agent-main-abc123.agents.svc.cluster.local:8000')
+          title: Acp Url
+          type: string
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        registration_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Single-use registration token provided during deployment (required when configured)
+          title: Registration Token
+        version_id:
+          description: Version ID being registered
+          title: Version Id
+          type: string
+      required:
+      - branch_id
+      - version_id
+      - acp_url
+      title: RegisterContainerRequest
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    TimeSeriesPoint:
+      description: A single time series data point.
+      properties:
+        ts:
+          description: Timestamp for the data point
+          format: date-time
+          title: Ts
+          type: string
+        value:
+          description: Metric value at timestamp
+          title: Value
+          type: number
+      required:
+      - ts
+      - value
+      title: TimeSeriesPoint
+      type: object
+    VersionPodLogsResponse:
+      description: Paginated pod logs for a deployed version.
+      properties:
+        has_more:
+          description: Whether more matching logs exist beyond this page
+          title: Has More
+          type: boolean
+        logs:
+          items:
+            $ref: '#/components/schemas/VersionPodLogEntry'
+          title: Logs
+          type: array
+        total:
+          description: Total number of matching logs
+          title: Total
+          type: integer
+      required:
+      - total
+      - has_more
+      title: VersionPodLogsResponse
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

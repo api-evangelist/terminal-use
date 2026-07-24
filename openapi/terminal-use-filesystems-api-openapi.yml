@@ -1,0 +1,958 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Filesystems API
+  version: 0.1.0
+tags:
+- name: Filesystems
+paths:
+  /filesystems:
+    get:
+      description: List all filesystems accessible to the current user.
+      operationId: filesystems_list
+      parameters:
+      - description: Optional project filter. When provided, requires read access to the project and returns only filesystems in that project.
+        in: query
+        name: project_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional project filter. When provided, requires read access to the project and returns only filesystems in that project.
+          title: Project Id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FilesystemResponse'
+                title: Response Filesystems List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Filesystems
+      tags:
+      - Filesystems
+    post:
+      description: Create a new filesystem linked to a project.
+      operationId: filesystems_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilesystemCreate'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilesystemResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Filesystem
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}:
+    get:
+      description: Get filesystem details by ID.
+      operationId: filesystems_retrieve
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilesystemResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Filesystem
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/download-url:
+    post:
+      description: Get a presigned URL for direct download from GCS.
+      operationId: filesystems_get_download_url
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/PresignedUrlRequest'
+              - type: 'null'
+              title: Request
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresignedUrlResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Download URL
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/file-download:
+    get:
+      description: Download a single file from the filesystem.
+      operationId: filesystems_download_file
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      - description: Relative file path to download.
+        in: query
+        name: path
+        required: true
+        schema:
+          description: Relative file path to download.
+          title: Path
+          type: string
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Binary file content
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Download File
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/file-upload:
+    put:
+      description: Upload a single file into a filesystem by relative path. Defaults to overwrite mode; conditional mode can be used for strict concurrency control.
+      operationId: filesystems_upload_file
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      - description: Relative path to write.
+        in: query
+        name: path
+        required: true
+        schema:
+          description: Relative path to write.
+          title: Path
+          type: string
+        x-fern-parameter-name: path
+      - description: 'Upload semantics: overwrite (default) or conditional.'
+        in: query
+        name: writeMode
+        required: false
+        schema:
+          $ref: '#/components/schemas/FileUploadWriteMode'
+          default: overwrite
+          description: 'Upload semantics: overwrite (default) or conditional.'
+        x-fern-parameter-name: write_mode
+      - description: 'Required in conditional mode: expected current archive version.'
+        in: query
+        name: baseVersion
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Required in conditional mode: expected current archive version.'
+          title: Baseversion
+        x-fern-parameter-name: base_version
+      - description: Conditional replace precondition on current file version.
+        in: query
+        name: expectedVersion
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Conditional replace precondition on current file version.
+          title: Expectedversion
+        x-fern-parameter-name: expected_version
+      - description: Conditional create precondition; must be '*'.
+        in: query
+        name: createOnly
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Conditional create precondition; must be '*'.
+          title: Createonly
+        x-fern-parameter-name: create_only
+      - description: Optional digest in format sha-256=<base64>.
+        in: query
+        name: digest
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional digest in format sha-256=<base64>.
+          title: Digest
+        x-fern-parameter-name: digest
+      - description: Optional idempotency key for safe retries.
+        in: header
+        name: Idempotency-Key
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional idempotency key for safe retries.
+          title: Idempotency-Key
+        x-fern-parameter-name: idempotency_key
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+              title: Body
+              type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                archive_version: a9502c997a...
+                created: false
+                file_version: d4f9678f0c...
+                filesystem_id: fs_123
+                path: src/main.py
+                size_bytes: 14
+                write_mode: overwrite
+              schema:
+                $ref: '#/components/schemas/SingleFileUploadResponse'
+          description: File replaced
+        '201':
+          content:
+            application/json:
+              example:
+                archive_version: c7e8441b20...
+                created: true
+                file_version: 6a1d5c3f11...
+                filesystem_id: fs_123
+                path: notes/todo.txt
+                size_bytes: 23
+                write_mode: conditional
+              schema:
+                $ref: '#/components/schemas/SingleFileUploadResponse'
+          description: File created
+        '400':
+          description: Invalid path, write mode, or digest
+        '404':
+          description: Filesystem not found
+        '409':
+          content:
+            application/json:
+              example:
+                code: 409
+                message: baseVersion does not match current archive version.
+          description: Conflict (stale base version or idempotency conflict)
+        '412':
+          content:
+            application/json:
+              example:
+                code: 412
+                message: expectedVersion does not match current file version.
+          description: Precondition failed for conditional upload
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+        '428':
+          content:
+            application/json:
+              example:
+                code: 428
+                message: baseVersion is required in conditional mode.
+          description: Conditional upload missing required preconditions
+      summary: Upload File
+      tags:
+      - Filesystems
+      x-fern-idempotent: true
+  /filesystems/{filesystem_id}/files:
+    get:
+      description: List files in the filesystem manifest with optional filtering.
+      operationId: filesystems_list_files
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      - description: Directory prefix to filter results
+        in: query
+        name: directory
+        required: false
+        schema:
+          default: /
+          description: Directory prefix to filter results
+          title: Directory
+          type: string
+      - description: Include subdirectories
+        in: query
+        name: recursive
+        required: false
+        schema:
+          default: true
+          description: Include subdirectories
+          title: Recursive
+          type: boolean
+      - description: Filter by MIME type
+        in: query
+        name: mime_type
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by MIME type
+          title: Mime Type
+      - description: Include file content in response
+        in: query
+        name: include_content
+        required: false
+        schema:
+          default: true
+          description: Include file content in response
+          title: Include Content
+          type: boolean
+      - description: Maximum number of results
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 1000
+          description: Maximum number of results
+          maximum: 5000
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Pagination offset
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: Pagination offset
+          minimum: 0
+          title: Offset
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilesResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Files
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/files/{file_path}:
+    get:
+      description: Retrieve a specific file (or directory) from the filesystem manifest.
+      operationId: filesystems_get_file
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      - in: path
+        name: file_path
+        required: true
+        schema:
+          title: File Path
+          type: string
+      - description: Include file content in response
+        in: query
+        name: include_content
+        required: false
+        schema:
+          default: true
+          description: Include file content in response
+          title: Include Content
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilesystemFileResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get File
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/sync-complete:
+    post:
+      description: Notify that a sync operation completed and provide the file manifest.
+      operationId: filesystems_sync_complete
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncCompleteRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncCompleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Complete Sync Operation
+      tags:
+      - Filesystems
+  /filesystems/{filesystem_id}/upload-url:
+    post:
+      description: Get a presigned URL for direct upload to GCS.
+      operationId: filesystems_get_upload_url
+      parameters:
+      - in: path
+        name: filesystem_id
+        required: true
+        schema:
+          title: Filesystem Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/PresignedUrlRequest'
+              - type: 'null'
+              title: Request
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresignedUrlResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Upload URL
+      tags:
+      - Filesystems
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    PresignedUrlResponse:
+      description: Response model for presigned URL operations.
+      properties:
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Content-Type header to use (required for PUT uploads).
+          title: Content Type
+        expires_at:
+          description: When the presigned URL expires.
+          format: date-time
+          title: Expires At
+          type: string
+        instructions:
+          description: Instructions for using the presigned URL.
+          title: Instructions
+          type: string
+        method:
+          description: 'HTTP method to use: ''PUT'' for upload, ''GET'' for download.'
+          title: Method
+          type: string
+        url:
+          description: The presigned URL for direct GCS upload/download.
+          title: Url
+          type: string
+      required:
+      - url
+      - expires_at
+      - method
+      - instructions
+      title: PresignedUrlResponse
+      type: object
+    FilesystemFile:
+      description: File metadata - used for both input (sync-complete) and as base for response.
+      properties:
+        checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum (None for directories).
+          title: Checksum
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File contents (None for binary/large files).
+          title: Content
+        content_truncated:
+          default: false
+          description: True if content was truncated due to size.
+          title: Content Truncated
+          type: boolean
+        is_binary:
+          default: false
+          description: True if file is binary.
+          title: Is Binary
+          type: boolean
+        is_directory:
+          default: false
+          description: Whether this entry is a directory.
+          title: Is Directory
+          type: boolean
+        mime_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: MIME type (None for directories).
+          title: Mime Type
+        modified_at:
+          description: File's last modification time.
+          format: date-time
+          title: Modified At
+          type: string
+        path:
+          description: Relative path within filesystem (e.g., 'src/index.ts').
+          title: Path
+          type: string
+        size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: File size in bytes (None for directories).
+          title: Size Bytes
+      required:
+      - path
+      - modified_at
+      title: FilesystemFile
+      type: object
+    ListFilesResponse:
+      description: Response model for listing files in a filesystem.
+      properties:
+        files:
+          description: List of file entries.
+          items:
+            $ref: '#/components/schemas/FilesystemFileResponse'
+          title: Files
+          type: array
+        filesystem_id:
+          description: The filesystem ID.
+          title: Filesystem Id
+          type: string
+        synced_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the manifest was last synced.
+          title: Synced At
+        total_count:
+          description: Total number of matching files.
+          title: Total Count
+          type: integer
+      required:
+      - filesystem_id
+      - total_count
+      - files
+      title: ListFilesResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    FileUploadWriteMode:
+      description: Single-file upload write semantics.
+      enum:
+      - overwrite
+      - conditional
+      title: FileUploadWriteMode
+      type: string
+    FilesystemFileResponse:
+      description: File metadata response - adds server-side fields.
+      properties:
+        checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum (None for directories).
+          title: Checksum
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File contents (None for binary/large files).
+          title: Content
+        content_truncated:
+          default: false
+          description: True if content was truncated due to size.
+          title: Content Truncated
+          type: boolean
+        is_binary:
+          default: false
+          description: True if file is binary.
+          title: Is Binary
+          type: boolean
+        is_directory:
+          default: false
+          description: Whether this entry is a directory.
+          title: Is Directory
+          type: boolean
+        mime_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: MIME type (None for directories).
+          title: Mime Type
+        modified_at:
+          description: File's last modification time.
+          format: date-time
+          title: Modified At
+          type: string
+        path:
+          description: Relative path within filesystem (e.g., 'src/index.ts').
+          title: Path
+          type: string
+        size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: File size in bytes (None for directories).
+          title: Size Bytes
+        synced_at:
+          description: When this entry was last synced.
+          format: date-time
+          title: Synced At
+          type: string
+      required:
+      - path
+      - modified_at
+      - synced_at
+      title: FilesystemFileResponse
+      type: object
+    FilesystemStatus:
+      description: Filesystem lifecycle status states.
+      enum:
+      - CREATING
+      - READY
+      - SYNCING_UP
+      - SYNCING_DOWN
+      - FAILED
+      title: FilesystemStatus
+      type: string
+    PresignedUrlRequest:
+      description: Request model for presigned URL generation.
+      properties:
+        expiration_seconds:
+          default: 3600
+          description: URL expiration time in seconds (default 1 hour, max 7 days).
+          maximum: 604800
+          minimum: 60
+          title: Expiration Seconds
+          type: integer
+      title: PresignedUrlRequest
+      type: object
+    FilesystemCreate:
+      description: 'Request model for creating a filesystem.
+
+
+        Filesystems inherit permissions from their parent project.'
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional human-readable name for the filesystem (unique per namespace).
+          title: Name
+        project_id:
+          description: Project ID. Filesystem inherits permissions from the project.
+          title: Project Id
+          type: string
+      required:
+      - project_id
+      title: FilesystemCreate
+      type: object
+    SyncCompleteResponse:
+      description: Response model for sync-complete operation.
+      properties:
+        files_count:
+          description: Number of files processed.
+          title: Files Count
+          type: integer
+        filesystem_id:
+          description: The filesystem ID.
+          title: Filesystem Id
+          type: string
+        status:
+          description: 'Result status: ''COMPLETED'' or ''ALREADY_PROCESSED''.'
+          title: Status
+          type: string
+        sync_id:
+          description: The sync operation ID (for idempotency).
+          title: Sync Id
+          type: string
+      required:
+      - filesystem_id
+      - sync_id
+      - files_count
+      - status
+      title: SyncCompleteResponse
+      type: object
+    SingleFileUploadResponse:
+      description: Response model for single-file upload operations.
+      properties:
+        archive_version:
+          description: New archive version token after this commit.
+          title: Archive Version
+          type: string
+        created:
+          description: True when the upload created a previously missing file.
+          title: Created
+          type: boolean
+        file_version:
+          description: New per-file version token (SHA256 of file content).
+          title: File Version
+          type: string
+        filesystem_id:
+          description: The filesystem ID.
+          title: Filesystem Id
+          type: string
+        path:
+          description: Normalized relative path written.
+          title: Path
+          type: string
+        size_bytes:
+          description: Uploaded file size in bytes.
+          title: Size Bytes
+          type: integer
+        write_mode:
+          $ref: '#/components/schemas/FileUploadWriteMode'
+          description: Applied upload write mode.
+      required:
+      - filesystem_id
+      - path
+      - write_mode
+      - created
+      - size_bytes
+      - file_version
+      - archive_version
+      title: SingleFileUploadResponse
+      type: object
+    FilesystemResponse:
+      description: Response model for filesystem operations.
+      properties:
+        archive_checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum of the archive for detecting changes.
+          title: Archive Checksum
+        archive_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: GCS path for the filesystem's archive.
+          title: Archive Path
+        archive_size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Size of the archive in bytes after last sync.
+          title: Archive Size Bytes
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the filesystem was created.
+          title: Created At
+        id:
+          description: The unique identifier of the filesystem.
+          title: Id
+          type: string
+        last_synced_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp of the last successful sync operation.
+          title: Last Synced At
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional human-readable name (unique per namespace).
+          title: Name
+        namespace_id:
+          description: The namespace this filesystem belongs to.
+          title: Namespace Id
+          type: string
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The project this filesystem belongs to (optional).
+          title: Project Id
+        status:
+          $ref: '#/components/schemas/FilesystemStatus'
+          description: The current status of the filesystem.
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the filesystem was last updated.
+          title: Updated At
+      required:
+      - id
+      - namespace_id
+      - status
+      title: FilesystemResponse
+      type: object
+    SyncCompleteRequest:
+      description: Request model for completing a sync operation.
+      properties:
+        archive_checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum of the archive.
+          title: Archive Checksum
+        archive_size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Size of the archive in bytes.
+          title: Archive Size Bytes
+        direction:
+          description: 'Sync direction: ''UP'' or ''DOWN''.'
+          title: Direction
+          type: string
+        files:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilesystemFile'
+            type: array
+          - type: 'null'
+          description: List of files in the filesystem (empty if status is FAILED).
+          title: Files
+        status:
+          description: 'Sync status: ''SUCCESS'' or ''FAILED''.'
+          title: Status
+          type: string
+        sync_id:
+          description: Unique ID for this sync operation (idempotency key).
+          title: Sync Id
+          type: string
+      required:
+      - sync_id
+      - direction
+      - status
+      title: SyncCompleteRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

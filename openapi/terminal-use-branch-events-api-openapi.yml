@@ -1,0 +1,346 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Branch Events API
+  version: 0.1.0
+tags:
+- name: Branch Events
+paths:
+  /branches/{branch_id}/events:
+    get:
+      description: List lifecycle events across all versions for a branch.
+      operationId: branches_events_list
+      parameters:
+      - in: path
+        name: branch_id
+        required: true
+        schema:
+          title: Branch Id
+          type: string
+      - description: Filter by event type
+        in: query
+        name: event_type
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/VersionEventType'
+          - type: 'null'
+          description: Filter by event type
+          title: Event Type
+      - description: Return events after this sequence_id (for ascending pagination)
+        in: query
+        name: after_sequence_id
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Return events after this sequence_id (for ascending pagination)
+          title: After Sequence Id
+      - description: Return events before this sequence_id (for descending pagination)
+        in: query
+        name: before_sequence_id
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Return events before this sequence_id (for descending pagination)
+          title: Before Sequence Id
+      - description: Maximum events to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Maximum events to return
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Order by sequence_id descending (newest first)
+        in: query
+        name: descending
+        required: false
+        schema:
+          default: true
+          description: Order by sequence_id descending (newest first)
+          title: Descending
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionEventListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Branch Events
+      tags:
+      - Branch Events
+      x-fern-sdk-group-name:
+      - branches
+      - events
+      x-fern-sdk-method-name: list
+components:
+  schemas:
+    VersionEventContent:
+      description: Typed content for version events stored as JSONB.
+      properties:
+        actor_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Email of the user who triggered this event
+          title: Actor Email
+        container_logs:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Best-effort container log snapshot for VERSION_FAILED events
+          title: Container Logs
+        container_logs_container_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Container name used when fetching container logs
+          title: Container Logs Container Name
+        container_logs_fetched_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the container logs snapshot was fetched
+          title: Container Logs Fetched At
+        container_logs_pod_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Pod name used when fetching container logs
+          title: Container Logs Pod Name
+        container_logs_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Which log source was used (current or previous)
+          title: Container Logs Source
+        container_logs_truncated:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether container logs were truncated due to safety limits
+          title: Container Logs Truncated
+        container_logs_unavailable_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Best-effort reason when container logs could not be fetched
+          title: Container Logs Unavailable Reason
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message for failure events
+          title: Error Message
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Classified failure reason (DeploymentFailureReason value) for VERSION_FAILED events
+          title: Failure Reason
+        from_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Version ID tasks were migrated FROM (for TASKS_MIGRATED events)
+          title: From Version Id
+        git_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Git hash for context
+          title: Git Hash
+        migrated_task_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated (for TASKS_MIGRATED events)
+          title: Migrated Task Count
+        migrated_task_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: Task IDs that were migrated (for TASKS_MIGRATED events)
+          title: Migrated Task Ids
+        new_status:
+          anyOf:
+          - $ref: '#/components/schemas/VersionStatus'
+          - type: 'null'
+          description: Status after this event
+        previous_status:
+          anyOf:
+          - $ref: '#/components/schemas/VersionStatus'
+          - type: 'null'
+          description: Status before this event
+        target_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Target version ID for rollback events
+          title: Target Version Id
+        triggered_by:
+          anyOf:
+          - $ref: '#/components/schemas/VersionEventTrigger'
+          - type: 'null'
+          description: What triggered this event
+      title: VersionEventContent
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    VersionEventTrigger:
+      description: What triggered a version event.
+      enum:
+      - deploy
+      - container_register
+      - rollback
+      - hot_swap
+      - helm_failure
+      - redeploy
+      - cleanup
+      - manual
+      title: VersionEventTrigger
+      type: string
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    VersionEventResponse:
+      description: Response model for a single version event.
+      properties:
+        actor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: User ID who triggered this event
+          title: Actor Id
+        branch_id:
+          description: Branch ID (denormalized)
+          title: Branch Id
+          type: string
+        content:
+          anyOf:
+          - $ref: '#/components/schemas/VersionEventContent'
+          - type: 'null'
+          description: Event-specific metadata
+        created_at:
+          description: When this event was created
+          format: date-time
+          title: Created At
+          type: string
+        event_type:
+          $ref: '#/components/schemas/VersionEventType'
+          description: Type of lifecycle event
+        id:
+          description: Event ID
+          title: Id
+          type: string
+        sequence_id:
+          description: Monotonically increasing sequence ID for ordering
+          title: Sequence Id
+          type: integer
+        version_id:
+          description: Version ID this event belongs to
+          title: Version Id
+          type: string
+      required:
+      - id
+      - sequence_id
+      - version_id
+      - branch_id
+      - event_type
+      - created_at
+      title: VersionEventResponse
+      type: object
+    VersionEventType:
+      description: Types of version lifecycle events.
+      enum:
+      - VERSION_CREATED
+      - VERSION_ACTIVATED
+      - VERSION_FAILED
+      - VERSION_DRAINING
+      - VERSION_RETIRED
+      - VERSION_ROLLED_BACK_FROM
+      - VERSION_ROLLED_BACK_TO
+      - VERSION_REDEPLOYED
+      - TASKS_MIGRATED
+      - VERSION_CLEANUP_FAILED
+      title: VersionEventType
+      type: string
+    VersionEventListResponse:
+      description: Response model for listing version events.
+      properties:
+        events:
+          description: List of version events
+          items:
+            $ref: '#/components/schemas/VersionEventResponse'
+          title: Events
+          type: array
+        has_more:
+          description: Whether there are more events after the last one
+          title: Has More
+          type: boolean
+        total:
+          description: Total number of events returned
+          title: Total
+          type: integer
+      required:
+      - events
+      - total
+      - has_more
+      title: VersionEventListResponse
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

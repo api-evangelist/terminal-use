@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Builds API
+  version: 0.1.0
+tags:
+- name: Builds
+paths:
+  /builds/prepare:
+    post:
+      description: Return a presigned URL for uploading a build context archive to GCS.
+      operationId: builds_prepare
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildPrepareRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildPrepareResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Prepare Remote Build Upload
+      tags:
+      - Builds
+  /builds/submit:
+    post:
+      description: Submit a Cloud Build build for an uploaded build context archive.
+      operationId: builds_submit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildSubmitRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildSubmitResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Submit Remote Build
+      tags:
+      - Builds
+  /builds/{build_id}:
+    get:
+      description: Get build status for a Cloud Build build ID (proxied).
+      operationId: builds_retrieve
+      parameters:
+      - in: path
+        name: build_id
+        required: true
+        schema:
+          title: Build Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuildStatusResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Remote Build Status
+      tags:
+      - Builds
+components:
+  schemas:
+    BuildStatusResponse:
+      description: Build status response (proxied from Cloud Build).
+      properties:
+        build_id:
+          description: Cloud Build build ID.
+          title: Build Id
+          type: string
+        cloud_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Raw Cloud Build status value.
+          title: Cloud Status
+        failure_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Failure message if build failed (best-effort).
+          title: Failure Message
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Image URL for this build (if encoded in build).
+          title: Image Url
+        log_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cloud Build log URL (if available).
+          title: Log Url
+        status:
+          description: Normalized status (queued|building|succeeded|failed|canceled|timed_out|unknown).
+          title: Status
+          type: string
+      required:
+      - build_id
+      - status
+      title: BuildStatusResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    BuildSubmitRequest:
+      description: Submit a Cloud Build build for a previously uploaded build context.
+      properties:
+        agent_name:
+          description: Agent short name
+          maxLength: 64
+          minLength: 1
+          title: Agent Name
+          type: string
+        bucket:
+          description: GCS bucket containing uploaded build context archive.
+          title: Bucket
+          type: string
+        git_branch:
+          anyOf:
+          - maxLength: 256
+            type: string
+          - type: 'null'
+          description: Optional git branch name for metadata.
+          title: Git Branch
+        git_hash:
+          anyOf:
+          - maxLength: 40
+            minLength: 7
+            type: string
+          - type: 'null'
+          description: Optional git hash for metadata.
+          title: Git Hash
+        namespace:
+          description: Target namespace slug
+          maxLength: 64
+          minLength: 1
+          title: Namespace
+          type: string
+        object_key:
+          description: GCS object key for the uploaded build context archive.
+          title: Object Key
+          type: string
+        tag:
+          description: Image tag to build/push
+          maxLength: 128
+          minLength: 1
+          title: Tag
+          type: string
+      required:
+      - namespace
+      - agent_name
+      - tag
+      - bucket
+      - object_key
+      title: BuildSubmitRequest
+      type: object
+    BuildPrepareRequest:
+      description: Prepare a remote build by issuing a presigned upload URL for build context.
+      properties:
+        agent_name:
+          description: Agent short name (without namespace prefix)
+          examples:
+          - my-agent
+          maxLength: 64
+          minLength: 1
+          title: Agent Name
+          type: string
+        namespace:
+          description: Target namespace slug for the build
+          examples:
+          - acme
+          - my-org
+          maxLength: 64
+          minLength: 1
+          title: Namespace
+          type: string
+        tag:
+          description: Image tag to build/push (typically git hash)
+          examples:
+          - abc123def456
+          maxLength: 128
+          minLength: 1
+          title: Tag
+          type: string
+      required:
+      - namespace
+      - agent_name
+      - tag
+      title: BuildPrepareRequest
+      type: object
+    BuildSubmitResponse:
+      description: Response after submitting a Cloud Build build.
+      properties:
+        build_id:
+          description: Cloud Build build ID (use for status polling).
+          title: Build Id
+          type: string
+        image_url:
+          description: Full Artifact Registry image URL that the build will push.
+          title: Image Url
+          type: string
+        log_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cloud Build log URL (if available).
+          title: Log Url
+      required:
+      - build_id
+      - image_url
+      title: BuildSubmitResponse
+      type: object
+    BuildPrepareResponse:
+      description: Response containing a presigned URL for uploading build context.
+      properties:
+        bucket:
+          description: GCS bucket where the context will be stored.
+          title: Bucket
+          type: string
+        content_type:
+          description: Content-Type header that must be used for the upload.
+          examples:
+          - application/gzip
+          title: Content Type
+          type: string
+        expires_at:
+          description: When the presigned URL expires.
+          format: date-time
+          title: Expires At
+          type: string
+        image_url:
+          description: Full Artifact Registry image URL that the build will push.
+          title: Image Url
+          type: string
+        instructions:
+          description: Human instructions for how to upload the context archive.
+          title: Instructions
+          type: string
+        method:
+          default: PUT
+          description: HTTP method to use for the upload.
+          title: Method
+          type: string
+        object_key:
+          description: GCS object key where the context will be stored.
+          title: Object Key
+          type: string
+        upload_url:
+          description: Presigned PUT URL for uploading the build context archive.
+          title: Upload Url
+          type: string
+      required:
+      - upload_url
+      - expires_at
+      - content_type
+      - instructions
+      - bucket
+      - object_key
+      - image_url
+      title: BuildPrepareResponse
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

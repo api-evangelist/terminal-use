@@ -1,0 +1,313 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys States API
+  version: 0.1.0
+tags:
+- name: States
+paths:
+  /states:
+    get:
+      description: List all states, filtered by task_id or agent_id (at least one required).
+      operationId: states_list
+      parameters:
+      - description: Task ID
+        in: query
+        name: task_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Task ID
+          title: Task Id
+      - description: Agent ID
+        in: query
+        name: agent_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent ID
+          title: Agent Id
+      - description: Limit
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Limit
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          description: Page number
+          minimum: 1
+          title: Page Number
+          type: integer
+      - description: Field to order by
+        in: query
+        name: order_by
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Field to order by
+          title: Order By
+      - description: Order direction (asc or desc)
+        in: query
+        name: order_direction
+        required: false
+        schema:
+          default: desc
+          description: Order direction (asc or desc)
+          title: Order Direction
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/State'
+                title: Response States List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List States
+      tags:
+      - States
+    post:
+      operationId: states_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Task State
+      tags:
+      - States
+  /states/{state_id}:
+    delete:
+      operationId: states_delete
+      parameters:
+      - in: path
+        name: state_id
+        required: true
+        schema:
+          title: State Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Task State
+      tags:
+      - States
+    get:
+      description: Get a state by its unique state ID.
+      operationId: states_retrieve
+      parameters:
+      - in: path
+        name: state_id
+        required: true
+        schema:
+          title: State Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get State by State ID
+      tags:
+      - States
+    put:
+      operationId: states_update
+      parameters:
+      - in: path
+        name: state_id
+        required: true
+        schema:
+          title: State Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Task State
+      tags:
+      - States
+components:
+  schemas:
+    UpdateStateRequest:
+      properties:
+        agent_id:
+          title: The unique id of the agent to update the state of
+          type: string
+        state:
+          additionalProperties: true
+          title: The state to update the state with.
+          type: object
+        task_id:
+          title: The unique id of the task to update the state of
+          type: string
+      required:
+      - task_id
+      - agent_id
+      - state
+      title: UpdateStateRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    State:
+      description: 'Represents a state in the agent system. A state is associated uniquely with a task and an agent.
+
+
+        This entity is used to store states in MongoDB, with each state
+
+        associated with a specific task and agent. The combination of task_id and agent_id is globally unique.
+
+
+        The state is a dictionary of arbitrary data.'
+      properties:
+        agent_id:
+          title: The unique id of the agent to send the state to
+          type: string
+        created_at:
+          description: The timestamp when the state was created
+          format: date-time
+          title: Created At
+          type: string
+        id:
+          description: The task state's unique id
+          title: Id
+          type: string
+        state:
+          additionalProperties: true
+          title: The state to send to the task.
+          type: object
+        task_id:
+          title: The unique id of the task to send the state to
+          type: string
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the state was last updated
+          title: Updated At
+      required:
+      - task_id
+      - agent_id
+      - state
+      - id
+      - created_at
+      title: State
+      type: object
+    CreateStateRequest:
+      properties:
+        agent_id:
+          title: The unique id of the agent to send the state to
+          type: string
+        state:
+          additionalProperties: true
+          title: The state to send to the task.
+          type: object
+        task_id:
+          title: The unique id of the task to send the state to
+          type: string
+      required:
+      - task_id
+      - agent_id
+      - state
+      title: CreateStateRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

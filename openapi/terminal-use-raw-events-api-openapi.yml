@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Raw Events API
+  version: 0.1.0
+tags:
+- name: Raw Events
+paths:
+  /raw-events:
+    post:
+      description: "Publish a raw SDK event for transformation and streaming.\n\n    This endpoint replaces the deprecated `/stream-events` endpoint.\n    Events are transformed via SDK-specific adapters (based on `sdk_type` and `sdk_version`)\n    and the resulting stream parts are published to Redis for real-time consumption.\n\n    Messages that should be stored (e.g., AssistantMessage, UserMessage) are\n    automatically persisted to MongoDB for later retrieval.\n\n    **Supported SDK Types:**\n    - `claude`: Claude Agent SDK messages (StreamEvent, AssistantMessage, etc.)\n    - `codex`: Codex SDK thread events (`item.*`, `turn.*`, `thread.*`)\n    - `terminal_use`: Direct UIMessage format (Vercel-compatible)\n\n    **What gets stored:**\n    - AssistantMessage, UserMessage, ResultMessage, SystemMessage\n\n    **What does NOT get stored:**\n    - StreamEvent (ephemeral streaming deltas)\n\n    Requires `update` permission on the task."
+      operationId: publish_raw_event_raw_events_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RawEventPayload'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublishRawEventResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Publish Raw SDK Event
+      tags:
+      - Raw Events
+      x-fern-retries:
+        disabled: true
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    PublishRawEventResponse:
+      description: Response after publishing a raw event.
+      properties:
+        published_count:
+          description: Number of stream parts published to Redis
+          title: Published Count
+          type: integer
+        stored:
+          description: Whether the message was persisted to storage
+          title: Stored
+          type: boolean
+      required:
+      - published_count
+      - stored
+      title: PublishRawEventResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    RawEventPayload:
+      description: Request payload for publishing a raw SDK event.
+      properties:
+        idempotency_key:
+          anyOf:
+          - maxLength: 256
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Optional idempotency key for request-level deduplication
+          title: Idempotency Key
+        raw_event:
+          additionalProperties: true
+          description: The raw SDK event payload
+          title: Raw Event
+          type: object
+        sdk_type:
+          description: SDK type identifier (e.g., 'claude', 'codex', 'terminal_use')
+          minLength: 1
+          title: Sdk Type
+          type: string
+        sdk_version:
+          description: SDK version in semver format (e.g., '0.1.22')
+          title: Sdk Version
+          type: string
+        task_id:
+          description: Task ID to publish the event to
+          title: Task Id
+          type: string
+      required:
+      - sdk_type
+      - sdk_version
+      - task_id
+      - raw_event
+      title: RawEventPayload
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

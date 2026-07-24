@@ -1,0 +1,421 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys API Keys API
+  version: 0.1.0
+tags:
+- name: API Keys
+paths:
+  /api_keys:
+    get:
+      description: List all API keys for the organization. Only org admins can list keys.
+      operationId: api_keys_list
+      parameters:
+      - in: query
+        name: include_revoked
+        required: false
+        schema:
+          default: false
+          title: Include Revoked
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List API Keys
+      tags:
+      - API Keys
+    post:
+      description: Create a new org-level API key. Only org admins can create API keys.
+      operationId: api_keys_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyCreateResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create API Key
+      tags:
+      - API Keys
+  /api_keys/{api_key_id}:
+    delete:
+      description: Revoke an API key. Only org admins can revoke keys.
+      operationId: api_keys_delete
+      parameters:
+      - in: path
+        name: api_key_id
+        required: true
+        schema:
+          title: Api Key Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Revoke API Key
+      tags:
+      - API Keys
+    get:
+      description: Get details of a specific API key. Only org admins can view keys.
+      operationId: api_keys_retrieve
+      parameters:
+      - in: path
+        name: api_key_id
+        required: true
+        schema:
+          title: Api Key Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get API Key
+      tags:
+      - API Keys
+    patch:
+      description: Update scopes for an API key. Only org admins can update key scopes.
+      operationId: api_keys_update_scopes
+      parameters:
+      - in: path
+        name: api_key_id
+        required: true
+        schema:
+          title: Api Key Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyScopesUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update API Key Scopes
+      tags:
+      - API Keys
+  /api_keys/{api_key_id}/sharing-groups:
+    patch:
+      description: Update default sharing groups for resources created by an API key.
+      operationId: api_keys_update_sharing_groups
+      parameters:
+      - in: path
+        name: api_key_id
+        required: true
+        schema:
+          title: Api Key Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeySharingGroupsUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update API Key Sharing Groups
+      tags:
+      - API Keys
+components:
+  schemas:
+    ApiKeyScope:
+      description: Scope definition for an API key - defines resource and role access.
+      properties:
+        resource_id:
+          description: ID of the resource.
+          title: Resource Id
+          type: string
+        resource_type:
+          description: Type of resource (namespace, project, agent).
+          title: Resource Type
+          type: string
+        role:
+          $ref: '#/components/schemas/ApiKeyScopeRole'
+          description: Role for this resource.
+      required:
+      - resource_type
+      - resource_id
+      - role
+      title: ApiKeyScope
+      type: object
+    ApiKeyScopesUpdateRequest:
+      description: Request model for updating API key scopes.
+      properties:
+        scopes:
+          description: Updated list of resource scopes.
+          items:
+            $ref: '#/components/schemas/ApiKeyScope'
+          minItems: 1
+          title: Scopes
+          type: array
+      required:
+      - scopes
+      title: ApiKeyScopesUpdateRequest
+      type: object
+    ApiKeyCreateRequest:
+      description: Request model for creating an API key.
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional description.
+          title: Description
+        name:
+          description: Human-readable name for the API key.
+          maxLength: 256
+          minLength: 1
+          title: Name
+          type: string
+        scopes:
+          description: List of resource scopes. At least one scope is required.
+          items:
+            $ref: '#/components/schemas/ApiKeyScope'
+          minItems: 1
+          title: Scopes
+          type: array
+        sharing_group_ids:
+          description: IDs of groups that receive default admin grants on key-created resources.
+          items:
+            type: string
+          minItems: 1
+          title: Sharing Group Ids
+          type: array
+      required:
+      - name
+      - scopes
+      - sharing_group_ids
+      title: ApiKeyCreateRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    ApiKeySharingGroupsUpdateRequest:
+      description: Request model for updating API key sharing groups.
+      properties:
+        sharing_group_ids:
+          description: Replacement sharing groups (future creations only).
+          items:
+            type: string
+          minItems: 1
+          title: Sharing Group Ids
+          type: array
+      required:
+      - sharing_group_ids
+      title: ApiKeySharingGroupsUpdateRequest
+      type: object
+    ApiKeyCreateResponse:
+      description: 'Response model for API key creation.
+
+
+        Includes the full API key (shown only once).'
+      properties:
+        api_key:
+          $ref: '#/components/schemas/ApiKeyResponse'
+          description: The created API key metadata.
+        key:
+          description: The full API key. Store securely - it will NOT be shown again.
+          title: Key
+          type: string
+      required:
+      - api_key
+      - key
+      title: ApiKeyCreateResponse
+      type: object
+    ApiKeyListResponse:
+      description: Response model for listing API keys.
+      properties:
+        api_keys:
+          description: List of API keys.
+          items:
+            $ref: '#/components/schemas/ApiKeyResponse'
+          title: Api Keys
+          type: array
+      title: ApiKeyListResponse
+      type: object
+    ApiKeyResponse:
+      description: Response model for API key (excludes sensitive data).
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the key was created.
+          title: Created At
+        created_by:
+          description: member_id of the creator.
+          title: Created By
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional description.
+          title: Description
+        id:
+          description: The unique identifier of the API key.
+          title: Id
+          type: string
+        key_prefix:
+          description: Display prefix (e.g., 'sk_tu_abc...').
+          title: Key Prefix
+          type: string
+        last_used_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the key was last used.
+          title: Last Used At
+        name:
+          description: Human-readable name for the API key.
+          title: Name
+          type: string
+        org_id:
+          description: WorkOS organization ID.
+          title: Org Id
+          type: string
+        revoked_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the key was revoked (soft delete).
+          title: Revoked At
+        scopes:
+          description: List of resource scopes for this API key.
+          items:
+            $ref: '#/components/schemas/ApiKeyScope'
+          title: Scopes
+          type: array
+        sharing_group_ids:
+          description: Groups that receive default admin grants on resources created by this key.
+          items:
+            type: string
+          title: Sharing Group Ids
+          type: array
+      required:
+      - id
+      - org_id
+      - key_prefix
+      - name
+      - created_by
+      title: ApiKeyResponse
+      type: object
+    ApiKeyScopeRole:
+      description: Role that can be assigned to an API key for a scoped resource.
+      enum:
+      - discoverer
+      - viewer
+      - editor
+      - admin
+      - owner
+      - member
+      - executor
+      title: ApiKeyScopeRole
+      type: string
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

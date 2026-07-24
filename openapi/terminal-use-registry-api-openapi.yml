@@ -1,0 +1,106 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Registry API
+  version: 0.1.0
+tags:
+- name: Registry
+paths:
+  /registry/auth:
+    get:
+      description: "Get short-lived credentials for pushing images to a namespace's registry.\n\n    Each namespace has its own isolated registry repository. The token returned\n    can ONLY push images to the specified namespace's repository.\n\n    The CLI uses this endpoint to authenticate with Docker before pushing\n    agent images. Returns a token valid for approximately 1 hour.\n\n    **Usage with Docker:**\n    ```bash\n    docker login {registry_url} -u {username} -p {token}\n    docker push {registry_url}/{repository}/{agent}:{tag}\n    ```"
+      operationId: registry_auth
+      parameters:
+      - description: Target namespace slug for the image push
+        in: query
+        name: namespace
+        required: true
+        schema:
+          description: Target namespace slug for the image push
+          examples:
+          - acme
+          - my-org
+          title: Namespace
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistryAuthResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get registry credentials for pushing agent images
+      tags:
+      - Registry
+components:
+  schemas:
+    RegistryAuthResponse:
+      description: Response containing short-lived registry credentials for pushing agent images.
+      properties:
+        expires_at:
+          description: Token expiration timestamp (typically ~1 hour from issuance)
+          format: date-time
+          title: Expires At
+          type: string
+        registry_url:
+          description: Docker registry host URL (e.g., us-east4-docker.pkg.dev)
+          title: Registry Url
+          type: string
+        repository:
+          description: Repository path within the registry (e.g., project-id/agents)
+          title: Repository
+          type: string
+        token:
+          description: Short-lived OAuth2 access token for docker login
+          title: Token
+          type: string
+        username:
+          default: oauth2accesstoken
+          description: Username for docker login (always 'oauth2accesstoken' for GCP)
+          title: Username
+          type: string
+      required:
+      - registry_url
+      - repository
+      - token
+      - expires_at
+      title: RegistryAuthResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

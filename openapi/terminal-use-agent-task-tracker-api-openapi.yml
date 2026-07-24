@@ -1,0 +1,265 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Agent Task Tracker API
+  version: 0.1.0
+tags:
+- name: Agent Task Tracker
+paths:
+  /tracker:
+    get:
+      description: List agent task trackers for a task, optionally filtered by agent.
+      operationId: tracker_list
+      parameters:
+      - description: Agent ID
+        in: query
+        name: agent_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent ID
+          title: Agent Id
+      - description: Limit
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Limit
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          description: Page number
+          minimum: 1
+          title: Page Number
+          type: integer
+      - description: Field to order by
+        in: query
+        name: order_by
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Field to order by
+          title: Order By
+      - description: Order direction (asc or desc)
+        in: query
+        name: order_direction
+        required: false
+        schema:
+          default: desc
+          description: Order direction (asc or desc)
+          title: Order Direction
+          type: string
+      - description: The task ID
+        in: query
+        name: task_id
+        required: true
+        schema:
+          description: The task ID
+          title: Task Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AgentTaskTracker'
+                title: Response Tracker List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Agent Task Trackers
+      tags:
+      - Agent Task Tracker
+      x-fern-sdk-group-name:
+      - tracker
+      x-fern-sdk-method-name: list
+  /tracker/{tracker_id}:
+    get:
+      description: Get agent task tracker by tracker ID
+      operationId: tracker_retrieve
+      parameters:
+      - in: path
+        name: tracker_id
+        required: true
+        schema:
+          title: Tracker Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskTracker'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Agent Task Tracker
+      tags:
+      - Agent Task Tracker
+      x-fern-sdk-group-name:
+      - tracker
+      x-fern-sdk-method-name: retrieve
+    put:
+      description: Update agent task tracker by tracker ID
+      operationId: tracker_update
+      parameters:
+      - in: path
+        name: tracker_id
+        required: true
+        schema:
+          title: Tracker Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAgentTaskTrackerRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTaskTracker'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Agent Task Tracker
+      tags:
+      - Agent Task Tracker
+      x-fern-sdk-group-name:
+      - tracker
+      x-fern-sdk-method-name: update
+components:
+  schemas:
+    UpdateAgentTaskTrackerRequest:
+      description: Request model for updating an agent task tracker.
+      properties:
+        last_processed_event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The most recent processed event ID (omit to leave unchanged)
+          title: Last Processed Event Id
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Processing status
+          title: Status
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status reason
+          title: Status Reason
+      title: UpdateAgentTaskTrackerRequest
+      type: object
+    AgentTaskTracker:
+      properties:
+        agent_id:
+          description: The UUID of the agent
+          title: Agent Id
+          type: string
+        created_at:
+          description: When the agent task tracker was created
+          format: date-time
+          title: Created At
+          type: string
+        id:
+          description: The UUID of the agent task tracker
+          title: Id
+          type: string
+        last_processed_event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The last processed event ID
+          title: Last Processed Event Id
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Processing status
+          title: Status
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status reason
+          title: Status Reason
+        task_id:
+          description: The UUID of the task
+          title: Task Id
+          type: string
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the agent task tracker was last updated
+          title: Updated At
+      required:
+      - id
+      - agent_id
+      - task_id
+      - created_at
+      title: AgentTaskTracker
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

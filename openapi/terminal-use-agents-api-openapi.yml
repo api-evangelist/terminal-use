@@ -1,0 +1,948 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Agents API
+  version: 0.1.0
+tags:
+- name: Agents
+paths:
+  /agents:
+    get:
+      description: List all registered agents, optionally filtered by query parameters.
+      operationId: agents_list
+      parameters:
+      - description: Task ID
+        in: query
+        name: task_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Task ID
+          title: Task Id
+      - description: Filter by namespace ID
+        in: query
+        name: namespace_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by namespace ID
+          title: Namespace Id
+      - description: Limit
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          description: Limit
+          minimum: 1
+          title: Limit
+          type: integer
+      - description: Page number
+        in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          description: Page number
+          minimum: 1
+          title: Page Number
+          type: integer
+      - description: Field to order by
+        in: query
+        name: order_by
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Field to order by
+          title: Order By
+      - description: Order direction (asc or desc)
+        in: query
+        name: order_direction
+        required: false
+        schema:
+          default: desc
+          description: Order direction (asc or desc)
+          title: Order Direction
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AgentListItem'
+                title: Response Agents List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Agents
+      tags:
+      - Agents
+  /agents/deploy:
+    post:
+      description: "Deploy an agent to the platform.\n\n    Called by CLI after pushing the container image to the registry.\n    Creates or updates agent, branch, and version records.\n\n    The deployment is asynchronous - poll GET /branches/{branch_id}\n    for status updates until status is READY or FAILED.\n\n    **Flow:**\n    1. CLI builds and pushes image to registry (using /registry/auth)\n    2. CLI calls POST /agents/deploy with image details\n    3. Platform creates records and triggers K8s deployment\n    4. Container starts and calls POST /versions/register\n    5. CLI polls GET /branches/{id} for status"
+      operationId: deploy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeployResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Deploy Agent
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: deploy
+  /agents/forward/name/{namespace_slug}/{agent_name}/{path}:
+    get:
+      description: Forward a GET request to an agent by namespace and name.
+      operationId: forward_get_request_to_agent_by_name
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: path
+        required: true
+        schema:
+          title: Path
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Forward GET request to agent by name
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: forward_get_by_name
+    post:
+      description: Forward a POST request to an agent by namespace and name.
+      operationId: rpc_by_name
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - in: path
+        name: path
+        required: true
+        schema:
+          title: Path
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Forward POST request to agent by name
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: rpc_by_name
+  /agents/name/{namespace_slug}/{agent_name}:
+    delete:
+      description: Delete an agent by namespace slug and agent name.
+      operationId: agents_delete_by_name
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Agent by Name
+      tags:
+      - Agents
+    get:
+      description: Get an agent by namespace slug and agent name.
+      operationId: agents_retrieve_by_name
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Agent by Name
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: retrieve_by_name
+  /agents/{agent_id}:
+    delete:
+      description: Delete an agent by its unique ID.
+      operationId: agents_delete
+      parameters:
+      - in: path
+        name: agent_id
+        required: true
+        schema:
+          title: Agent Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Agent by ID
+      tags:
+      - Agents
+    get:
+      description: Get an agent by its unique ID.
+      operationId: agents_retrieve
+      parameters:
+      - in: path
+        name: agent_id
+        required: true
+        schema:
+          title: Agent Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Agent by ID
+      tags:
+      - Agents
+  /agents/{agent_id}/metrics:
+    get:
+      description: Get aggregated metrics for an agent over the last 24 hours. Includes task success rate, task count, error log count, and average task duration.
+      operationId: agents_retrieve_metrics
+      parameters:
+      - in: path
+        name: agent_id
+        required: true
+        schema:
+          title: Agent Id
+          type: string
+      - description: Optional branch ID filter
+        in: query
+        name: branch_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional branch ID filter
+          title: Branch Id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentMetricsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Agent Metrics
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      x-fern-sdk-method-name: retrieve_metrics
+  /agents/{namespace_slug}/{agent_name}/versions:
+    get:
+      description: "List all versions for an agent.\n\n    Optionally filter by branch name or version status.\n    Versions are ordered by deployed_at descending (most recent first)."
+      operationId: agents_list_versions
+      parameters:
+      - in: path
+        name: namespace_slug
+        required: true
+        schema:
+          title: Namespace Slug
+          type: string
+      - in: path
+        name: agent_name
+        required: true
+        schema:
+          title: Agent Name
+          type: string
+      - description: Filter by branch name (e.g., 'main', 'feature/login'). If not provided, returns versions across all branches.
+        in: query
+        name: branch
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by branch name (e.g., 'main', 'feature/login'). If not provided, returns versions across all branches.
+          title: Branch
+      - description: Filter by version status
+        in: query
+        name: status
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/VersionStatus'
+          - type: 'null'
+          description: Filter by version status
+          title: Status
+      - description: Maximum versions to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 20
+          description: Maximum versions to return
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Versions for Agent
+      tags:
+      - Agents
+      x-fern-sdk-group-name:
+      - agents
+      - versions
+      x-fern-sdk-method-name: list
+components:
+  schemas:
+    DeployResponse:
+      description: 'Immediate response from deploy request.
+
+
+        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
+      properties:
+        agent_id:
+          description: Agent ID (created or existing)
+          title: Agent Id
+          type: string
+        branch_id:
+          description: Branch ID for this git branch
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        tasks_migrated:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated from old version (if any)
+          title: Tasks Migrated
+        version_id:
+          description: New version ID
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Initial version status
+      required:
+      - agent_id
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: DeployResponse
+      type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    VersionResponse:
+      description: Full version details.
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          description: Type of ACP server (sync or async)
+        author_email:
+          description: Commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Commit author name
+          title: Author Name
+          type: string
+        branch_id:
+          description: Parent branch ID
+          title: Branch Id
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp
+          title: Created At
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        failure_diagnostics:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          description: User-facing failure diagnostics with 'title', 'description', and 'action' fields
+          title: Failure Diagnostics
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Classified failure reason when status is FAILED (e.g., 'image_pull_failed', 'crash_loop', 'scheduling_failed')
+          title: Failure Reason
+        git_branch:
+          description: Git branch name
+          title: Git Branch
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        image_expires_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When image expires (for rollback window)
+          title: Image Expires At
+        image_url:
+          description: Container image URL
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the commit had uncommitted changes
+          title: Is Dirty
+          type: boolean
+        last_rollback_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was last rolled back TO
+          title: Last Rollback At
+        replicas:
+          default: 0
+          description: Current pod count for this version
+          title: Replicas
+          type: integer
+        retired_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When version was retired
+          title: Retired At
+        rollback_count:
+          default: 0
+          description: Number of rollbacks to this version
+          title: Rollback Count
+          type: integer
+        rolled_back_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Timestamp when this version was rolled back FROM
+          title: Rolled Back At
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp
+          title: Updated At
+      required:
+      - id
+      - branch_id
+      - git_hash
+      - git_branch
+      - author_name
+      - author_email
+      - image_url
+      - status
+      - deployed_at
+      - sdk_type
+      - acp_type
+      title: VersionResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    AgentMetricsResponse:
+      description: Aggregated metrics for an agent.
+      properties:
+        avg_task_duration_seconds:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Average duration of completed/failed tasks in seconds. None if no tasks have finished in the time window.
+          examples:
+          - 12.5
+          title: Avg Task Duration Seconds
+        error_log_count_24h:
+          description: Number of ERROR/CRITICAL level logs in the last 24 hours
+          examples:
+          - 3
+          title: Error Log Count 24H
+          type: integer
+        task_count_24h:
+          description: Total number of tasks created in the last 24 hours
+          examples:
+          - 142
+          title: Task Count 24H
+          type: integer
+        task_success_rate_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Percentage of successful tasks (COMPLETED) vs failed tasks. None if no tasks have finished in the time window.
+          examples:
+          - 95.5
+          title: Task Success Rate Pct
+      required:
+      - task_count_24h
+      - error_log_count_24h
+      title: AgentMetricsResponse
+      type: object
+    AgentInputType:
+      enum:
+      - text
+      - json
+      title: AgentInputType
+      type: string
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    VersionListResponse:
+      description: Response for listing versions of a branch.
+      properties:
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID
+          title: Branch Id
+        total:
+          description: Total count
+          title: Total
+          type: integer
+        versions:
+          description: List of versions
+          items:
+            $ref: '#/components/schemas/VersionResponse'
+          title: Versions
+          type: array
+      required:
+      - versions
+      - total
+      title: VersionListResponse
+      type: object
+    AgentListItem:
+      description: 'Minimal agent shape for discovery/listing.
+
+
+        The /agents list endpoint is authorized via `discover` and must not leak
+
+        read-level fields (e.g. description, registration metadata).'
+      properties:
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status (ACTIVE/DELETED).
+      required:
+      - id
+      - namespace_id
+      - name
+      title: AgentListItem
+      type: object
+    AgentStatus:
+      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+      enum:
+      - ACTIVE
+      - DELETED
+      title: AgentStatus
+      type: string
+    Agent:
+      properties:
+        agent_input_type:
+          anyOf:
+          - $ref: '#/components/schemas/AgentInputType'
+          - type: 'null'
+          description: The type of input the agent expects.
+        created_at:
+          description: The timestamp when the agent was created
+          format: date-time
+          title: Created At
+          type: string
+        description:
+          description: The description of the action.
+          title: Description
+          type: string
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        registered_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the agent was last registered
+          title: Registered At
+        registration_metadata:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: The metadata for the agent's registration.
+          title: Registration Metadata
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The reason for the status of the action.
+          title: Status Reason
+        updated_at:
+          description: The timestamp when the agent was last updated
+          format: date-time
+          title: Updated At
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      - description
+      - created_at
+      - updated_at
+      title: Agent
+      type: object
+    DeployRequest:
+      description: 'Request model for deploying an agent.
+
+
+        Called by CLI after pushing the container image to the registry.'
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          default: async
+          description: ACP server type (sync or async)
+        agent_name:
+          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
+          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
+          title: Agent Name
+          type: string
+        are_tasks_sticky:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
+          title: Are Tasks Sticky
+        author_email:
+          description: Git commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Git commit author name
+          title: Author Name
+          type: string
+        branch:
+          description: Git branch name (e.g., 'main', 'feature/new-tool')
+          title: Branch
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent description (used when creating new agent)
+          title: Description
+        git_hash:
+          description: Git commit hash (short or full)
+          maxLength: 40
+          minLength: 7
+          title: Git Hash
+          type: string
+        git_message:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Git commit message (truncated if too long)
+          title: Git Message
+        image_url:
+          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the working directory had uncommitted changes at deploy time
+          title: Is Dirty
+          type: boolean
+        replicas:
+          default: 1
+          description: Desired replica count (1-10)
+          maximum: 10
+          minimum: 1
+          title: Replicas
+          type: integer
+        resources:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
+          title: Resources
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          default: claude_agent_sdk
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot containing the deploy source for Builder reopenability
+          title: Source Filesystem Id
+      required:
+      - agent_name
+      - branch
+      - git_hash
+      - image_url
+      - author_name
+      - author_email
+      title: DeployRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

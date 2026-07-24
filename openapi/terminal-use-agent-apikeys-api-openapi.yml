@@ -1,0 +1,382 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys API
+  version: 0.1.0
+tags:
+- name: Agent APIKeys
+paths:
+  /agent_api_keys:
+    get:
+      description: List API keys for an agent ID.
+      operationId: agent_api_keys_list
+      parameters:
+      - in: query
+        name: agent_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+      - in: query
+        name: agent_name
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          title: Limit
+          type: integer
+      - in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          title: Page Number
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AgentAPIKey'
+                title: Response Agent Api Keys List
+                type: array
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List API keys for an agent ID
+      tags:
+      - Agent APIKeys
+    post:
+      operationId: agent_api_keys_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAPIKeyRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAPIKeyResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Api Key
+      tags:
+      - Agent APIKeys
+  /agent_api_keys/name/{api_key_name}:
+    delete:
+      description: Delete API key by name.
+      operationId: agent_api_keys_name_delete
+      parameters:
+      - in: path
+        name: api_key_name
+        required: true
+        schema:
+          title: Api Key Name
+          type: string
+      - in: query
+        name: agent_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+      - in: query
+        name: agent_name
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+      - in: query
+        name: api_key_type
+        required: false
+        schema:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          default: external
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                title: Response Agent Api Keys Name Delete
+                type: string
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete API key by name
+      tags:
+      - Agent APIKeys
+  /agent_api_keys/name/{name}:
+    get:
+      description: Return named API key for the agent ID.
+      operationId: agent_api_keys_name_retrieve
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          title: Name
+          type: string
+      - in: query
+        name: agent_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Id
+      - in: query
+        name: agent_name
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+      - in: query
+        name: api_key_type
+        required: false
+        schema:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          default: external
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentAPIKey'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Return named API key for the agent ID
+      tags:
+      - Agent APIKeys
+  /agent_api_keys/{id}:
+    delete:
+      description: Delete API key by ID.
+      operationId: agent_api_keys_delete
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          title: Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                title: Response Agent Api Keys Delete
+                type: string
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete API key by ID
+      tags:
+      - Agent APIKeys
+    get:
+      description: Return API key by ID.
+      operationId: agent_api_keys_retrieve
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          title: Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentAPIKey'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Return the API key by ID
+      tags:
+      - Agent APIKeys
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    AgentAPIKey:
+      properties:
+        agent_id:
+          description: The UUID of the agent
+          title: Agent Id
+          type: string
+        api_key_type:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          description: The type of the agent API key (either internal or external)
+        created_at:
+          description: When the agent API key was created
+          format: date-time
+          title: Created At
+          type: string
+        id:
+          description: The unique identifier of the agent API key.
+          title: Id
+          type: string
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The optional name of the agent API key.
+          title: Name
+      required:
+      - id
+      - agent_id
+      - created_at
+      - name
+      - api_key_type
+      title: AgentAPIKey
+      type: object
+    AgentAPIKeyType:
+      enum:
+      - internal
+      - external
+      - github
+      - slack
+      title: AgentAPIKeyType
+      type: string
+    CreateAPIKeyRequest:
+      properties:
+        agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The UUID of the agent
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the agent - if not provided, the agent_id must be set.
+          title: Agent Name
+        api_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optionally provide the API key value - if not set, one will be generated.
+          title: Api Key
+        api_key_type:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          default: external
+          description: The type of the agent API key (external by default).
+        name:
+          description: The name of the agent's API key.
+          title: Name
+          type: string
+      required:
+      - name
+      title: CreateAPIKeyRequest
+      type: object
+    CreateAPIKeyResponse:
+      properties:
+        agent_id:
+          description: The UUID of the agent
+          title: Agent Id
+          type: string
+        api_key:
+          description: The value of the newly created API key.
+          title: Api Key
+          type: string
+        api_key_type:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          description: The type of the created agent API key (external).
+        created_at:
+          description: When the agent API key was created
+          format: date-time
+          title: Created At
+          type: string
+        id:
+          description: The unique identifier of the agent API key.
+          title: Id
+          type: string
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The optional name of the agent API key.
+          title: Name
+      required:
+      - id
+      - agent_id
+      - created_at
+      - name
+      - api_key_type
+      - api_key
+      title: CreateAPIKeyResponse
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

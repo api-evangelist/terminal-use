@@ -1,0 +1,165 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Search API
+  version: 0.1.0
+tags:
+- name: Search
+paths:
+  /search:
+    get:
+      description: "Unified search endpoint for agents, tasks, and workspaces.\n\n    Searches by name using case-insensitive matching.\n    Results are sorted by relevance (exact matches first, then prefix matches, then contains)."
+      operationId: search
+      parameters:
+      - description: Search query (minimum 2 characters)
+        in: query
+        name: q
+        required: true
+        schema:
+          description: Search query (minimum 2 characters)
+          minLength: 2
+          title: Q
+          type: string
+      - description: Comma-separated list of types to search (agents,tasks,workspaces). If not provided, searches all types.
+        in: query
+        name: types
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated list of types to search (agents,tasks,workspaces). If not provided, searches all types.
+          title: Types
+      - description: Optional namespace ID to filter results
+        in: query
+        name: namespace_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional namespace ID to filter results
+          title: Namespace Id
+      - description: Maximum number of results per type (max 50)
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          description: Maximum number of results per type (max 50)
+          maximum: 50
+          minimum: 1
+          title: Limit
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Search Resources
+      tags:
+      - Search
+components:
+  schemas:
+    SearchResultType:
+      description: Types of resources that can be returned in search results.
+      enum:
+      - agent
+      - task
+      - workspace
+      title: SearchResultType
+      type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SearchResponse:
+      description: Response from the search endpoint.
+      properties:
+        query:
+          description: The search query that was used
+          title: Query
+          type: string
+        results:
+          description: List of search results
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+          title: Results
+          type: array
+        total:
+          description: Total number of results across all types
+          title: Total
+          type: integer
+      required:
+      - total
+      - query
+      title: SearchResponse
+      type: object
+    SearchResultItem:
+      description: A single search result item.
+      properties:
+        id:
+          description: The unique identifier
+          title: Id
+          type: string
+        name:
+          description: The display name
+          title: Name
+          type: string
+        namespace_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The namespace this resource belongs to
+          title: Namespace Id
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The current status
+          title: Status
+        type:
+          $ref: '#/components/schemas/SearchResultType'
+          description: The type of resource
+      required:
+      - type
+      - id
+      - name
+      title: SearchResultItem
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

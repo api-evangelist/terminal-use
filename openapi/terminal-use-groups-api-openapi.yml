@@ -1,0 +1,672 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys Groups API
+  version: 0.1.0
+tags:
+- name: Groups
+paths:
+  /groups:
+    get:
+      description: List groups visible to the current principal.
+      operationId: groups_list
+      parameters:
+      - description: Optional owner org filter.
+        in: query
+        name: owner_org_id
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional owner org filter.
+          title: Owner Org Id
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          maximum: 200
+          minimum: 1
+          title: Limit
+          type: integer
+      - in: query
+        name: page_number
+        required: false
+        schema:
+          default: 1
+          minimum: 1
+          title: Page Number
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupListResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Groups
+      tags:
+      - Groups
+    post:
+      description: Create an org-owned access group.
+      operationId: groups_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccessGroupRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroup'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Create Group
+      tags:
+      - Groups
+  /groups/{group_id}:
+    delete:
+      description: Delete an access group.
+      operationId: groups_delete
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Delete Group
+      tags:
+      - Groups
+    get:
+      description: Get group details.
+      operationId: groups_retrieve
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroup'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Get Group
+      tags:
+      - Groups
+    patch:
+      description: Update group metadata.
+      operationId: groups_update
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccessGroupRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroup'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Update Group
+      tags:
+      - Groups
+  /groups/{group_id}/managers:
+    get:
+      operationId: groups_managers_list
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupManagersResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Group Managers
+      tags:
+      - Groups
+  /groups/{group_id}/managers/{member_id}:
+    delete:
+      operationId: groups_managers_delete
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Remove Group Manager
+      tags:
+      - Groups
+    put:
+      operationId: groups_managers_upsert
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupManager'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Add Group Manager
+      tags:
+      - Groups
+  /groups/{group_id}/members:
+    get:
+      operationId: groups_members_list
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupMembersResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Group Members
+      tags:
+      - Groups
+  /groups/{group_id}/members/{member_id}:
+    delete:
+      operationId: groups_members_delete
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Remove Group Member
+      tags:
+      - Groups
+    put:
+      operationId: groups_members_upsert
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: member_id
+        required: true
+        schema:
+          title: Member Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupMember'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Add Group Member
+      tags:
+      - Groups
+  /groups/{group_id}/visible-orgs:
+    get:
+      operationId: groups_visible_orgs_list
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupVisibleOrgsResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: List Group Visible Orgs
+      tags:
+      - Groups
+  /groups/{group_id}/visible-orgs/{org_id}:
+    delete:
+      operationId: groups_visible_orgs_delete
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: org_id
+        required: true
+        schema:
+          title: Org Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Remove Group Visible Org
+      tags:
+      - Groups
+    put:
+      operationId: groups_visible_orgs_upsert
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          title: Group Id
+          type: string
+      - in: path
+        name: org_id
+        required: true
+        schema:
+          title: Org Id
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessGroupVisibleOrg'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Add Group Visible Org
+      tags:
+      - Groups
+components:
+  schemas:
+    UpdateAccessGroupRequest:
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional group description.
+          title: Description
+      title: UpdateAccessGroupRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    AccessGroupMember:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Group membership row id.
+          title: Id
+          type: string
+        member_id:
+          description: WorkOS member id.
+          title: Member Id
+          type: string
+      required:
+      - id
+      - group_id
+      - member_id
+      title: AccessGroupMember
+      type: object
+    AccessGroupManagersResponse:
+      properties:
+        managers:
+          items:
+            $ref: '#/components/schemas/AccessGroupManager'
+          title: Managers
+          type: array
+      title: AccessGroupManagersResponse
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    AccessGroupVisibleOrg:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Visible org row id.
+          title: Id
+          type: string
+        org_id:
+          description: Organization id with visibility.
+          title: Org Id
+          type: string
+      required:
+      - id
+      - group_id
+      - org_id
+      title: AccessGroupVisibleOrg
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    AccessGroupListResponse:
+      properties:
+        groups:
+          items:
+            $ref: '#/components/schemas/AccessGroup'
+          title: Groups
+          type: array
+      title: AccessGroupListResponse
+      type: object
+    CreateAccessGroupRequest:
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional group description.
+          title: Description
+        name:
+          description: Group name (unique within owner org).
+          maxLength: 255
+          minLength: 1
+          title: Name
+          type: string
+      required:
+      - name
+      title: CreateAccessGroupRequest
+      type: object
+    AccessGroupVisibleOrgsResponse:
+      properties:
+        visible_orgs:
+          items:
+            $ref: '#/components/schemas/AccessGroupVisibleOrg'
+          title: Visible Orgs
+          type: array
+      title: AccessGroupVisibleOrgsResponse
+      type: object
+    AccessGroupMembersResponse:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/AccessGroupMember'
+          title: Members
+          type: array
+      title: AccessGroupMembersResponse
+      type: object
+    AccessGroupManager:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Group manager row id.
+          title: Id
+          type: string
+        member_id:
+          description: WorkOS member id.
+          title: Member Id
+          type: string
+      required:
+      - id
+      - group_id
+      - member_id
+      title: AccessGroupManager
+      type: object
+    AccessGroup:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        created_by:
+          description: member_id of the creator.
+          title: Created By
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional group description.
+          title: Description
+        id:
+          description: Access group id.
+          title: Id
+          type: string
+        name:
+          description: Group name.
+          title: Name
+          type: string
+        owner_org_id:
+          description: Owner organization id.
+          title: Owner Org Id
+          type: string
+        updated_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Last update timestamp.
+          title: Updated At
+      required:
+      - id
+      - owner_org_id
+      - name
+      - created_by
+      title: AccessGroup
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key

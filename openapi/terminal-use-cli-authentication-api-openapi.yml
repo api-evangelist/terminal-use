@@ -1,0 +1,193 @@
+openapi: 3.1.0
+info:
+  title: Sb0 Agent APIKeys CLI Authentication API
+  version: 0.1.0
+tags:
+- name: CLI Authentication
+paths:
+  /v1/auth/cli/refresh:
+    post:
+      description: 'Refresh an expired session JWT using a refresh token.
+
+
+        Note: Refresh tokens are single-use. The response contains a new refresh_token
+
+        that must replace the old one for future refresh operations.'
+      operationId: refresh_cli_token_v1_auth_cli_refresh_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CLIRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CLIRefreshResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Refresh Cli Token
+      tags:
+      - CLI Authentication
+  /v1/auth/cli/token:
+    post:
+      description: Exchange authorization code for session JWT using PKCE.
+      operationId: exchange_cli_token_v1_auth_cli_token_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CLITokenRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CLITokenResponse'
+          description: Successful Response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Exchange Cli Token
+      tags:
+      - CLI Authentication
+components:
+  schemas:
+    CLIRefreshRequest:
+      description: Request body for CLI token refresh.
+      properties:
+        refresh_token:
+          description: Refresh token from previous authentication
+          title: Refresh Token
+          type: string
+      required:
+      - refresh_token
+      title: CLIRefreshRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    CLITokenResponse:
+      description: Response for CLI token exchange.
+      properties:
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: User email
+          title: Email
+        expires_in:
+          description: Token expiration in seconds
+          title: Expires In
+          type: integer
+        member_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: User ID from WorkOS
+          title: Member Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: User display name
+          title: Name
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization ID (if applicable)
+          title: Org Id
+        refresh_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Refresh token for obtaining new access tokens
+          title: Refresh Token
+        session_jwt:
+          description: Session JWT (WorkOS access token)
+          title: Session Jwt
+          type: string
+      required:
+      - session_jwt
+      - expires_in
+      title: CLITokenResponse
+      type: object
+    CLIRefreshResponse:
+      description: Response for CLI token refresh.
+      properties:
+        expires_in:
+          description: Token expiration in seconds
+          title: Expires In
+          type: integer
+        refresh_token:
+          description: New refresh token (replaces the old one)
+          title: Refresh Token
+          type: string
+        session_jwt:
+          description: New session JWT (WorkOS access token)
+          title: Session Jwt
+          type: string
+      required:
+      - session_jwt
+      - refresh_token
+      - expires_in
+      title: CLIRefreshResponse
+      type: object
+    CLITokenRequest:
+      description: Request body for CLI token exchange with PKCE.
+      properties:
+        code:
+          description: Authorization code from OAuth callback
+          title: Code
+          type: string
+        code_verifier:
+          description: PKCE code verifier
+          title: Code Verifier
+          type: string
+      required:
+      - code
+      - code_verifier
+      title: CLITokenRequest
+      type: object
+x-fern-idempotency-headers:
+- header: Idempotency-Key
+  name: idempotency_key
