@@ -1,0 +1,56 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.terminaluse.com + openapi/terminal-use-openapi-original.json
+summary: >-
+  Cross-cutting request/response conventions for the Terminal Use API, captured
+  from the docs and derived from the OpenAPI (openapi 3.1.0, 151 operations).
+authentication:
+  style: bearer
+  header: "Authorization: Bearer tu_..."
+  env_var: TERMINALUSE_API_KEY
+  ref: authentication/terminal-use-authentication.yml
+idempotency:
+  supported: true
+  mechanism: Idempotency-Key request header
+  scope: >-
+    Documented on file-upload operations (e.g. filesystems_upload_file) to make
+    large/binary uploads safely retryable. Derived from an `Idempotency-Key`
+    header parameter present in the OpenAPI.
+  evidence: openapi/terminal-use-openapi-original.json#/paths (Idempotency-Key parameter on filesystems_upload_file)
+pagination:
+  style: mixed (limit/offset with cursor support on some collections)
+  params:
+    - limit          # page size (most list endpoints)
+    - offset
+    - cursor
+    - after
+    - page_number
+    - page_size
+  ordering_params: [order_by, order_direction]
+  note: >-
+    Most list operations accept a `limit`; some also expose offset, cursor, or
+    page_number for paging. Derived from OpenAPI parameters.
+error_envelope:
+  format: fastapi-validation
+  primary_status: 422
+  shape: '{ "detail": [ { "loc": [...], "msg": "string", "type": "string" } ] }'
+  schema: HTTPValidationError -> ValidationError
+  ref: errors/terminal-use-problem-types.yml
+retries:
+  policy: SDK auto-retries on 408, 429, and 5xx (default 2 retries; configurable via max_retries / maxRetries)
+  source: https://docs.terminaluse.com/api-reference/errors
+streaming:
+  mechanism: Server-Sent Events (SSE)
+  endpoint: GET /tasks/{id}/stream (tasks_stream)
+  usage: Stream task messages/events back to a UI; Vercel AI SDK provider available.
+versioning:
+  api_version: '0.1.0'
+  scheme: agent deployment versioning (each `tu deploy` creates a new Version; branches point at the active version; rollback supported)
+  ref: lifecycle/terminal-use-lifecycle.yml
+webhooks:
+  supported: true
+  verification: webhook keys (inbound delivery verification)
+  ref: asyncapi/terminal-use-webhooks.yml
+resource_model:
+  primitives: [Namespace, Project, Filesystem, Agent, Environment, Branch, Version, Task, Event, Message, State]
+  ref: data-model/terminal-use-data-model.yml

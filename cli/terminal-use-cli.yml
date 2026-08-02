@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.terminaluse.com/api-reference/cli
+name: tu
+summary: >-
+  First-party CLI for Terminal Use. Scaffolds, builds, deploys, and operates
+  background agents; manages tasks, filesystems, environment variables, and
+  webhook keys from local workflows. Not a complete wrapper around every HTTP
+  endpoint — CLI-first surface for the build/deploy and run/interact loops.
+distributed_with: terminaluse (PyPI)
+install:
+- method: uv
+  command: uv tool install terminaluse
+  note: If `tu` is not found, run `uv tool update-shell` and restart your shell.
+global_flags:
+- flag: "--version"
+  short: "-v"
+  meaning: Show CLI version
+- flag: "--debug"
+  short: "-d"
+  meaning: Enable debug output
+- flag: "--json"
+  short: "-j"
+  meaning: Output CLI errors as JSON
+- flag: "--help"
+  short: "-h"
+  meaning: Show help
+authentication:
+  commands:
+  - tu login    # authenticate via browser
+  - tu logout   # clear stored credentials
+  - tu whoami   # show current auth state
+  env_var: TERMINALUSE_API_KEY
+commands:
+- command: tu init
+  purpose: Scaffold a new agent project
+  flags: ["--namespace", "--name", "--description", "--template <default|temporal>", "--no-uv", "--sdk-type <claude_agent_sdk|codex_agent_sdk>"]
+- command: tu deploy
+  purpose: Build and deploy an agent (creates a new version, activates it on the resolved branch)
+  flags: ["--config", "--tag", "--branch", "--skip-build", "--no-cache", "--yes", "--verbose", "--detach"]
+- command: tu ls
+  purpose: List recent versions or branch events
+- command: tu rollback
+  purpose: Roll a branch back to an earlier version
+  flags: ["--branch", "--version", "--agent", "--config", "--yes", "--json"]
+- command: tu logs
+  purpose: View agent logs
+  flags: ["--task", "--level", "--source", "--since", "--until", "--version", "--limit", "--follow"]
+- command: tu agents
+  purpose: Manage agents
+  subcommands: [ls, get, delete, cleanup_workflows]
+- command: tu tasks
+  purpose: Manage tasks
+  subcommands: [create, send, ls, get, pull, delete, cleanup, migrate]
+- command: tu projects
+  purpose: Manage projects
+  subcommands: [ls, get, create, update, delete]
+- command: tu namespaces
+  purpose: List namespaces
+  subcommands: [ls]
+- command: tu env
+  purpose: Manage environment variables / secrets
+  subcommands: [add, ls, get, rm, pull, import]
+- command: tu fs
+  purpose: Manage filesystems
+  subcommands: [create, ls, get, push, pull]
+- command: tu keys
+  purpose: Manage webhook keys (not API auth keys)
+  subcommands: [instructions, add, ls, rm]
+key_flows:
+- name: Build and deploy
+  steps: ["tu init", "write agent code (Python)", "tu deploy"]
+- name: Run and interact
+  steps: ["tu fs create -p <project-id> -n my-files", "tu tasks create -a <namespace/agent> -p <project-id> -m 'hello'", "tu tasks send <task-id> -m 'follow up'", "tu tasks pull <task-id> --out ./output"]

@@ -1,22 +1,505 @@
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v1
 aid: terminal-use
 name: Terminal Use
-description: Terminal Use is a company surfaced as a portfolio company of y-combinator and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Terminal Use is a deployment and orchestration platform for background AI
+  agents — "Vercel for background agents." It gives agents that need long-lived
+  task state, persistent files at /workspace, and production deployment
+  primitives (versions, rollback, logs, environment secrets) a single runtime
+  model and one deploy flow. Teams write agent code in Python with the
+  AgentServer runtime, ship it with the tu CLI, then call deployed agents from
+  their own app with the Python or TypeScript SDKs (including a Vercel AI SDK
+  provider for streaming chat UIs). The platform is model- and framework-
+  agnostic — run the Claude Agent SDK, Codex SDK, or your own framework inside
+  sandboxed compute with forkable, shareable filesystems. The HTTP API exposes
+  namespaces, projects, agents, branches, versions, tasks, events, messages,
+  state, filesystems, schedules, secrets, API keys, and webhook keys. Terminal
+  Use is a Y Combinator (W26) company founded by Vivek Raja, Filip Balucha, and
+  Stavros Filosidis.
 url: https://raw.githubusercontent.com/api-evangelist/terminal-use/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.terminaluse.com/icon.svg
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: portfolio-lead-enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Agents
+- AI Agents
+- Background Agents
+- Agent Infrastructure
+- Deployment
+- Orchestration
+- Sandboxed Compute
+- Filesystems
+- Developer Tools
+- SDK
+- CLI
+apis:
+- aid: terminal-use:terminal-use-agent-apikeys-api
+  name: Terminal Use Agent APIKeys API
+  description: The Agent APIKeys API from Terminal Use — 4 operation(s) for agent apikeys.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Agent APIKeys
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-agent-apikeys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-agent-task-tracker-api
+  name: Terminal Use Agent Task Tracker API
+  description: The Agent Task Tracker API from Terminal Use — 2 operation(s) for agent task tracker.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Agent Task Tracker
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-agent-task-tracker-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-agents-api
+  name: Terminal Use Agents API
+  description: The Agents API from Terminal Use — 7 operation(s) for agents.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-agents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-api-keys-api
+  name: Terminal Use API Keys API
+  description: The API Keys API from Terminal Use — 3 operation(s) for api keys.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-authentication-api
+  name: Terminal Use Authentication API
+  description: The Authentication API from Terminal Use — 1 operation(s) for authentication.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-branch-events-api
+  name: Terminal Use Branch Events API
+  description: The Branch Events API from Terminal Use — 1 operation(s) for branch events.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Branch Events
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-branch-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-branches-api
+  name: Terminal Use Branches API
+  description: The Branches API from Terminal Use — 10 operation(s) for branches.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Branches
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-branches-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-builds-api
+  name: Terminal Use Builds API
+  description: The Builds API from Terminal Use — 3 operation(s) for builds.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Builds
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-builds-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-cli-authentication-api
+  name: Terminal Use CLI Authentication API
+  description: The CLI Authentication API from Terminal Use — 2 operation(s) for cli authentication.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - CLI Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-cli-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-environments-api
+  name: Terminal Use Environments API
+  description: The Environments API from Terminal Use — 4 operation(s) for environments.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Environments
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-environments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-events-api
+  name: Terminal Use Events API
+  description: The Events API from Terminal Use — 2 operation(s) for events.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-filesystems-api
+  name: Terminal Use Filesystems API
+  description: The Filesystems API from Terminal Use — 9 operation(s) for filesystems.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Filesystems
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-filesystems-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-groups-api
+  name: Terminal Use Groups API
+  description: The Groups API from Terminal Use — 8 operation(s) for groups.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-groups-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-logs-api
+  name: Terminal Use Logs API
+  description: The Logs API from Terminal Use — 3 operation(s) for logs.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-logs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-messages-v2-api
+  name: Terminal Use Messages v2 API
+  description: The Messages v2 API from Terminal Use — 2 operation(s) for messages v2.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Messages v2
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-messages-v2-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-namespaces-api
+  name: Terminal Use Namespaces API
+  description: The Namespaces API from Terminal Use — 5 operation(s) for namespaces.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Namespaces
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-namespaces-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-oauth-api
+  name: Terminal Use OAuth API
+  description: The OAuth API from Terminal Use — 2 operation(s) for oauth.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-oauth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-organizations-api
+  name: Terminal Use Organizations API
+  description: The Organizations API from Terminal Use — 7 operation(s) for organizations.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-projects-api
+  name: Terminal Use Projects API
+  description: The Projects API from Terminal Use — 4 operation(s) for projects.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-raw-events-api
+  name: Terminal Use Raw Events API
+  description: The Raw Events API from Terminal Use — 1 operation(s) for raw events.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Raw Events
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-raw-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-registry-api
+  name: Terminal Use Registry API
+  description: The Registry API from Terminal Use — 1 operation(s) for registry.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Registry
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-registry-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-schedules-api
+  name: Terminal Use Schedules API
+  description: The Schedules API from Terminal Use — 5 operation(s) for schedules.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-schedules-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-search-api
+  name: Terminal Use Search API
+  description: The Search API from Terminal Use — 1 operation(s) for search.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-search-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-secrets-api
+  name: Terminal Use Secrets API
+  description: The Secrets API from Terminal Use — 4 operation(s) for secrets.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-secrets-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-states-api
+  name: Terminal Use States API
+  description: The States API from Terminal Use — 2 operation(s) for states.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - States
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-states-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-tasks-api
+  name: Terminal Use Tasks API
+  description: The Tasks API from Terminal Use — 14 operation(s) for tasks.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-tasks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-version-events-api
+  name: Terminal Use Version Events API
+  description: The Version Events API from Terminal Use — 1 operation(s) for version events.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Version Events
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-version-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
+- aid: terminal-use:terminal-use-versions-api
+  name: Terminal Use Versions API
+  description: The Versions API from Terminal Use — 6 operation(s) for versions.
+  humanURL: https://docs.terminaluse.com
+  baseURL: https://api.terminaluse.com
+  tags:
+  - Versions
+  properties:
+  - type: OpenAPI
+    url: openapi/terminal-use-versions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.terminaluse.com
+  - type: APIReference
+    url: https://docs.terminaluse.com/api-reference/authentication
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: AgenticAccess
+  url: agentic-access/terminal-use-agentic-access.yml
+- type: Website
+  url: https://www.terminaluse.com
+- type: Portal
+  url: https://app.terminaluse.com
+- type: Documentation
+  url: https://docs.terminaluse.com
+- type: APIReference
+  url: https://docs.terminaluse.com/api-reference/authentication
+- type: GettingStarted
+  url: https://docs.terminaluse.com/introduction/quickstart
+- type: GitHubOrganization
+  url: https://github.com/terminal-use
+- type: SignUp
+  url: https://app.terminaluse.com
+- type: Authentication
+  url: authentication/terminal-use-authentication.yml
+- type: Packages
+  url: packages/terminal-use-packages.yml
+- type: SDKs
+  url: packages/terminal-use-packages.yml
+- type: CLI
+  url: cli/terminal-use-cli.yml
+- type: LLMsTxt
+  url: llms/terminal-use-llms.txt
+- type: Conventions
+  url: conventions/terminal-use-conventions.yml
+- type: Idempotency
+  url: conventions/terminal-use-conventions.yml
+- type: ErrorCatalog
+  url: errors/terminal-use-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/terminal-use-lifecycle.yml
+- type: Conformance
+  url: conformance/terminal-use-conformance.yml
+- type: DataModel
+  url: data-model/terminal-use-data-model.yml
+- type: MCPServer
+  url: mcp/terminal-use-mcp.yml
+- type: Overlay
+  url: overlays/terminal-use-openapi-overlay.yaml
+- type: Webhooks
+  url: asyncapi/terminal-use-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: DomainSecurity
+  url: security/terminal-use-domain-security.yml

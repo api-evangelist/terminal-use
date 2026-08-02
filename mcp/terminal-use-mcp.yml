@@ -1,0 +1,51 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/terminal-use-openapi-original.json
+note: >-
+  No official hosted/remote Terminal Use MCP server was found (searched npm
+  @terminaluse scope, the npm registry, and the docs). This is a DERIVED
+  candidate tool list — a starting point mapping marquee API operations to MCP
+  tools, not a published server. The `tu` CLI is the primary agent-facing
+  surface today.
+server:
+  name: terminal-use
+  transport: http
+  url: null
+tools:
+- name: list_agents
+  description: List deployed agents.
+  source_operation: openapi/terminal-use-openapi-original.json#agents_list
+- name: get_agent
+  description: Retrieve an agent by id or name.
+  source_operation: openapi/terminal-use-openapi-original.json#agents_retrieve
+- name: deploy_agent
+  description: Build and deploy an agent version.
+  source_operation: openapi/terminal-use-openapi-original.json#deploy
+- name: create_task
+  description: Create a task against a deployed agent.
+  source_operation: openapi/terminal-use-openapi-original.json#tasks_create
+- name: send_task_event
+  description: Send an event (input) to a running task.
+  source_operation: openapi/terminal-use-openapi-original.json#tasks_send_event
+- name: stream_task
+  description: Stream a task's messages/events over SSE.
+  source_operation: openapi/terminal-use-openapi-original.json#tasks_stream
+- name: get_task
+  description: Retrieve a task by id.
+  source_operation: openapi/terminal-use-openapi-original.json#tasks_retrieve
+- name: cancel_task
+  description: Cancel a running task.
+  source_operation: openapi/terminal-use-openapi-original.json#tasks_cancel
+- name: list_messages
+  description: List messages emitted for a task.
+  source_operation: openapi/terminal-use-openapi-original.json#messages_v2_list
+- name: create_filesystem
+  description: Create a persistent filesystem in a project.
+  source_operation: openapi/terminal-use-openapi-original.json#filesystems_create
+- name: list_filesystems
+  description: List filesystems.
+  source_operation: openapi/terminal-use-openapi-original.json#filesystems_list
+- name: get_task_state
+  description: Retrieve per-task persisted state.
+  source_operation: openapi/terminal-use-openapi-original.json#states_retrieve

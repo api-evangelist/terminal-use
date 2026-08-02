@@ -1,0 +1,20 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/terminal-use-openapi-original.json + https://docs.terminaluse.com
+note: >-
+  Agent Skills generated from the Terminal Use OpenAPI (operationIds verified in
+  the spec) and the documented conventions. No provider-published skills or
+  AGENTS.md were found.
+skills:
+- file: terminal-use-run-and-stream-task.md
+  name: Run a task against an agent and stream results
+  api: openapi/terminal-use-openapi-original.json
+  operations: [filesystems_create, tasks_create, tasks_send_event, tasks_stream, messages_v2_list, states_retrieve]
+- file: terminal-use-deploy-and-rollback-agent.md
+  name: Deploy an agent and roll back a bad version
+  api: openapi/terminal-use-openapi-original.json
+  operations: [deploy, agents_retrieve, agents_list_versions, branches_retrieve, branches_rollback]
+- file: terminal-use-provision-namespace-project-key.md
+  name: Provision a namespace, project, and API key
+  api: openapi/terminal-use-openapi-original.json
+  operations: [namespaces_check_slug_availability, namespaces_create, projects_create, api_keys_create, api_keys_update_scopes]

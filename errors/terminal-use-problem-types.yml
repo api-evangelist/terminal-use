@@ -1,0 +1,56 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/terminal-use-openapi-original.json + https://docs.terminaluse.com/api-reference/errors
+format: fastapi-validation
+envelope:
+  media_type: application/json
+  shape: '{ "detail": [ { "loc": ["body","field"], "msg": "…", "type": "…" } ] }'
+  schema: HTTPValidationError
+  item_schema: ValidationError (loc[], msg, type)
+notes: >-
+  The API is FastAPI-generated (spec title "Sb0 API"). Nearly every operation
+  documents a 422 Unprocessable Entity validation response; a handful of
+  operations document additional 4xx conditions. The SDK surfaces 422 as
+  UnprocessableEntityError (Python) / TerminalUseError with statusCode (TS), and
+  auto-retries 408/429/5xx.
+problems:
+- status: 422
+  title: Unprocessable Entity (validation error)
+  description: Request failed schema/parameter validation; `detail[]` lists each offending location, message, and type.
+  occurrences: 146
+  sdk_exception: UnprocessableEntityError
+- status: 400
+  title: Bad Request
+  description: Malformed request.
+  occurrences: 1
+- status: 404
+  title: Not Found
+  description: Referenced resource does not exist.
+  occurrences: 1
+- status: 409
+  title: Conflict
+  description: Resource state conflict (e.g. slug/name already in use).
+  occurrences: 1
+- status: 412
+  title: Precondition Failed
+  description: A required precondition on the request was not met.
+  occurrences: 1
+- status: 428
+  title: Precondition Required
+  description: The request must be conditional; a required precondition header was missing.
+  occurrences: 1
+- status: 408
+  title: Request Timeout
+  description: Client request timed out; SDK auto-retries.
+  retryable: true
+  source: docs
+- status: 429
+  title: Too Many Requests
+  description: Rate limited; SDK auto-retries with backoff.
+  retryable: true
+  source: docs
+- status: 5xx
+  title: Server Error
+  description: Upstream/server error; SDK auto-retries.
+  retryable: true
+  source: docs

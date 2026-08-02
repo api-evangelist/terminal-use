@@ -1,0 +1,33 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.terminaluse.com/concepts/deployments + openapi/terminal-use-openapi-original.json
+versioning:
+  api_spec_version: '0.1.0'
+  scheme: deployment-versioning
+  model: >-
+    Terminal Use versions the deployed agent, not the HTTP API path. Each
+    `tu deploy` creates a new immutable Version (one deployable build). Branches
+    are deployment slots that point at the current active version within an
+    Environment (e.g. production, preview). Tasks are created against a specific
+    version.
+  docs: https://docs.terminaluse.com/concepts/deployments
+rollback:
+  supported: true
+  mechanism: >-
+    Roll a branch back to an earlier version via `tu rollback` or the API
+    (branches_rollback / agents_branches_rollback / branches_redeploy).
+  operations: [branches_rollback, agents_branches_rollback, branches_redeploy]
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No public deprecation policy or RFC 8594 Sunset/Deprecation header support found.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+notes: >-
+  No public status page, SLA, or changelog page was found as of this pass
+  (docs index at docs.terminaluse.com/llms.txt lists no changelog). The
+  provider is early-stage (Y Combinator W26); StatusPage and Deprecation
+  pointers are intentionally omitted because neither surface is published.

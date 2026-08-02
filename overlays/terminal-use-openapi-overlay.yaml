@@ -1,0 +1,30 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Terminal Use
+  version: 1.0.0
+extends: openapi/terminal-use-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: terminal-use
+    x-apievangelist-base-url: https://api.terminaluse.com
+    x-apievangelist-notes: >-
+      Terminal Use agent deployment platform. Bearer-token (tu_...) auth via
+      Authorization header / TERMINALUSE_API_KEY. The published spec declares no
+      components.securitySchemes; auth is documented at
+      https://docs.terminaluse.com/api-reference/authentication.
+- target: $.info
+  update:
+    x-apievangelist-auth:
+      type: http
+      scheme: bearer
+      env_var: TERMINALUSE_API_KEY
+    x-apievangelist-conventions: conventions/terminal-use-conventions.yml
+    x-apievangelist-errors: errors/terminal-use-problem-types.yml
+    x-apievangelist-idempotency:
+      supported: true
+      header: Idempotency-Key
+- target: $.servers
+  update:
+  - url: https://api.terminaluse.com
+    description: Production (added by API Evangelist; original spec omits servers[]).

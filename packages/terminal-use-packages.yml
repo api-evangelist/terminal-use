@@ -1,0 +1,44 @@
+generated: '2026-07-21'
+method: searched
+source: npm registry, PyPI, and docs.terminaluse.com
+packages:
+- language: python
+  registry: pypi
+  name: terminaluse
+  version: 0.35.0
+  url: https://pypi.org/project/terminaluse/
+  install: pip install terminaluse
+  summary: >-
+    Terminal Use Python SDK. Provides the app-side client (TerminalUse) for
+    calling deployed agents and managing resources, the agent runtime library
+    (terminaluse.lib / AgentServer / adk), and bundles the `tu` CLI as a console
+    entry point.
+  repository: https://github.com/terminal-use/monorepo
+  official: true
+- language: javascript
+  registry: npm
+  name: "@terminaluse/sdk"
+  version: 0.8.0
+  url: https://www.npmjs.com/package/@terminaluse/sdk
+  install: npm install @terminaluse/sdk
+  summary: >-
+    Terminal Use TypeScript client SDK (TerminalUseClient) for calling deployed
+    agents and managing resources from an app or backend. Bearer-auth; supports
+    configurable base URL and automatic retries.
+  repository: https://github.com/terminal-use/monorepo
+  official: true
+- language: javascript
+  registry: npm
+  name: "@terminaluse/vercel-ai-sdk-provider"
+  url: https://www.npmjs.com/package/@terminaluse/vercel-ai-sdk-provider
+  install: npm install @terminaluse/vercel-ai-sdk-provider
+  summary: >-
+    Vercel AI SDK provider for Terminal Use agents — build streaming chat
+    interfaces (React) backed by deployed Terminal Use agents.
+  repository: https://github.com/terminal-use/monorepo
+  official: true
+notes: >-
+  The `tu` CLI is distributed inside the `terminaluse` PyPI package (recommended
+  install: `uv tool install terminaluse`); its command surface is catalogued in
+  cli/terminal-use-cli.yml. No first-party libraries were found on Maven Central,
+  NuGet, pkg.go.dev, RubyGems, Packagist, or crates.io as of this pass.

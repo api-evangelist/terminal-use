@@ -1,0 +1,88 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/terminal-use-openapi-original.json + https://docs.terminaluse.com/concepts/core-model
+summary: >-
+  Entity-relationship graph for the Terminal Use resource model, derived from
+  OpenAPI schema id-reference fields and the documented core model. Namespaces
+  are the top-level isolation boundary; agents deploy into versions on branches;
+  tasks run against a version with an optional filesystem and carry events,
+  messages, and state.
+entities:
+- name: Namespace
+  description: Isolation boundary for compute and storage.
+  id_fields: [owner_org_id]
+- name: Project
+  description: Collaboration/permission boundary for filesystems.
+  id_fields: [namespace_id]
+- name: Filesystem
+  description: Persistent files mounted into tasks at /workspace; forkable and shareable.
+- name: Agent
+  description: A deployed Python runtime; each deploy creates a new version.
+  id_fields: [namespace_id]
+- name: Environment
+  description: Named deployment policy (e.g. production, preview).
+- name: Branch
+  description: Deployment slot pointing at the current active version.
+- name: Version
+  description: One deployable build of an agent.
+- name: Task
+  description: One running conversation/unit of work against an agent version.
+  id_fields: [namespace_id, filesystem_id, current_version_id, created_version_id]
+- name: Event
+  description: Input sent to a task.
+  id_fields: [agent_id, task_id, sequence_id]
+- name: Message
+  description: Output emitted by the agent for a task.
+- name: State
+  description: Per-task persisted JSON for continuity across turns.
+  id_fields: [agent_id, task_id]
+relationships:
+- from: Project
+  to: Namespace
+  type: belongs_to
+  via: namespace_id
+- from: Agent
+  to: Namespace
+  type: belongs_to
+  via: namespace_id
+- from: Namespace
+  to: Agent
+  type: has_many
+- from: Agent
+  to: Version
+  type: has_many
+- from: Agent
+  to: Branch
+  type: has_many
+- from: Branch
+  to: Version
+  type: has_one
+  via: active_version
+- from: Task
+  to: Namespace
+  type: belongs_to
+  via: namespace_id
+- from: Task
+  to: Version
+  type: belongs_to
+  via: current_version_id
+- from: Task
+  to: Filesystem
+  type: has_one
+  via: filesystem_id
+- from: Event
+  to: Task
+  type: belongs_to
+  via: task_id
+- from: Event
+  to: Agent
+  type: belongs_to
+  via: agent_id
+- from: Message
+  to: Task
+  type: belongs_to
+  via: task_id
+- from: State
+  to: Task
+  type: belongs_to
+  via: task_id

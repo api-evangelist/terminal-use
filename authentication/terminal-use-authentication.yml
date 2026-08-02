@@ -1,0 +1,42 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.terminaluse.com/api-reference/authentication
+docs: https://docs.terminaluse.com/concepts/keys-and-secrets
+note: >-
+  The published OpenAPI (openapi/terminal-use-openapi-original.json) declares no
+  components.securitySchemes, so this profile is captured from the documented
+  authentication surface rather than derived from the spec.
+summary:
+  types: [http]
+  scheme: bearer
+  token_format: "tu_..."
+  env_var: TERMINALUSE_API_KEY
+  base_url: https://api.terminaluse.com
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: >-
+    Authenticate every API call with a Bearer token (API key) prefixed `tu_`.
+    Supply it explicitly to the SDK client or via the TERMINALUSE_API_KEY
+    environment variable. Obtain a token with `tu login` (browser flow) or from
+    the dashboard at https://app.terminaluse.com.
+  sources: [https://docs.terminaluse.com/api-reference/authentication]
+key_types:
+- kind: API key
+  used_for: Authenticating calls to the Terminal Use API from an app, backend, or automation.
+  management: /api-reference/api-keys (list/create/get/revoke; update scopes; update sharing groups)
+  scoped: true
+  note: API keys carry scopes and can be assigned to sharing groups.
+- kind: Webhook key
+  used_for: Verifying inbound webhook delivery from Terminal Use.
+  management: tu keys (instructions/add/ls/rm); /api-reference/webhook-keys-*
+- kind: Environment secret
+  used_for: Runtime environment variables injected into a deployed agent environment (production/preview).
+  management: tu env (add/ls/get/rm/pull/import)
+related_endpoints:
+  oauth_tags_in_spec: [OAuth, "CLI Authentication", Authentication]
+  note: >-
+    The OpenAPI groups a small set of OAuth and CLI-authentication operations
+    (used by the `tu login` browser flow); end-user API access is bearer-token
+    based.

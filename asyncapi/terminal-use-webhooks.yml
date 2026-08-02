@@ -1,0 +1,32 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.terminaluse.com/concepts/keys-and-secrets + https://docs.terminaluse.com/api-reference/cli
+spec_type: Webhooks
+note: >-
+  Terminal Use documents an inbound webhook surface but publishes no AsyncAPI
+  document, so this captures the webhook/event surface rather than a verbatim
+  AsyncAPI spec. NEVER fabricated: only the webhook-key surface and the
+  documented task event/streaming model are recorded.
+event_surfaces:
+- kind: webhook
+  name: Terminal Use webhooks
+  direction: inbound
+  verification: >-
+    Webhook keys verify inbound webhook delivery from Terminal Use. Managed via
+    the `tu keys` CLI (instructions/add/ls/rm) and the API webhook-keys
+    operations.
+  management_api:
+    tag: Webhook Keys
+    docs: https://docs.terminaluse.com/api-reference/webhook-keys-list
+- kind: streaming
+  name: Task event stream
+  direction: outbound (server -> client)
+  transport: Server-Sent Events (SSE)
+  endpoint: GET /tasks/{id}/stream
+  operation: tasks_stream
+  model: >-
+    Tasks receive Events (input) and emit Messages (output). Clients stream a
+    task's messages/events over SSE; a Vercel AI SDK provider
+    (@terminaluse/vercel-ai-sdk-provider) consumes the stream for chat UIs.
+  related_operations: [tasks_send_event, tasks_stream, events_list, events_retrieve, messages_v2_list]
+webhook_keys_operations: [webhook_keys_list, webhook_keys_create, webhook_keys_get, webhook_keys_delete]
