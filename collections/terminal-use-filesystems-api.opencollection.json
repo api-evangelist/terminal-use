@@ -1,0 +1,303 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Filesystems API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Filesystems",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Filesystems",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/filesystems",
+            "params": [
+              {
+                "name": "project_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional project filter. When provided, requires read access to the project and returns only filesystems in that project."
+              }
+            ]
+          },
+          "docs": "List all filesystems accessible to the current user."
+        },
+        {
+          "info": {
+            "name": "Create Filesystem",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/filesystems",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new filesystem linked to a project."
+        },
+        {
+          "info": {
+            "name": "Get Filesystem",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get filesystem details by ID."
+        },
+        {
+          "info": {
+            "name": "Get Download URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/download-url",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a presigned URL for direct download from GCS."
+        },
+        {
+          "info": {
+            "name": "Download File",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/file-download",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Relative file path to download."
+              }
+            ]
+          },
+          "docs": "Download a single file from the filesystem."
+        },
+        {
+          "info": {
+            "name": "Upload File",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/file-upload",
+            "headers": [
+              {
+                "name": "Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Relative path to write."
+              },
+              {
+                "name": "writeMode",
+                "value": "",
+                "type": "query",
+                "description": "Upload semantics: overwrite (default) or conditional."
+              },
+              {
+                "name": "baseVersion",
+                "value": "",
+                "type": "query",
+                "description": "Required in conditional mode: expected current archive version."
+              },
+              {
+                "name": "expectedVersion",
+                "value": "",
+                "type": "query",
+                "description": "Conditional replace precondition on current file version."
+              },
+              {
+                "name": "createOnly",
+                "value": "",
+                "type": "query",
+                "description": "Conditional create precondition; must be '*'."
+              },
+              {
+                "name": "digest",
+                "value": "",
+                "type": "query",
+                "description": "Optional digest in format sha-256=<base64>."
+              }
+            ]
+          },
+          "docs": "Upload a single file into a filesystem by relative path. Defaults to overwrite mode; conditional mode can be used for strict concurrency control."
+        },
+        {
+          "info": {
+            "name": "List Files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/files",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "directory",
+                "value": "",
+                "type": "query",
+                "description": "Directory prefix to filter results"
+              },
+              {
+                "name": "recursive",
+                "value": "",
+                "type": "query",
+                "description": "Include subdirectories"
+              },
+              {
+                "name": "mime_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by MIME type"
+              },
+              {
+                "name": "include_content",
+                "value": "",
+                "type": "query",
+                "description": "Include file content in response"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset"
+              }
+            ]
+          },
+          "docs": "List files in the filesystem manifest with optional filtering."
+        },
+        {
+          "info": {
+            "name": "Get File",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/files/:file_path",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "file_path",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "include_content",
+                "value": "",
+                "type": "query",
+                "description": "Include file content in response"
+              }
+            ]
+          },
+          "docs": "Retrieve a specific file (or directory) from the filesystem manifest."
+        },
+        {
+          "info": {
+            "name": "Complete Sync Operation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/sync-complete",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Notify that a sync operation completed and provide the file manifest."
+        },
+        {
+          "info": {
+            "name": "Get Upload URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/filesystems/:filesystem_id/upload-url",
+            "params": [
+              {
+                "name": "filesystem_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a presigned URL for direct upload to GCS."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

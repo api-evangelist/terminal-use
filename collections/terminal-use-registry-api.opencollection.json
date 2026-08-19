@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Registry API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Registry",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get registry credentials for pushing agent images",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/registry/auth",
+            "params": [
+              {
+                "name": "namespace",
+                "value": "",
+                "type": "query",
+                "description": "Target namespace slug for the image push"
+              }
+            ]
+          },
+          "docs": "Get short-lived credentials for pushing images to a namespace's registry.\n\n    Each namespace has its own isolated registry repository. The token returned\n    can ONLY push images to the specified namespace's repository.\n\n    The CLI uses this endpoint to authenticate with Docker before pushing\n    agent images. Returns a token valid for approximately 1 hour.\n\n    **Usage with Docker:**\n    ```bash\n    docker login {registry_url} -u {username} -p {token}\n    docker push {registry_url}/{repositor"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

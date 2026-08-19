@@ -1,0 +1,153 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Organizations API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List User Organizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/organizations"
+          },
+          "docs": "List all organizations the current user belongs to."
+        },
+        {
+          "info": {
+            "name": "Get Current Organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/organizations/current"
+          },
+          "docs": "Get the current user's organization info."
+        },
+        {
+          "info": {
+            "name": "List Organization Invitations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/organizations/invitations"
+          },
+          "docs": "List pending invitations for the current organization."
+        },
+        {
+          "info": {
+            "name": "Create Organization Invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/organizations/invitations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Invite a user to the current organization. Idempotent for existing pending invites by email."
+        },
+        {
+          "info": {
+            "name": "Revoke Organization Invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/organizations/invitations/:invitation_id",
+            "params": [
+              {
+                "name": "invitation_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Revoke a pending invitation in the current organization."
+        },
+        {
+          "info": {
+            "name": "Resend Organization Invitation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/organizations/invitations/:invitation_id/resend",
+            "params": [
+              {
+                "name": "invitation_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Resend a pending invitation in the current organization."
+        },
+        {
+          "info": {
+            "name": "List Organization Members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/organizations/members"
+          },
+          "docs": "List active members in the current organization."
+        },
+        {
+          "info": {
+            "name": "Update Organization Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/v1/organizations/members/:membership_id",
+            "params": [
+              {
+                "name": "membership_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a member role in the current organization."
+        },
+        {
+          "info": {
+            "name": "Remove Organization Member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/organizations/members/:membership_id",
+            "params": [
+              {
+                "name": "membership_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Remove an active member from the current organization."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

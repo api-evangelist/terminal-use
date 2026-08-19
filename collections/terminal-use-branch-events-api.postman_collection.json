@@ -1,0 +1,240 @@
+{
+  "item": [
+    {
+      "id": "a1d76479-a929-4612-9884-03fd57bba30a",
+      "name": "Branch Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "647b42b3-d9f7-4530-aa14-8f1f247fc464",
+          "name": "List Branch Events",
+          "request": {
+            "name": "List Branch Events",
+            "description": {
+              "content": "List lifecycle events across all versions for a branch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "branches",
+                ":branch_id",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "event_type",
+                  "value": "<string>",
+                  "description": "Filter by event type"
+                },
+                {
+                  "disabled": false,
+                  "key": "after_sequence_id",
+                  "value": "<integer>",
+                  "description": "Return events after this sequence_id (for ascending pagination)"
+                },
+                {
+                  "disabled": false,
+                  "key": "before_sequence_id",
+                  "value": "<integer>",
+                  "description": "Return events before this sequence_id (for descending pagination)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Maximum events to return"
+                },
+                {
+                  "disabled": false,
+                  "key": "descending",
+                  "value": "true",
+                  "description": "Order by sequence_id descending (newest first)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8a544f40-506c-4ea7-b803-cbe312e06893",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_type",
+                      "value": "VERSION_RETIRED"
+                    },
+                    {
+                      "key": "after_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "before_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "descending",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"events\": [\n    {\n      \"id\": \"string\",\n      \"sequence_id\": 3540,\n      \"version_id\": \"string\",\n      \"branch_id\": \"string\",\n      \"event_type\": \"TASKS_MIGRATED\",\n      \"created_at\": \"2011-12-03T13:33:42.824Z\",\n      \"actor_id\": \"string\",\n      \"content\": {\n        \"actor_email\": \"string\",\n        \"container_logs\": \"string\",\n        \"container_logs_container_name\": \"string\",\n        \"container_logs_fetched_at\": \"1958-05-04T02:31:59.151Z\",\n        \"container_logs_pod_name\": \"string\",\n        \"container_logs_source\": \"string\",\n        \"container_logs_truncated\": true,\n        \"container_logs_unavailable_reason\": \"string\",\n        \"error_message\": \"string\",\n        \"failure_reason\": \"string\",\n        \"from_version_id\": \"string\",\n        \"git_hash\": \"string\",\n        \"migrated_task_count\": 5673,\n        \"migrated_task_ids\": [\n          \"string\",\n          \"string\"\n        ],\n        \"new_status\": \"RETIRED\",\n        \"previous_status\": \"ACTIVE\",\n        \"target_version_id\": \"string\",\n        \"triggered_by\": \"deploy\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"sequence_id\": 7057,\n      \"version_id\": \"string\",\n      \"branch_id\": \"string\",\n      \"event_type\": \"VERSION_ACTIVATED\",\n      \"created_at\": \"2009-05-28T03:44:28.764Z\",\n      \"actor_id\": \"string\",\n      \"content\": {\n        \"actor_email\": \"string\",\n        \"container_logs\": \"string\",\n        \"container_logs_container_name\": \"string\",\n        \"container_logs_fetched_at\": \"1961-07-25T20:58:09.479Z\",\n        \"container_logs_pod_name\": \"string\",\n        \"container_logs_source\": \"string\",\n        \"container_logs_truncated\": false,\n        \"container_logs_unavailable_reason\": \"string\",\n        \"error_message\": \"string\",\n        \"failure_reason\": \"string\",\n        \"from_version_id\": \"string\",\n        \"git_hash\": \"string\",\n        \"migrated_task_count\": 1406,\n        \"migrated_task_ids\": [\n          \"string\",\n          \"string\"\n        ],\n        \"new_status\": \"ACTIVE\",\n        \"previous_status\": \"RETIRED\",\n        \"target_version_id\": \"string\",\n        \"triggered_by\": \"rollback\"\n      }\n    }\n  ],\n  \"total\": 1875,\n  \"has_more\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27b812e4-0ba8-4d02-b25a-5cb153ea9f6d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_type",
+                      "value": "VERSION_RETIRED"
+                    },
+                    {
+                      "key": "after_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "before_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "descending",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3fe718ed-eba5-4d2b-8880-af0782c0c984",
+    "name": "Sb0 Agent APIKeys Branch Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

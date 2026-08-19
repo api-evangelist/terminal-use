@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Builds API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Builds",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Prepare Remote Build Upload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/builds/prepare",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Return a presigned URL for uploading a build context archive to GCS."
+        },
+        {
+          "info": {
+            "name": "Submit Remote Build",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/builds/submit",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a Cloud Build build for an uploaded build context archive."
+        },
+        {
+          "info": {
+            "name": "Get Remote Build Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/builds/:build_id",
+            "params": [
+              {
+                "name": "build_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get build status for a Cloud Build build ID (proxied)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

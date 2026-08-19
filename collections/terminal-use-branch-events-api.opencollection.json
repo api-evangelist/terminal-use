@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Branch Events API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Branch Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Branch Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branches/:branch_id/events",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "event_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event type"
+              },
+              {
+                "name": "after_sequence_id",
+                "value": "",
+                "type": "query",
+                "description": "Return events after this sequence_id (for ascending pagination)"
+              },
+              {
+                "name": "before_sequence_id",
+                "value": "",
+                "type": "query",
+                "description": "Return events before this sequence_id (for descending pagination)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum events to return"
+              },
+              {
+                "name": "descending",
+                "value": "",
+                "type": "query",
+                "description": "Order by sequence_id descending (newest first)"
+              }
+            ]
+          },
+          "docs": "List lifecycle events across all versions for a branch."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

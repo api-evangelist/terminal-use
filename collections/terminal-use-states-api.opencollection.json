@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys States API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "States",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List States",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/states",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "Task ID"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Agent ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to order by"
+              },
+              {
+                "name": "order_direction",
+                "value": "",
+                "type": "query",
+                "description": "Order direction (asc or desc)"
+              }
+            ]
+          },
+          "docs": "List all states, filtered by task_id or agent_id (at least one required)."
+        },
+        {
+          "info": {
+            "name": "Create Task State",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/states",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Task State"
+        },
+        {
+          "info": {
+            "name": "Get State by State ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/states/:state_id",
+            "params": [
+              {
+                "name": "state_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a state by its unique state ID."
+        },
+        {
+          "info": {
+            "name": "Update Task State",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/states/:state_id",
+            "params": [
+              {
+                "name": "state_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update Task State"
+        },
+        {
+          "info": {
+            "name": "Delete Task State",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/states/:state_id",
+            "params": [
+              {
+                "name": "state_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete Task State"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

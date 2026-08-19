@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Agent Task Tracker API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agent Task Tracker",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Agent Task Trackers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tracker",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Agent ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to order by"
+              },
+              {
+                "name": "order_direction",
+                "value": "",
+                "type": "query",
+                "description": "Order direction (asc or desc)"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "The task ID"
+              }
+            ]
+          },
+          "docs": "List agent task trackers for a task, optionally filtered by agent."
+        },
+        {
+          "info": {
+            "name": "Get Agent Task Tracker",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tracker/:tracker_id",
+            "params": [
+              {
+                "name": "tracker_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get agent task tracker by tracker ID"
+        },
+        {
+          "info": {
+            "name": "Update Agent Task Tracker",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/tracker/:tracker_id",
+            "params": [
+              {
+                "name": "tracker_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update agent task tracker by tracker ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

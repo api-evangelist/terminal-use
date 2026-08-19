@@ -1,0 +1,73 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Events API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events",
+            "params": [
+              {
+                "name": "last_processed_event_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional event ID to get events after this ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Optional limit on number of results"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "The task ID"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "The agent ID"
+              }
+            ]
+          },
+          "docs": "List events for a specific task and agent.\n\nOptionally filter for events after a specific sequence ID.\nResults are ordered by sequence_id."
+        },
+        {
+          "info": {
+            "name": "Get Event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/events/:event_id",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get Event"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Messages v2 API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Messages v2",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Messages (v2 - UIMessage format)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/messages",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "parent_tool_use_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "The task ID"
+              }
+            ]
+          },
+          "docs": "List messages for a task in Vercel AI SDK UIMessage format.\n\n    This endpoint returns messages transformed from raw SDK events into\n    a normalized UIMessage format suitable for frontend consumption.\n\n    Features:\n    - Tool merging: tool_use and tool_result are combined into single tool parts\n    - Complete-units pagination: Never splits tool request/result pairs across pages\n    - Runtime transformation: Raw SDK messages are transformed on-demand\n\n    Args:\n        task_id: The task ID to f"
+        },
+        {
+          "info": {
+            "name": "Get Message (v2 - UIMessage format)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/messages/:message_id",
+            "params": [
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "The task ID"
+              }
+            ]
+          },
+          "docs": "Get a single message by ID in UIMessage format.\n\n    Returns the transformed UIMessage or null if not found."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

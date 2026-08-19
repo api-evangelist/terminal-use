@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agent APIKeys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List API keys for an agent ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agent_api_keys",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List API keys for an agent ID."
+        },
+        {
+          "info": {
+            "name": "Create Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agent_api_keys",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create Api Key"
+        },
+        {
+          "info": {
+            "name": "Delete API key by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/agent_api_keys/name/:api_key_name",
+            "params": [
+              {
+                "name": "api_key_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "api_key_type",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Delete API key by name."
+        },
+        {
+          "info": {
+            "name": "Return named API key for the agent ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agent_api_keys/name/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "api_key_type",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Return named API key for the agent ID."
+        },
+        {
+          "info": {
+            "name": "Return the API key by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agent_api_keys/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return API key by ID."
+        },
+        {
+          "info": {
+            "name": "Delete API key by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/agent_api_keys/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete API key by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

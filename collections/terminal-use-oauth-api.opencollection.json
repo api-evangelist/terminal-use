@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys OAuth API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate Oauth",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/oauth/initiate",
+            "params": [
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query",
+                "description": "URI to redirect after authentication"
+              },
+              {
+                "name": "code_challenge",
+                "value": "",
+                "type": "query",
+                "description": "PKCE code challenge (S256)"
+              },
+              {
+                "name": "connection_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional WorkOS connection ID for SSO"
+              },
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization ID to scope the authentication to"
+              }
+            ]
+          },
+          "docs": "Generate authorization URL for OAuth authentication."
+        },
+        {
+          "info": {
+            "name": "Exchange Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/oauth/token",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "Authorization code from OAuth callback"
+              }
+            ]
+          },
+          "docs": "Exchange authorization code for access token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

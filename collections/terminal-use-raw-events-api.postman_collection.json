@@ -1,0 +1,166 @@
+{
+  "item": [
+    {
+      "id": "e850f219-ab43-4ca5-b5ab-8557f5d3cd2e",
+      "name": "Raw Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3f94866d-6d8a-435d-897b-b41db6318b8c",
+          "name": "Publish Raw SDK Event",
+          "request": {
+            "name": "Publish Raw SDK Event",
+            "description": {
+              "content": "Publish a raw SDK event for transformation and streaming.\n\n    This endpoint replaces the deprecated `/stream-events` endpoint.\n    Events are transformed via SDK-specific adapters (based on `sdk_type` and `sdk_version`)\n    and the resulting stream parts are published to Redis for real-time consumption.\n\n    Messages that should be stored (e.g., AssistantMessage, UserMessage) are\n    automatically persisted to MongoDB for later retrieval.\n\n    **Supported SDK Types:**\n    - `claude`: Claude Agent SDK messages (StreamEvent, AssistantMessage, etc.)\n    - `codex`: Codex SDK thread events (`item.*`, `turn.*`, `thread.*`)\n    - `terminal_use`: Direct UIMessage format (Vercel-compatible)\n\n    **What gets stored:**\n    - AssistantMessage, UserMessage, ResultMessage, SystemMessage\n\n    **What does NOT get stored:**\n    - StreamEvent (ephemeral streaming deltas)\n\n    Requires `update` permission on the task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "raw-events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sdk_type\": \"<string>\",\n  \"sdk_version\": \"<string>\",\n  \"task_id\": \"<string>\",\n  \"raw_event\": {\n    \"key_0\": false,\n    \"key_1\": \"string\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8e2fbf41-249e-48ee-887e-98aece9746ea",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "raw-events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sdk_type\": \"<string>\",\n  \"sdk_version\": \"<string>\",\n  \"task_id\": \"<string>\",\n  \"raw_event\": {\n    \"key_0\": \"string\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"published_count\": 7577,\n  \"stored\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "86c6c5b6-59ee-413d-bcbc-1fcc81a642a0",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "raw-events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sdk_type\": \"<string>\",\n  \"sdk_version\": \"<string>\",\n  \"task_id\": \"<string>\",\n  \"raw_event\": {\n    \"key_0\": \"string\"\n  },\n  \"idempotency_key\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b54ecd53-7a7f-429e-a97b-e4a714050f78",
+    "name": "Sb0 Agent APIKeys Raw Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

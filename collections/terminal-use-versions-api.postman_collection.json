@@ -1,0 +1,988 @@
+{
+  "item": [
+    {
+      "id": "056da55c-1b13-4118-8096-a957eea6345e",
+      "name": "Versions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0bd54255-93c2-4575-86c5-89e0ac7dc4c9",
+          "name": "Register Container",
+          "request": {
+            "name": "Register Container",
+            "description": {
+              "content": "Register an agent container that has started up.\n\n    Called by the agent container on startup to:\n    1. Register its ACP URL with the platform\n    2. Receive its API key for authenticating subsequent requests\n\n    This endpoint should be called from within the container's entrypoint\n    after the ACP server is ready to receive traffic.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                "register"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branch_id\": \"<string>\",\n  \"version_id\": \"<string>\",\n  \"acp_url\": \"<string>\",\n  \"registration_token\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2b0f60d0-a775-4942-b83d-dda7e62118d3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    "register"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"branch_id\": \"<string>\",\n  \"version_id\": \"<string>\",\n  \"acp_url\": \"<string>\",\n  \"registration_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"agent_id\": \"string\",\n  \"agent_name\": \"string\",\n  \"agent_api_key\": \"string\",\n  \"branch_id\": \"string\",\n  \"version_status\": \"UNHEALTHY\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9f15cce6-5519-410b-a2cf-821e3a473f65",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    "register"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"branch_id\": \"<string>\",\n  \"version_id\": \"<string>\",\n  \"acp_url\": \"<string>\",\n  \"registration_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eb34b366-f642-4181-9380-66abb04d3cbb",
+          "name": "Get Version",
+          "request": {
+            "name": "Get Version",
+            "description": {
+              "content": "Get version details by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2b74311e-a5e9-4c4f-adc3-f9aae2450fbf",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"branch_id\": \"string\",\n  \"git_hash\": \"string\",\n  \"git_branch\": \"string\",\n  \"author_name\": \"string\",\n  \"author_email\": \"string\",\n  \"image_url\": \"string\",\n  \"status\": \"DEPLOYING\",\n  \"deployed_at\": \"1949-11-24T20:08:09.688Z\",\n  \"sdk_type\": \"claude_agent_sdk\",\n  \"acp_type\": \"async\",\n  \"created_at\": \"2010-03-05T21:28:18.769Z\",\n  \"failure_diagnostics\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\"\n  },\n  \"failure_reason\": \"string\",\n  \"git_message\": \"\",\n  \"image_expires_at\": \"1963-01-22T03:43:16.991Z\",\n  \"is_dirty\": false,\n  \"last_rollback_at\": \"1989-07-04T19:33:21.744Z\",\n  \"replicas\": 0,\n  \"retired_at\": \"1971-06-25T09:26:06.868Z\",\n  \"rollback_count\": 0,\n  \"rolled_back_at\": \"1961-08-25T11:37:48.104Z\",\n  \"source_filesystem_id\": \"string\",\n  \"updated_at\": \"1954-08-14T05:42:24.751Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ae49c768-660b-4b61-934d-272bd2a820cf",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1f092b44-3862-4295-a30b-94c326a32dae",
+          "name": "Stream Deployment Progress",
+          "request": {
+            "name": "Stream Deployment Progress",
+            "description": {
+              "content": "SSE endpoint for real-time deployment progress events.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id",
+                "deploy",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f4ee34cc-0db7-419d-b3ad-07390661635a",
+              "name": "SSE stream of deployment events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "deploy",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version_id\": \"string\",\n  \"type\": \"connected\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "466d3e8a-3d5b-4364-aa18-002a3b600b01",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "deploy",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33df3add-9644-42e7-b125-4866171d328d",
+          "name": "Get Version Metrics",
+          "request": {
+            "name": "Get Version Metrics",
+            "description": {
+              "content": "Get deployment metrics for a specific version.\n\n    Returns metrics related to the deployment process for this version,\n    including average and P95 deployment durations queried from ClickHouse traces.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id",
+                "metrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f1fc011a-2d61-41ce-9d9c-a34e578de5e5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"deployment_duration_p95_seconds\": 8412,\n  \"deployment_duration_seconds\": 702\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76cba5f1-7a01-460d-ad9d-548389bb7e67",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5d11f79e-72d0-4ec0-be55-029fefc975b6",
+          "name": "Get Version Pod Logs",
+          "request": {
+            "name": "Get Version Pod Logs",
+            "description": {
+              "content": "Get Kubernetes pod/container logs for a specific deployment version.\n\n    Data is sourced from ClickHouse `otel.pod_logs`, populated by the dedicated\n    pod-log collector DaemonSet. This endpoint has no Kubernetes or event-snapshot\n    fallback path.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id",
+                "pod-logs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "pod",
+                  "value": "<string>",
+                  "description": "Filter by pod name"
+                },
+                {
+                  "disabled": false,
+                  "key": "container",
+                  "value": "<string>",
+                  "description": "Filter by container name"
+                },
+                {
+                  "disabled": false,
+                  "key": "stream",
+                  "value": "<string>",
+                  "description": "Filter by log stream (stdout/stderr)"
+                },
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Start timestamp filter (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "until",
+                  "value": "<dateTime>",
+                  "description": "End timestamp filter (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Full-text search in log message"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "Cursor for the next page, using the previous log_id"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "16e8df43-ec21-4247-be6a-b91d4e18d07e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "pod-logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "pod",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "container",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stream",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "until",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 5600,\n  \"has_more\": false,\n  \"logs\": [\n    {\n      \"log_id\": \"string\",\n      \"timestamp\": \"string\",\n      \"version_id\": \"string\",\n      \"agent_id\": \"string\",\n      \"message\": \"string\",\n      \"branch_id\": \"string\",\n      \"cluster\": \"string\",\n      \"container_name\": \"string\",\n      \"k8s_namespace\": \"string\",\n      \"pod_name\": \"string\",\n      \"stream\": \"string\"\n    },\n    {\n      \"log_id\": \"string\",\n      \"timestamp\": \"string\",\n      \"version_id\": \"string\",\n      \"agent_id\": \"string\",\n      \"message\": \"string\",\n      \"branch_id\": \"string\",\n      \"cluster\": \"string\",\n      \"container_name\": \"string\",\n      \"k8s_namespace\": \"string\",\n      \"pod_name\": \"string\",\n      \"stream\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1453f4d3-6ba4-445b-b798-fffc55c98654",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "pod-logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "pod",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "container",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stream",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "until",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "990d389c-de49-4da8-b14c-a8fbdb5ebccb",
+          "name": "Get Version Pod Metrics",
+          "request": {
+            "name": "Get Version Pod Metrics",
+            "description": {
+              "content": "Get pod-level resource metrics (CPU and memory) for a specific version.\n\n    Data is sourced from ClickHouse `otel_metrics_*` tables populated by the\n    OpenTelemetry Collector's Prometheus receiver scraping kubelet cAdvisor metrics.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id",
+                "pod-metrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "window_minutes",
+                  "value": "60"
+                },
+                {
+                  "disabled": false,
+                  "key": "step_seconds",
+                  "value": "60"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e456125f-f8d9-4686-8889-335fbb2ec915",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "pod-metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "window_minutes",
+                      "value": "60"
+                    },
+                    {
+                      "key": "step_seconds",
+                      "value": "60"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"window_minutes\": 937,\n  \"step_seconds\": 4337,\n  \"cpu_cores\": [\n    {\n      \"ts\": \"1971-03-26T16:10:02.366Z\",\n      \"value\": 6278.202777610167\n    },\n    {\n      \"ts\": \"2013-01-07T09:10:56.759Z\",\n      \"value\": 8517.254261091874\n    }\n  ],\n  \"k8s_namespace\": \"string\",\n  \"memory_working_set_bytes\": [\n    {\n      \"ts\": \"1960-05-20T18:25:43.166Z\",\n      \"value\": 4599.960870435559\n    },\n    {\n      \"ts\": \"2010-12-20T23:21:50.563Z\",\n      \"value\": 6764.303048549842\n    }\n  ],\n  \"pod_name_prefix\": \"string\",\n  \"pods\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1457ec25-7163-431d-bdb7-a512262466ba",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "pod-metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "window_minutes",
+                      "value": "60"
+                    },
+                    {
+                      "key": "step_seconds",
+                      "value": "60"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3cd37372-fca6-48fd-a07e-5767f7abbaa1",
+    "name": "Sb0 Agent APIKeys Versions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

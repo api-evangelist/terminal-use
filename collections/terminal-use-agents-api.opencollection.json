@@ -1,0 +1,285 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Agents API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "Task ID"
+              },
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by namespace ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Field to order by"
+              },
+              {
+                "name": "order_direction",
+                "value": "",
+                "type": "query",
+                "description": "Order direction (asc or desc)"
+              }
+            ]
+          },
+          "docs": "List all registered agents, optionally filtered by query parameters."
+        },
+        {
+          "info": {
+            "name": "Deploy Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/deploy",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deploy an agent to the platform.\n\n    Called by CLI after pushing the container image to the registry.\n    Creates or updates agent, branch, and version records.\n\n    The deployment is asynchronous - poll GET /branches/{branch_id}\n    for status updates until status is READY or FAILED.\n\n    **Flow:**\n    1. CLI builds and pushes image to registry (using /registry/auth)\n    2. CLI calls POST /agents/deploy with image details\n    3. Platform creates records and triggers K8s deployment\n    4. Conta"
+        },
+        {
+          "info": {
+            "name": "Forward GET request to agent by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/forward/name/:namespace_slug/:agent_name/:path",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Forward a GET request to an agent by namespace and name."
+        },
+        {
+          "info": {
+            "name": "Forward POST request to agent by name",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/forward/name/:namespace_slug/:agent_name/:path",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Forward a POST request to an agent by namespace and name."
+        },
+        {
+          "info": {
+            "name": "Get Agent by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/name/:namespace_slug/:agent_name",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an agent by namespace slug and agent name."
+        },
+        {
+          "info": {
+            "name": "Delete Agent by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/agents/name/:namespace_slug/:agent_name",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an agent by namespace slug and agent name."
+        },
+        {
+          "info": {
+            "name": "Get Agent by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:agent_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an agent by its unique ID."
+        },
+        {
+          "info": {
+            "name": "Delete Agent by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/agents/:agent_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an agent by its unique ID."
+        },
+        {
+          "info": {
+            "name": "Get Agent Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:agent_id/metrics",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional branch ID filter"
+              }
+            ]
+          },
+          "docs": "Get aggregated metrics for an agent over the last 24 hours. Includes task success rate, task count, error log count, and average task duration."
+        },
+        {
+          "info": {
+            "name": "List Versions for Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/versions",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch name (e.g., 'main', 'feature/login'). If not provided, returns versions across all branches."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by version status"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum versions to return"
+              }
+            ]
+          },
+          "docs": "List all versions for an agent.\n\n    Optionally filter by branch name or version status.\n    Versions are ordered by deployed_at descending (most recent first)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

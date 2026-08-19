@@ -1,0 +1,3192 @@
+{
+  "item": [
+    {
+      "id": "d05b74a6-6143-4bf2-8c6c-cc830599818d",
+      "name": "Tasks",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "47664b5b-0f1f-4555-aa7a-3b3f32cbf785",
+          "name": "List Tasks",
+          "request": {
+            "name": "List Tasks",
+            "description": {
+              "content": "List all tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_id",
+                  "value": "<string>",
+                  "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+                },
+                {
+                  "disabled": false,
+                  "key": "namespace_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "agent_name",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "branch_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "created_after",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "created_before",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_total",
+                  "value": "false"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "disabled": false,
+                  "key": "page_number",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "order_by",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "order_direction",
+                  "value": "desc"
+                },
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3eabcb09-25cd-45b1-a255-669efa7b9440",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "namespace_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "TERMINATED"
+                    },
+                    {
+                      "key": "status",
+                      "value": "FAILED"
+                    },
+                    {
+                      "key": "created_after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "created_before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_total",
+                      "value": "false"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page_number",
+                      "value": "1"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_direction",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"filesystem_id\": \"string\",\n    \"namespace_id\": \"string\",\n    \"agents\": [\n      {\n        \"id\": \"string\",\n        \"namespace_id\": \"string\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"created_at\": \"1993-12-10T18:27:28.847Z\",\n        \"updated_at\": \"2001-03-26T14:40:54.164Z\",\n        \"agent_input_type\": \"json\",\n        \"registered_at\": \"2014-04-15T20:51:55.355Z\",\n        \"registration_metadata\": {\n          \"key_0\": false,\n          \"key_1\": 1616.4048007086508\n        },\n        \"status\": \"ACTIVE\",\n        \"status_reason\": \"string\"\n      },\n      {\n        \"id\": \"string\",\n        \"namespace_id\": \"string\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"created_at\": \"1987-03-01T00:48:10.589Z\",\n        \"updated_at\": \"2003-10-31T10:29:19.307Z\",\n        \"agent_input_type\": \"json\",\n        \"registered_at\": \"1948-08-15T01:04:48.274Z\",\n        \"registration_metadata\": {\n          \"key_0\": \"string\"\n        },\n        \"status\": \"ACTIVE\",\n        \"status_reason\": \"string\"\n      }\n    ],\n    \"created_at\": \"1979-05-10T09:29:21.965Z\",\n    \"created_version_id\": \"string\",\n    \"current_version_id\": \"string\",\n    \"name\": \"string\",\n    \"params\": {\n      \"key_0\": false\n    },\n    \"status\": \"CANCELED\",\n    \"status_reason\": \"string\",\n    \"task_metadata\": {\n      \"key_0\": 220.53079094127793\n    },\n    \"updated_at\": \"1981-04-16T06:27:29.718Z\"\n  },\n  {\n    \"id\": \"string\",\n    \"filesystem_id\": \"string\",\n    \"namespace_id\": \"string\",\n    \"agents\": [\n      {\n        \"id\": \"string\",\n        \"namespace_id\": \"string\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"created_at\": \"1962-12-05T17:11:25.474Z\",\n        \"updated_at\": \"1969-08-19T22:17:43.815Z\",\n        \"agent_input_type\": \"text\",\n        \"registered_at\": \"2003-12-31T00:05:25.082Z\",\n        \"registration_metadata\": {\n          \"key_0\": 6038.036353148383\n        },\n        \"status\": \"ACTIVE\",\n        \"status_reason\": \"string\"\n      },\n      {\n        \"id\": \"string\",\n        \"namespace_id\": \"string\",\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"created_at\": \"1998-11-05T08:38:45.878Z\",\n        \"updated_at\": \"2023-06-24T22:59:09.998Z\",\n        \"agent_input_type\": \"json\",\n        \"registered_at\": \"2001-01-24T10:01:21.224Z\",\n        \"registration_metadata\": {\n          \"key_0\": false,\n          \"key_1\": 4998.455279509279\n        },\n        \"status\": \"ACTIVE\",\n        \"status_reason\": \"string\"\n      }\n    ],\n    \"created_at\": \"1983-08-29T11:34:21.630Z\",\n    \"created_version_id\": \"string\",\n    \"current_version_id\": \"string\",\n    \"name\": \"string\",\n    \"params\": {\n      \"key_0\": \"string\",\n      \"key_1\": false\n    },\n    \"status\": \"IDLE\",\n    \"status_reason\": \"string\",\n    \"task_metadata\": {\n      \"key_0\": 6033,\n      \"key_1\": false\n    },\n    \"updated_at\": \"1978-12-18T18:20:33.091Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a21d2a6-07b0-44f8-9a92-99b17266a42b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "namespace_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "TERMINATED"
+                    },
+                    {
+                      "key": "status",
+                      "value": "FAILED"
+                    },
+                    {
+                      "key": "created_after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "created_before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_total",
+                      "value": "false"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "page_number",
+                      "value": "1"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_direction",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e83befea-831d-4f34-a07f-c5b08abe86c7",
+          "name": "Create Task",
+          "request": {
+            "name": "Create Task",
+            "description": {
+              "content": "Create a new task for an agent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agent_id\": \"<string>\",\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"filesystem_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"params\": {\n    \"key_0\": 8609.388096145478\n  },\n  \"project_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1e4051c9-70b9-4b12-82e1-93d99be24a26",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"agent_id\": \"<string>\",\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"filesystem_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"params\": {\n    \"key_0\": 6582,\n    \"key_1\": \"string\"\n  },\n  \"project_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"agents\": [\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2005-11-16T19:20:44.570Z\",\n      \"updated_at\": \"1949-05-07T13:59:46.983Z\",\n      \"agent_input_type\": \"json\",\n      \"registered_at\": \"1979-06-27T01:14:56.053Z\",\n      \"registration_metadata\": {\n        \"key_0\": 7133,\n        \"key_1\": \"string\"\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2010-05-21T17:24:46.563Z\",\n      \"updated_at\": \"1965-07-13T01:31:50.483Z\",\n      \"agent_input_type\": \"text\",\n      \"registered_at\": \"1951-07-22T02:23:54.523Z\",\n      \"registration_metadata\": {\n        \"key_0\": 2002.5872525697807,\n        \"key_1\": false\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    }\n  ],\n  \"created_at\": \"2003-03-30T14:49:56.574Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": \"string\"\n  },\n  \"status\": \"DELETED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": true,\n    \"key_1\": \"string\",\n    \"key_2\": 5546\n  },\n  \"updated_at\": \"2001-02-25T07:02:23.741Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c0ff8ffd-9e22-4eb7-804f-20127abf505a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"agent_id\": \"<string>\",\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"filesystem_id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"params\": {\n    \"key_0\": 6582,\n    \"key_1\": \"string\"\n  },\n  \"project_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6467dbf7-a1b2-4175-b715-5b24ad5fe716",
+          "name": "Migrate Tasks Between Versions",
+          "request": {
+            "name": "Migrate Tasks Between Versions",
+            "description": {
+              "content": "Migrate tasks between versions within the same branch. Supports two modes: bulk migration by source version (from_version_id), or migration of specific tasks (task_ids). Target can be explicit (to_version_id) or latest active version (to_latest).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                "migrate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"from_version_id\": \"<string>\",\n  \"task_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"to_latest\": false,\n  \"to_version_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3bccfefa-13af-4ac9-ad6c-44724c64f71b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "migrate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_version_id\": \"<string>\",\n  \"task_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"to_latest\": false,\n  \"to_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"to_version\": {\n    \"id\": \"string\",\n    \"branch_id\": \"string\",\n    \"git_hash\": \"string\",\n    \"git_branch\": \"string\",\n    \"author_name\": \"string\",\n    \"author_email\": \"string\",\n    \"image_url\": \"string\",\n    \"status\": \"UNHEALTHY\",\n    \"deployed_at\": \"1964-04-08T06:44:37.705Z\",\n    \"sdk_type\": \"claude_agent_sdk\",\n    \"acp_type\": \"async\",\n    \"created_at\": \"2011-05-08T16:32:50.641Z\",\n    \"failure_diagnostics\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    },\n    \"failure_reason\": \"string\",\n    \"git_message\": \"\",\n    \"image_expires_at\": \"1976-05-12T22:23:45.617Z\",\n    \"is_dirty\": false,\n    \"last_rollback_at\": \"1975-03-25T03:09:53.459Z\",\n    \"replicas\": 0,\n    \"retired_at\": \"1973-03-26T03:57:14.671Z\",\n    \"rollback_count\": 0,\n    \"rolled_back_at\": \"2001-01-16T19:46:42.389Z\",\n    \"source_filesystem_id\": \"string\",\n    \"updated_at\": \"1951-11-26T06:56:57.442Z\"\n  },\n  \"branch_id\": \"string\",\n  \"tasks\": [\n    {\n      \"id\": \"string\",\n      \"filesystem_id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"agents\": [\n        {\n          \"id\": \"string\",\n          \"namespace_id\": \"string\",\n          \"name\": \"string\",\n          \"description\": \"string\",\n          \"created_at\": \"2020-03-20T20:18:08.991Z\",\n          \"updated_at\": \"2017-06-12T10:56:24.407Z\",\n          \"agent_input_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"registered_at\": \"2022-06-21T22:53:30.007Z\",\n          \"registration_metadata\": {\n            \"key_0\": true,\n            \"key_1\": true\n          },\n          \"status\": \"ACTIVE\",\n          \"status_reason\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"namespace_id\": \"string\",\n          \"name\": \"string\",\n          \"description\": \"string\",\n          \"created_at\": \"2024-09-19T00:53:08.038Z\",\n          \"updated_at\": \"1997-10-19T17:33:14.362Z\",\n          \"agent_input_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"registered_at\": \"2017-06-23T10:49:06.350Z\",\n          \"registration_metadata\": {\n            \"key_0\": 1441,\n            \"key_1\": 8592\n          },\n          \"status\": \"ACTIVE\",\n          \"status_reason\": \"string\"\n        }\n      ],\n      \"created_at\": \"1976-10-08T00:29:39.952Z\",\n      \"created_version_id\": \"string\",\n      \"current_version_id\": \"string\",\n      \"name\": \"string\",\n      \"params\": {\n        \"key_0\": false\n      },\n      \"status\": \"COMPLETED\",\n      \"status_reason\": \"string\",\n      \"task_metadata\": {\n        \"key_0\": true,\n        \"key_1\": false,\n        \"key_2\": 3567\n      },\n      \"updated_at\": \"1952-02-20T02:27:31.871Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"filesystem_id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"agents\": [\n        {\n          \"id\": \"string\",\n          \"namespace_id\": \"string\",\n          \"name\": \"string\",\n          \"description\": \"string\",\n          \"created_at\": \"2017-02-26T02:51:53.057Z\",\n          \"updated_at\": \"2003-04-29T14:58:43.363Z\",\n          \"agent_input_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"registered_at\": \"2018-04-04T13:15:07.437Z\",\n          \"registration_metadata\": {\n            \"key_0\": 8024.528653164851\n          },\n          \"status\": \"ACTIVE\",\n          \"status_reason\": \"string\"\n        },\n        {\n          \"id\": \"string\",\n          \"namespace_id\": \"string\",\n          \"name\": \"string\",\n          \"description\": \"string\",\n          \"created_at\": \"1963-12-03T16:02:23.666Z\",\n          \"updated_at\": \"2020-03-25T12:11:46.685Z\",\n          \"agent_input_type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"registered_at\": \"1994-06-15T21:25:05.195Z\",\n          \"registration_metadata\": {\n            \"key_0\": 7355.199732189157\n          },\n          \"status\": \"ACTIVE\",\n          \"status_reason\": \"string\"\n        }\n      ],\n      \"created_at\": \"1963-06-29T08:48:26.078Z\",\n      \"created_version_id\": \"string\",\n      \"current_version_id\": \"string\",\n      \"name\": \"string\",\n      \"params\": {\n        \"key_0\": \"string\"\n      },\n      \"status\": \"FAILED\",\n      \"status_reason\": \"string\",\n      \"task_metadata\": {\n        \"key_0\": true\n      },\n      \"updated_at\": \"1995-02-04T07:15:25.079Z\"\n    }\n  ],\n  \"from_version_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b7bdd28b-63ee-4870-be19-e1f69c798f4b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "migrate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_version_id\": \"<string>\",\n  \"task_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"to_latest\": false,\n  \"to_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6da52bda-5e53-4664-96f8-92303fc33dc2",
+          "name": "Delete Task by Name",
+          "request": {
+            "name": "Delete Task by Name",
+            "description": {
+              "content": "Delete a task by its unique name.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                "name",
+                ":task_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_id",
+                  "value": "<string>",
+                  "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d2614d13-36c8-4ebf-96ce-3062fbabcbe3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b9ff972-75b0-4092-9531-c268767548d7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "82e7ca75-1c62-44b9-b394-38e65d89197a",
+          "name": "Get Task by Name",
+          "request": {
+            "name": "Get Task by Name",
+            "description": {
+              "content": "Get a task by its unique name.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                "name",
+                ":task_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "agent_id",
+                  "value": "<string>",
+                  "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6cf4a156-409c-4793-8352-d27225965ea5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"agents\": [\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2005-11-16T19:20:44.570Z\",\n      \"updated_at\": \"1949-05-07T13:59:46.983Z\",\n      \"agent_input_type\": \"json\",\n      \"registered_at\": \"1979-06-27T01:14:56.053Z\",\n      \"registration_metadata\": {\n        \"key_0\": 7133,\n        \"key_1\": \"string\"\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2010-05-21T17:24:46.563Z\",\n      \"updated_at\": \"1965-07-13T01:31:50.483Z\",\n      \"agent_input_type\": \"text\",\n      \"registered_at\": \"1951-07-22T02:23:54.523Z\",\n      \"registration_metadata\": {\n        \"key_0\": 2002.5872525697807,\n        \"key_1\": false\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    }\n  ],\n  \"created_at\": \"2003-03-30T14:49:56.574Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": \"string\"\n  },\n  \"status\": \"DELETED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": true,\n    \"key_1\": \"string\",\n    \"key_2\": 5546\n  },\n  \"updated_at\": \"2001-02-25T07:02:23.741Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "819eb973-6781-4163-9a28-933ac5d77b13",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2286af4f-9796-4aeb-bf32-8df3895e7fb2",
+          "name": "Update Task by Name",
+          "request": {
+            "name": "Update Task by Name",
+            "description": {
+              "content": "Update mutable fields for a task by its unique Name.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                "name",
+                ":task_name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_id",
+                  "value": "<string>",
+                  "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_metadata\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": false\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f1cef4ea-676a-458a-8757-f3f3984decbb",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"task_metadata\": {\n    \"key_0\": 9441.920417404046,\n    \"key_1\": 3696,\n    \"key_2\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"created_at\": \"1983-10-08T07:46:56.486Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": false,\n    \"key_1\": true\n  },\n  \"status\": \"FAILED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": 1711.310328022939\n  },\n  \"updated_at\": \"1947-03-31T00:21:15.411Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c69fef1-fee6-4ad1-872e-a2445167f112",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"task_metadata\": {\n    \"key_0\": 9441.920417404046,\n    \"key_1\": 3696,\n    \"key_2\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2012d02a-dae6-4499-bef0-d627ec8856d1",
+          "name": "Stream Task Events by Name",
+          "request": {
+            "name": "Stream Task Events by Name",
+            "description": {
+              "content": "Stream events for a task by its unique name using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                "name",
+                ":task_name",
+                "stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_id",
+                  "value": "<string>",
+                  "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7805c1f2-f0e8-4cb9-beb5-33c37abd8d40",
+              "name": "SSE stream of TextStreamPart events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"start\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebd3020d-100f-4064-83ec-ec93ae2f5ef7",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    "name",
+                    ":task_name",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9d28ca13-75d4-46ed-a6da-4e417636d892",
+          "name": "Delete Task by ID",
+          "request": {
+            "name": "Delete Task by ID",
+            "description": {
+              "content": "Delete a task by its unique ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "57bb425c-830f-486d-9a81-a64d48826d7f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "efd17975-4ebc-45cb-b7a9-d68ba90d5c2b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0a5177da-8e53-49e8-a364-eaae1c7da8d1",
+          "name": "Get Task by ID",
+          "request": {
+            "name": "Get Task by ID",
+            "description": {
+              "content": "Get a task by its unique ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "relationships",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5bb4346f-703c-4d5f-a9ba-161fd3fec272",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"agents\": [\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2005-11-16T19:20:44.570Z\",\n      \"updated_at\": \"1949-05-07T13:59:46.983Z\",\n      \"agent_input_type\": \"json\",\n      \"registered_at\": \"1979-06-27T01:14:56.053Z\",\n      \"registration_metadata\": {\n        \"key_0\": 7133,\n        \"key_1\": \"string\"\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2010-05-21T17:24:46.563Z\",\n      \"updated_at\": \"1965-07-13T01:31:50.483Z\",\n      \"agent_input_type\": \"text\",\n      \"registered_at\": \"1951-07-22T02:23:54.523Z\",\n      \"registration_metadata\": {\n        \"key_0\": 2002.5872525697807,\n        \"key_1\": false\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    }\n  ],\n  \"created_at\": \"2003-03-30T14:49:56.574Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": \"string\"\n  },\n  \"status\": \"DELETED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": true,\n    \"key_1\": \"string\",\n    \"key_2\": 5546\n  },\n  \"updated_at\": \"2001-02-25T07:02:23.741Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "784ff6b6-27dd-4a68-a5e3-da3966113e86",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    },
+                    {
+                      "key": "relationships",
+                      "value": "agents"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9d6df171-c2a1-4b6b-bcb9-28939127e353",
+          "name": "Update Task by ID",
+          "request": {
+            "name": "Update Task by ID",
+            "description": {
+              "content": "Update mutable fields for a task by its unique ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task_metadata\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": false\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3c6ee13d-b433-4aa3-82ab-78d0c817dfe3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"task_metadata\": {\n    \"key_0\": 9441.920417404046,\n    \"key_1\": 3696,\n    \"key_2\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"created_at\": \"1983-10-08T07:46:56.486Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": false,\n    \"key_1\": true\n  },\n  \"status\": \"FAILED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": 1711.310328022939\n  },\n  \"updated_at\": \"1947-03-31T00:21:15.411Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "700d48a5-6bcb-4a9e-9883-4879c4f76075",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"task_metadata\": {\n    \"key_0\": 9441.920417404046,\n    \"key_1\": 3696,\n    \"key_2\": true\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7e3584c9-d40b-4f4a-835c-97ee2e1c42f7",
+          "name": "Cancel Task",
+          "request": {
+            "name": "Cancel Task",
+            "description": {
+              "content": "Cancel a running task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c99db123-f3b0-48df-8434-6081f5cbad90",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"filesystem_id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"agents\": [\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2005-11-16T19:20:44.570Z\",\n      \"updated_at\": \"1949-05-07T13:59:46.983Z\",\n      \"agent_input_type\": \"json\",\n      \"registered_at\": \"1979-06-27T01:14:56.053Z\",\n      \"registration_metadata\": {\n        \"key_0\": 7133,\n        \"key_1\": \"string\"\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"namespace_id\": \"string\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"created_at\": \"2010-05-21T17:24:46.563Z\",\n      \"updated_at\": \"1965-07-13T01:31:50.483Z\",\n      \"agent_input_type\": \"text\",\n      \"registered_at\": \"1951-07-22T02:23:54.523Z\",\n      \"registration_metadata\": {\n        \"key_0\": 2002.5872525697807,\n        \"key_1\": false\n      },\n      \"status\": \"ACTIVE\",\n      \"status_reason\": \"string\"\n    }\n  ],\n  \"created_at\": \"2003-03-30T14:49:56.574Z\",\n  \"created_version_id\": \"string\",\n  \"current_version_id\": \"string\",\n  \"name\": \"string\",\n  \"params\": {\n    \"key_0\": \"string\"\n  },\n  \"status\": \"DELETED\",\n  \"status_reason\": \"string\",\n  \"task_metadata\": {\n    \"key_0\": true,\n    \"key_1\": \"string\",\n    \"key_2\": 5546\n  },\n  \"updated_at\": \"2001-02-25T07:02:23.741Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a98970a9-7e11-455c-ae7a-70be21a749fc",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fe06c3f8-baa0-4c5a-a0c8-493c677bf246",
+          "name": "Send Event to Task",
+          "request": {
+            "name": "Send Event to Task",
+            "description": {
+              "content": "Send an event to a running task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": {\n    \"text\": \"<string>\",\n    \"type\": \"text\"\n  },\n  \"idempotency_key\": \"<string>\",\n  \"persist_message\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0638d114-ad55-43a0-9bb5-cf7745b185b3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": {\n    \"text\": \"string\",\n    \"type\": \"text\"\n  },\n  \"idempotency_key\": \"<string>\",\n  \"persist_message\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"sequence_id\": 1225,\n  \"task_id\": \"string\",\n  \"agent_id\": \"string\",\n  \"content\": {\n    \"text\": \"string\",\n    \"type\": \"text\"\n  },\n  \"created_at\": \"1999-01-12T17:41:21.550Z\",\n  \"streamCapabilities\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dedebe56-9865-4db2-96a3-527b3eeb7d78",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"content\": {\n    \"text\": \"string\",\n    \"type\": \"text\"\n  },\n  \"idempotency_key\": \"<string>\",\n  \"persist_message\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "20939c08-3a9b-4c35-9252-2a65a63eba9e",
+          "name": "Handler End",
+          "request": {
+            "name": "Handler End",
+            "description": {
+              "content": "Signal that an ACP handler has finished processing an event.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "handler-end"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duration_ms\": \"<integer>\",\n  \"error\": \"<string>\",\n  \"event_id\": \"<string>\",\n  \"pod_id\": \"<string>\",\n  \"success\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e76e9b8d-e3a2-4501-9e16-bfb7ecefb0fb",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "handler-end"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"duration_ms\": \"<integer>\",\n  \"error\": \"<string>\",\n  \"event_id\": \"<string>\",\n  \"pod_id\": \"<string>\",\n  \"success\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"handler_status\": \"string\",\n  \"task_status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98b80402-7ec2-421f-a4d2-6d4098e5da63",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "handler-end"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"duration_ms\": \"<integer>\",\n  \"error\": \"<string>\",\n  \"event_id\": \"<string>\",\n  \"pod_id\": \"<string>\",\n  \"success\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c6d7040b-330d-456a-940b-fb8180e648e6",
+          "name": "Stream Task Events by ID",
+          "request": {
+            "name": "Stream Task Events by ID",
+            "description": {
+              "content": "Stream events for a task by its unique ID using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "64e1767c-72f0-45c9-8ad1-59b6eb676ce1",
+              "name": "SSE stream of TextStreamPart events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"start\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7e2e55e4-00b0-4649-a150-2ae0704d3c00",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6301cfdc-6671-441e-8cb3-3f4b8ccbc5b7",
+          "name": "List System Folder Types",
+          "request": {
+            "name": "List System Folder Types",
+            "description": {
+              "content": "Get all registered system folder types with their configurations for a task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "system-folder-types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1da608f5-fa77-4a14-9d68-b72a5edd710b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folder-types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"type\": \"string\",\n    \"host_path\": \"string\",\n    \"sandbox_mount_path\": \"string\"\n  },\n  {\n    \"type\": \"string\",\n    \"host_path\": \"string\",\n    \"sandbox_mount_path\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "699f3b0e-7a7d-4281-9ff5-7e0646443337",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folder-types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fc3606a9-3379-467d-90db-85d3ca021107",
+          "name": "Get System Folder",
+          "request": {
+            "name": "Get System Folder",
+            "description": {
+              "content": "Get a task's system folder record by type.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "system-folders",
+                ":folder_type"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "folder_type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a3a70e58-ce31-4ee1-9327-246cb1c7a895",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"task_id\": \"string\",\n  \"folder_type\": \"string\",\n  \"archive_checksum\": \"string\",\n  \"archive_size_bytes\": 523,\n  \"created_at\": \"1992-11-09T05:43:42.476Z\",\n  \"last_synced_at\": \"2008-09-17T10:22:09.359Z\",\n  \"sync_status\": \"string\",\n  \"updated_at\": \"1948-08-15T10:01:57.525Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "199bce54-5857-4da7-8e59-f2d028e583f1",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "835b7785-c1d8-4584-bb50-f0663bb03dd4",
+          "name": "Get System Folder Download URL",
+          "request": {
+            "name": "Get System Folder Download URL",
+            "description": {
+              "content": "Get a presigned URL for direct download of a system folder archive from GCS.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "system-folders",
+                ":folder_type",
+                "download-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "folder_type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expiration_seconds\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "30e68dca-1e1a-4fa4-bdae-742c0456dd77",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "download-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\",\n  \"expires_at\": \"1958-11-16T05:33:32.788Z\",\n  \"method\": \"string\",\n  \"instructions\": \"string\",\n  \"content_type\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9f127d85-b4da-4dab-b987-0a462034c07e",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "download-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1e655499-fd20-4ada-beee-a35c32192828",
+          "name": "Complete System Folder Sync",
+          "request": {
+            "name": "Complete System Folder Sync",
+            "description": {
+              "content": "Complete a system folder sync operation and update metadata.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "system-folders",
+                ":folder_type",
+                "sync-complete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "folder_type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7ea38a80-efca-42cf-b210-98e4e6c5b75b",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "sync-complete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"task_id\": \"string\",\n  \"folder_type\": \"string\",\n  \"sync_id\": \"string\",\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66f33f25-cc65-41a1-867e-bc9de164aab9",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "sync-complete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "054024da-78ef-401c-876f-4f623395d201",
+          "name": "Get System Folder Upload URL",
+          "request": {
+            "name": "Get System Folder Upload URL",
+            "description": {
+              "content": "Get a presigned URL for direct upload of a system folder archive to GCS.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "tasks",
+                ":task_id",
+                "system-folders",
+                ":folder_type",
+                "upload-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "folder_type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "task_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expiration_seconds\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fc7ec7ab-1094-4317-a277-e9176f9d8e35",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "upload-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\",\n  \"expires_at\": \"1958-11-16T05:33:32.788Z\",\n  \"method\": \"string\",\n  \"instructions\": \"string\",\n  \"content_type\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c664de2-c35d-40b0-91b1-45a0c7574155",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tasks",
+                    ":task_id",
+                    "system-folders",
+                    ":folder_type",
+                    "upload-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "folder_type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "task_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "aaca2352-374c-4838-8151-7d5b3511e8ac",
+    "name": "Sb0 Agent APIKeys Tasks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

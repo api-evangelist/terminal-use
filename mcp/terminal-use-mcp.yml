@@ -2,12 +2,10 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/terminal-use-openapi-original.json
-note: >-
-  No official hosted/remote Terminal Use MCP server was found (searched npm
-  @terminaluse scope, the npm registry, and the docs). This is a DERIVED
-  candidate tool list — a starting point mapping marquee API operations to MCP
-  tools, not a published server. The `tu` CLI is the primary agent-facing
-  surface today.
+note: No official hosted/remote Terminal Use MCP server was found (searched npm @terminaluse scope, the
+  npm registry, and the docs). This is a DERIVED candidate tool list — a starting point mapping marquee
+  API operations to MCP tools, not a published server. The `tu` CLI is the primary agent-facing surface
+  today.
 server:
   name: terminal-use
   transport: http
@@ -49,3 +47,9 @@ tools:
 - name: get_task_state
   description: Retrieve per-task persisted state.
   source_operation: openapi/terminal-use-openapi-original.json#states_retrieve
+deployment:
+  mode: none
+  verified: derived
+  tools: 12
+  checked: '2026-08-12'
+  source: catalog MCP census

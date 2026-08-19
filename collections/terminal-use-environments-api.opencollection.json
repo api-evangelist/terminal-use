@@ -1,0 +1,212 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Environments API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Environments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List all environments for an agent.\n\n    Environments define deployment targets (e.g., production, staging, preview)."
+        },
+        {
+          "info": {
+            "name": "Create Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new environment for an agent.\n\n    Environments define deployment targets with branch matching rules.\n    The is_prod flag cannot be set via API - production environment is protected.\n\n    **Branch Rules:**\n    - Exact match: [\"main\"] or [\"develop\"]\n    - Wildcard: [\"feature/*\"] matches feature/foo, feature/bar\n    - Catch-all: [\"*\"] matches any branch"
+        },
+        {
+          "info": {
+            "name": "Get Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments/:env_name",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "env_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get environment details by name."
+        },
+        {
+          "info": {
+            "name": "Update Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments/:env_name",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "env_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing environment.\n\n    All fields are optional - only provided fields will be updated.\n\n    **Production Environment Constraints:**\n    - branch_rules must be exactly one literal string (no wildcards)\n    - is_prod cannot be changed via API"
+        },
+        {
+          "info": {
+            "name": "Delete Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments/:env_name",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "env_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an environment.\n\n    **Note:** Production environments (is_prod=True) cannot be deleted."
+        },
+        {
+          "info": {
+            "name": "List Branches for Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments/:env_name/branches",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "env_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List all branches that match this environment's branch rules.\n\n    For wildcard environments (like preview with [\"*\"]),\n    returns all non-retired branches for the agent.\n\n    For specific branch rules (like production with [\"main\"]),\n    returns only the matching branch(es).\n\n    Branches are sorted by updated_at descending (most recent first)."
+        },
+        {
+          "info": {
+            "name": "Resolve Environment for Branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/resolve-env",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Resolve which environment matches a given branch.\n\n    Uses specificity-based matching:\n    - Exact match wins over wildcards (e.g., \"main\" matches production before preview)\n    - Prefix wildcards match by length (e.g., \"feature/*\" beats \"*\")\n    - Catch-all \"*\" has lowest priority\n\n    Returns 404 if no environment matches the branch."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

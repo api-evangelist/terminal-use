@@ -1,0 +1,161 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Logs API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Agent Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/logs",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query",
+                "description": "Name of the agent (format: namespace/name or agent ID)"
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch/deployment ID"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by task ID"
+              },
+              {
+                "name": "trace_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by OTEL trace ID (32 lowercase hex chars)"
+              },
+              {
+                "name": "level",
+                "value": "",
+                "type": "query",
+                "description": "Filter by log level"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Filter by source (stdout, stderr, server)"
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Start timestamp filter (ISO 8601)"
+              },
+              {
+                "name": "until",
+                "value": "",
+                "type": "query",
+                "description": "End timestamp filter (ISO 8601)"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search in message (case-insensitive)"
+              },
+              {
+                "name": "after_id",
+                "value": "",
+                "type": "query",
+                "description": "Return logs after this log_id (cursor-based pagination)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of results to skip"
+              }
+            ]
+          },
+          "docs": "Query logs for an agent. Requires user authentication."
+        },
+        {
+          "info": {
+            "name": "Ingest Agent Logs (OTLP Format)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/logs/otlp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Ingest OpenTelemetry logs from an agent. Requires agent API key authentication."
+        },
+        {
+          "info": {
+            "name": "Stream Agent Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/logs/stream",
+            "params": [
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query",
+                "description": "Name of the agent (format: namespace/name or agent ID)"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by task ID"
+              },
+              {
+                "name": "level",
+                "value": "",
+                "type": "query",
+                "description": "Minimum log level"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Filter by source (stdout, stderr, server)"
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by branch/version ID"
+              }
+            ]
+          },
+          "docs": "Stream logs for an agent in real-time using Server-Sent Events (SSE). Emits multiple event types (connected, log, error) discriminated by 'type' field. Only streams NEW logs after connection (like tail -f). Auto-disconnects after 5 minutes for cost control."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

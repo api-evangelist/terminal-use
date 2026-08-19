@@ -1,0 +1,626 @@
+{
+  "item": [
+    {
+      "id": "07d34017-5bb7-44ee-8d98-a545b191d433",
+      "name": "Logs",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fd92a923-a07f-4b1d-85f5-3ee4b81693fd",
+          "name": "List Agent Logs",
+          "request": {
+            "name": "List Agent Logs",
+            "description": {
+              "content": "Query logs for an agent. Requires user authentication.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "logs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_name",
+                  "value": "<string>",
+                  "description": "(Required) Name of the agent (format: namespace/name or agent ID)"
+                },
+                {
+                  "disabled": false,
+                  "key": "branch_id",
+                  "value": "<string>",
+                  "description": "Filter by branch/deployment ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<string>",
+                  "description": "Filter by task ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "trace_id",
+                  "value": "<string>",
+                  "description": "Filter by OTEL trace ID (32 lowercase hex chars)"
+                },
+                {
+                  "disabled": false,
+                  "key": "level",
+                  "value": "<string>",
+                  "description": "Filter by log level"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<string>",
+                  "description": "Filter by source (stdout, stderr, server)"
+                },
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Start timestamp filter (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "until",
+                  "value": "<dateTime>",
+                  "description": "End timestamp filter (ISO 8601)"
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Full-text search in message (case-insensitive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "after_id",
+                  "value": "<string>",
+                  "description": "Return logs after this log_id (cursor-based pagination)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Number of results to skip"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "949a0910-b749-43af-9cbb-d7b80f955a87",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "trace_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "level",
+                      "value": "CRITICAL"
+                    },
+                    {
+                      "key": "source",
+                      "value": "server"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "until",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"logs\": [\n    {\n      \"log_id\": \"string\",\n      \"timestamp\": \"string\",\n      \"agent_id\": \"string\",\n      \"source\": \"stdout\",\n      \"level\": \"DEBUG\",\n      \"message\": \"string\",\n      \"environment\": \"string\",\n      \"logger\": \"string\",\n      \"method\": \"string\",\n      \"span_id\": \"string\",\n      \"task_id\": \"string\",\n      \"trace_id\": \"string\",\n      \"version\": \"string\"\n    },\n    {\n      \"log_id\": \"string\",\n      \"timestamp\": \"string\",\n      \"agent_id\": \"string\",\n      \"source\": \"stdout\",\n      \"level\": \"CRITICAL\",\n      \"message\": \"string\",\n      \"environment\": \"string\",\n      \"logger\": \"string\",\n      \"method\": \"string\",\n      \"span_id\": \"string\",\n      \"task_id\": \"string\",\n      \"trace_id\": \"string\",\n      \"version\": \"string\"\n    }\n  ],\n  \"total\": 4088,\n  \"has_more\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f8268ffd-0451-40a2-a1be-39d37371c453",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "trace_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "level",
+                      "value": "CRITICAL"
+                    },
+                    {
+                      "key": "source",
+                      "value": "server"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "until",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a4c670c8-559f-4764-9e42-ec5673b8ac6c",
+          "name": "Ingest Agent Logs (OTLP Format)",
+          "request": {
+            "name": "Ingest Agent Logs (OTLP Format)",
+            "description": {
+              "content": "Ingest OpenTelemetry logs from an agent. Requires agent API key authentication.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "logs",
+                "otlp"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceLogs\": [\n    {\n      \"resource\": {}\n    },\n    {\n      \"resource\": {}\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "14b1280e-7931-46d8-a301-b037fab7a20f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs",
+                    "otlp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resourceLogs\": [\n    {\n      \"resource\": {}\n    },\n    {\n      \"resource\": {}\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"logs_count\": 1852,\n  \"status\": \"accepted\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8cd820e0-3c40-41cb-b4ba-0a38b2c052e1",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs",
+                    "otlp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"resourceLogs\": [\n    {\n      \"resource\": {}\n    },\n    {\n      \"resource\": {}\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9d9bc2df-a69a-45ea-ab73-d8d16a73c297",
+          "name": "Stream Agent Logs",
+          "request": {
+            "name": "Stream Agent Logs",
+            "description": {
+              "content": "Stream logs for an agent in real-time using Server-Sent Events (SSE). Emits multiple event types (connected, log, error) discriminated by 'type' field. Only streams NEW logs after connection (like tail -f). Auto-disconnects after 5 minutes for cost control.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "logs",
+                "stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "agent_name",
+                  "value": "<string>",
+                  "description": "(Required) Name of the agent (format: namespace/name or agent ID)"
+                },
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<string>",
+                  "description": "Filter by task ID"
+                },
+                {
+                  "disabled": false,
+                  "key": "level",
+                  "value": "<string>",
+                  "description": "Minimum log level"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<string>",
+                  "description": "Filter by source (stdout, stderr, server)"
+                },
+                {
+                  "disabled": false,
+                  "key": "branch_id",
+                  "value": "<string>",
+                  "description": "Filter by branch/version ID"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4cc3d725-455a-4939-85c1-b71a37d28a51",
+              "name": "SSE stream of log events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "level",
+                      "value": "CRITICAL"
+                    },
+                    {
+                      "key": "source",
+                      "value": "server"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"agent_id\": \"string\",\n  \"type\": \"connected\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bf78e32-684d-45cf-9521-83e08e72ff64",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "logs",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "agent_name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "level",
+                      "value": "CRITICAL"
+                    },
+                    {
+                      "key": "source",
+                      "value": "server"
+                    },
+                    {
+                      "key": "branch_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "43362129-ce40-48f5-a0de-25eb20046822",
+    "name": "Sb0 Agent APIKeys Logs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

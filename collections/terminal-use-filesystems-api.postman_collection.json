@@ -1,0 +1,2182 @@
+{
+  "item": [
+    {
+      "id": "61067502-f9cd-4d29-ad51-d8460bcb320f",
+      "name": "Filesystems",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "789fa6ed-391f-472e-a6fa-7603c019b761",
+          "name": "List Filesystems",
+          "request": {
+            "name": "List Filesystems",
+            "description": {
+              "content": "List all filesystems accessible to the current user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "project_id",
+                  "value": "<string>",
+                  "description": "Optional project filter. When provided, requires read access to the project and returns only filesystems in that project."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2a8d0540-296d-4f34-9271-e7320b053545",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "project_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"namespace_id\": \"string\",\n    \"status\": \"CREATING\",\n    \"archive_checksum\": \"string\",\n    \"archive_path\": \"string\",\n    \"archive_size_bytes\": 8639,\n    \"created_at\": \"1965-01-29T14:10:42.324Z\",\n    \"last_synced_at\": \"1986-08-21T23:57:55.477Z\",\n    \"name\": \"string\",\n    \"project_id\": \"string\",\n    \"updated_at\": \"1990-05-02T12:08:26.465Z\"\n  },\n  {\n    \"id\": \"string\",\n    \"namespace_id\": \"string\",\n    \"status\": \"SYNCING_UP\",\n    \"archive_checksum\": \"string\",\n    \"archive_path\": \"string\",\n    \"archive_size_bytes\": 6225,\n    \"created_at\": \"1980-12-15T04:41:16.112Z\",\n    \"last_synced_at\": \"1985-04-05T02:40:54.832Z\",\n    \"name\": \"string\",\n    \"project_id\": \"string\",\n    \"updated_at\": \"1991-05-07T20:00:15.072Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f67b8cd7-cdc8-46de-b2a4-8c9d7385f05b",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "project_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f6620431-2a57-408c-824a-76afc0c417d5",
+          "name": "Create Filesystem",
+          "request": {
+            "name": "Create Filesystem",
+            "description": {
+              "content": "Create a new filesystem linked to a project.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"project_id\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "63505786-9d8d-4ac7-9e82-5861ae3a7ab9",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"project_id\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"status\": \"FAILED\",\n  \"archive_checksum\": \"string\",\n  \"archive_path\": \"string\",\n  \"archive_size_bytes\": 4532,\n  \"created_at\": \"2009-06-02T07:45:54.204Z\",\n  \"last_synced_at\": \"2016-06-18T19:10:11.996Z\",\n  \"name\": \"string\",\n  \"project_id\": \"string\",\n  \"updated_at\": \"1971-07-26T02:54:04.889Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "96f36d67-06cf-4a01-8603-117f6a47e6df",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"project_id\": \"<string>\",\n  \"name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a527dd36-a66e-4f64-aced-52185cc63d2a",
+          "name": "Get Filesystem",
+          "request": {
+            "name": "Get Filesystem",
+            "description": {
+              "content": "Get filesystem details by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a21cbd9b-d38a-498d-8ec4-b54ff62675d8",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"namespace_id\": \"string\",\n  \"status\": \"FAILED\",\n  \"archive_checksum\": \"string\",\n  \"archive_path\": \"string\",\n  \"archive_size_bytes\": 4532,\n  \"created_at\": \"2009-06-02T07:45:54.204Z\",\n  \"last_synced_at\": \"2016-06-18T19:10:11.996Z\",\n  \"name\": \"string\",\n  \"project_id\": \"string\",\n  \"updated_at\": \"1971-07-26T02:54:04.889Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f3cdeac0-6f32-47e7-a09e-60040df6cf93",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e54f87f3-a77a-465c-a215-e9b1ca1bbfe0",
+          "name": "Get Download URL",
+          "request": {
+            "name": "Get Download URL",
+            "description": {
+              "content": "Get a presigned URL for direct download from GCS.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "download-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expiration_seconds\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "de790613-1d8b-424c-8b7f-ce9e99f5c945",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "download-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\",\n  \"expires_at\": \"1974-07-20T17:34:59.613Z\",\n  \"method\": \"string\",\n  \"instructions\": \"string\",\n  \"content_type\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "943c251b-c18f-4b6d-8ef0-6416873591c5",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "download-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "409a127c-9f6d-4541-9879-bc9d1f495925",
+          "name": "Download File",
+          "request": {
+            "name": "Download File",
+            "description": {
+              "content": "Download a single file from the filesystem.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "file-download"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "path",
+                  "value": "<string>",
+                  "description": "(Required) Relative file path to download."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/octet-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7a18f1b4-9b5f-4278-bfa9-1c5b6ec20c6a",
+              "name": "Binary file content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/octet-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/octet-stream"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "fd2cd69a-9698-40c5-b9c0-cd2df20b07f9",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "df807616-187b-48b6-827b-132c7fc27feb",
+          "name": "Upload File",
+          "request": {
+            "name": "Upload File",
+            "description": {
+              "content": "Upload a single file into a filesystem by relative path. Defaults to overwrite mode; conditional mode can be used for strict concurrency control.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "file-upload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "path",
+                  "value": "<string>",
+                  "description": "(Required) Relative path to write."
+                },
+                {
+                  "disabled": false,
+                  "key": "writeMode",
+                  "value": "overwrite",
+                  "description": "Upload semantics: overwrite (default) or conditional."
+                },
+                {
+                  "disabled": false,
+                  "key": "baseVersion",
+                  "value": "<string>",
+                  "description": "Required in conditional mode: expected current archive version."
+                },
+                {
+                  "disabled": false,
+                  "key": "expectedVersion",
+                  "value": "<string>",
+                  "description": "Conditional replace precondition on current file version."
+                },
+                {
+                  "disabled": false,
+                  "key": "createOnly",
+                  "value": "<string>",
+                  "description": "Conditional create precondition; must be '*'."
+                },
+                {
+                  "disabled": false,
+                  "key": "digest",
+                  "value": "<string>",
+                  "description": "Optional digest in format sha-256=<base64>."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Optional idempotency key for safe retries.",
+                "key": "Idempotency-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/octet-stream"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<binary>"
+            }
+          },
+          "response": [
+            {
+              "id": "360439b0-d223-40da-83f2-e5761b6b7aa0",
+              "name": "File replaced",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"archive_version\": \"a9502c997a...\",\n  \"created\": false,\n  \"file_version\": \"d4f9678f0c...\",\n  \"filesystem_id\": \"fs_123\",\n  \"path\": \"src/main.py\",\n  \"size_bytes\": 14,\n  \"write_mode\": \"overwrite\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e136c515-412f-4b7b-a6b0-3afbf48fe0a0",
+              "name": "File created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"archive_version\": \"c7e8441b20...\",\n  \"created\": true,\n  \"file_version\": \"6a1d5c3f11...\",\n  \"filesystem_id\": \"fs_123\",\n  \"path\": \"notes/todo.txt\",\n  \"size_bytes\": 23,\n  \"write_mode\": \"conditional\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76d79a5f-6f68-4601-b193-fbc8d9a4c113",
+              "name": "Invalid path, write mode, or digest",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c1c49a47-dc9e-4997-ab16-73f356d3654f",
+              "name": "Filesystem not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1c0637aa-dc9d-462c-bd3a-6238c179e17d",
+              "name": "Conflict (stale base version or idempotency conflict)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 409,\n  \"message\": \"baseVersion does not match current archive version.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "17a1988b-fa75-4185-8cd6-0fe1353800bf",
+              "name": "Precondition failed for conditional upload",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Precondition Failed",
+              "code": 412,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 412,\n  \"message\": \"expectedVersion does not match current file version.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aef5e081-1110-4151-8649-6050b61aabda",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ca997e5-d8a5-4cf6-90a8-6186b0c42fa6",
+              "name": "Conditional upload missing required preconditions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "file-upload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "writeMode",
+                      "value": "overwrite"
+                    },
+                    {
+                      "key": "baseVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "expectedVersion",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "createOnly",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "digest",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "Optional idempotency key for safe retries.",
+                    "key": "Idempotency-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "<binary>"
+                }
+              },
+              "status": "Precondition Required",
+              "code": 428,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 428,\n  \"message\": \"baseVersion is required in conditional mode.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2bae96ae-aa25-4496-8f3a-0d758cc4f5ee",
+          "name": "List Files",
+          "request": {
+            "name": "List Files",
+            "description": {
+              "content": "List files in the filesystem manifest with optional filtering.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "files"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "directory",
+                  "value": "/",
+                  "description": "Directory prefix to filter results"
+                },
+                {
+                  "disabled": false,
+                  "key": "recursive",
+                  "value": "true",
+                  "description": "Include subdirectories"
+                },
+                {
+                  "disabled": false,
+                  "key": "mime_type",
+                  "value": "<string>",
+                  "description": "Filter by MIME type"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_content",
+                  "value": "true",
+                  "description": "Include file content in response"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "1000",
+                  "description": "Maximum number of results"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "12e88610-da29-4ad8-bcc8-07588a708839",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "files"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "directory",
+                      "value": "/"
+                    },
+                    {
+                      "key": "recursive",
+                      "value": "true"
+                    },
+                    {
+                      "key": "mime_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_content",
+                      "value": "true"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"filesystem_id\": \"string\",\n  \"total_count\": 3061,\n  \"files\": [\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1971-05-10T14:56:21.720Z\",\n      \"synced_at\": \"2012-05-04T03:48:11.369Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 2511\n    },\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1949-10-16T03:01:21.577Z\",\n      \"synced_at\": \"2004-02-25T10:52:32.144Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 5486\n    }\n  ],\n  \"synced_at\": \"1950-09-01T00:42:49.734Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ebb942f-3145-488f-b288-99a4c475b6ea",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "files"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "directory",
+                      "value": "/"
+                    },
+                    {
+                      "key": "recursive",
+                      "value": "true"
+                    },
+                    {
+                      "key": "mime_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_content",
+                      "value": "true"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1000"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e3a3de12-81c1-458b-8eac-3f3d63f488a1",
+          "name": "Get File",
+          "request": {
+            "name": "Get File",
+            "description": {
+              "content": "Retrieve a specific file (or directory) from the filesystem manifest.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "files",
+                ":file_path"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include_content",
+                  "value": "true",
+                  "description": "Include file content in response"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "file_path",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4f35d2ae-2e56-405d-9a0e-8e6658dfcbc5",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "files",
+                    ":file_path"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_content",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "file_path",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"path\": \"string\",\n  \"modified_at\": \"1962-12-15T04:09:08.687Z\",\n  \"synced_at\": \"2021-09-02T06:43:28.603Z\",\n  \"checksum\": \"string\",\n  \"content\": \"string\",\n  \"content_truncated\": false,\n  \"is_binary\": false,\n  \"is_directory\": false,\n  \"mime_type\": \"string\",\n  \"size_bytes\": 3250\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee81bb6b-94e6-4118-9de6-744000c45214",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "files",
+                    ":file_path"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_content",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "file_path",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "859b3763-66d6-41cc-9b27-ac43ebdd30d9",
+          "name": "Complete Sync Operation",
+          "request": {
+            "name": "Complete Sync Operation",
+            "description": {
+              "content": "Notify that a sync operation completed and provide the file manifest.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "sync-complete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\",\n  \"files\": [\n    {\n      \"path\": \"<string>\",\n      \"modified_at\": \"<dateTime>\",\n      \"checksum\": \"<string>\",\n      \"content\": \"<string>\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"<string>\",\n      \"size_bytes\": \"<integer>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"modified_at\": \"<dateTime>\",\n      \"checksum\": \"<string>\",\n      \"content\": \"<string>\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"<string>\",\n      \"size_bytes\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f3104ec7-b1ba-412d-b223-4c2ac2be3a15",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "sync-complete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\",\n  \"files\": [\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1953-03-06T20:53:16.808Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 866\n    },\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1957-11-20T01:58:30.205Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 4996\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"filesystem_id\": \"string\",\n  \"sync_id\": \"string\",\n  \"files_count\": 9205,\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "353b4536-638b-4366-9504-c3c860d64043",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "sync-complete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"sync_id\": \"<string>\",\n  \"direction\": \"<string>\",\n  \"status\": \"<string>\",\n  \"archive_checksum\": \"<string>\",\n  \"archive_size_bytes\": \"<integer>\",\n  \"files\": [\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1953-03-06T20:53:16.808Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 866\n    },\n    {\n      \"path\": \"string\",\n      \"modified_at\": \"1957-11-20T01:58:30.205Z\",\n      \"checksum\": \"string\",\n      \"content\": \"string\",\n      \"content_truncated\": false,\n      \"is_binary\": false,\n      \"is_directory\": false,\n      \"mime_type\": \"string\",\n      \"size_bytes\": 4996\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c61ed5d-c893-4de7-ac39-e45ee064d63f",
+          "name": "Get Upload URL",
+          "request": {
+            "name": "Get Upload URL",
+            "description": {
+              "content": "Get a presigned URL for direct upload to GCS.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "filesystems",
+                ":filesystem_id",
+                "upload-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "filesystem_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expiration_seconds\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "337796c1-caa5-4823-88aa-3f9d82a6bb81",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "upload-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\",\n  \"expires_at\": \"1974-07-20T17:34:59.613Z\",\n  \"method\": \"string\",\n  \"instructions\": \"string\",\n  \"content_type\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d29a90c3-a2ec-4fdf-be5a-db71bc2627ba",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "filesystems",
+                    ":filesystem_id",
+                    "upload-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "filesystem_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expiration_seconds\": 3600\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3459cdc3-aa61-4905-a534-5f2eb196fab6",
+    "name": "Sb0 Agent APIKeys Filesystems API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

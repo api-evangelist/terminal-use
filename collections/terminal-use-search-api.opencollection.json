@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Search API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search Resources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/search",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Search query (minimum 2 characters)"
+              },
+              {
+                "name": "types",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of types to search (agents,tasks,workspaces). If not provided, searches all types."
+              },
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional namespace ID to filter results"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results per type (max 50)"
+              }
+            ]
+          },
+          "docs": "Unified search endpoint for agents, tasks, and workspaces.\n\n    Searches by name using case-insensitive matching.\n    Results are sorted by relevance (exact matches first, then prefix matches, then contains)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

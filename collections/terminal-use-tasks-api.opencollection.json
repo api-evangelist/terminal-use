@@ -1,0 +1,497 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Tasks API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+              },
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_after",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_before",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "include_total",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "order_direction",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "relationships",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List all tasks."
+        },
+        {
+          "info": {
+            "name": "Create Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new task for an agent."
+        },
+        {
+          "info": {
+            "name": "Migrate Tasks Between Versions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/migrate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Migrate tasks between versions within the same branch. Supports two modes: bulk migration by source version (from_version_id), or migration of specific tasks (task_ids). Target can be explicit (to_version_id) or latest active version (to_latest)."
+        },
+        {
+          "info": {
+            "name": "Get Task by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/name/:task_name",
+            "params": [
+              {
+                "name": "task_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "relationships",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+              }
+            ]
+          },
+          "docs": "Get a task by its unique name."
+        },
+        {
+          "info": {
+            "name": "Update Task by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/tasks/name/:task_name",
+            "params": [
+              {
+                "name": "task_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update mutable fields for a task by its unique Name."
+        },
+        {
+          "info": {
+            "name": "Delete Task by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/name/:task_name",
+            "params": [
+              {
+                "name": "task_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+              }
+            ]
+          },
+          "docs": "Delete a task by its unique name."
+        },
+        {
+          "info": {
+            "name": "Stream Task Events by Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/name/:task_name/stream",
+            "params": [
+              {
+                "name": "task_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "query",
+                "description": "Optional agent filter. When provided, we authorize it via direct OpenFGA Check and avoid ListObjects(agent) to prevent false 403s from transient/partial list results."
+              }
+            ]
+          },
+          "docs": "Stream events for a task by its unique name using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format)."
+        },
+        {
+          "info": {
+            "name": "Get Task by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "relationships",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get a task by its unique ID."
+        },
+        {
+          "info": {
+            "name": "Update Task by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update mutable fields for a task by its unique ID."
+        },
+        {
+          "info": {
+            "name": "Delete Task by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a task by its unique ID."
+        },
+        {
+          "info": {
+            "name": "Cancel Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/cancel",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Cancel a running task."
+        },
+        {
+          "info": {
+            "name": "Send Event to Task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/events",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send an event to a running task."
+        },
+        {
+          "info": {
+            "name": "Handler End",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/handler-end",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Signal that an ACP handler has finished processing an event."
+        },
+        {
+          "info": {
+            "name": "Stream Task Events by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/:task_id/stream",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Stream events for a task by its unique ID using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format)."
+        },
+        {
+          "info": {
+            "name": "List System Folder Types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/:task_id/system-folder-types",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get all registered system folder types with their configurations for a task."
+        },
+        {
+          "info": {
+            "name": "Get System Folder",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/:task_id/system-folders/:folder_type",
+            "params": [
+              {
+                "name": "folder_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a task's system folder record by type."
+        },
+        {
+          "info": {
+            "name": "Get System Folder Download URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/system-folders/:folder_type/download-url",
+            "params": [
+              {
+                "name": "folder_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a presigned URL for direct download of a system folder archive from GCS."
+        },
+        {
+          "info": {
+            "name": "Complete System Folder Sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/system-folders/:folder_type/sync-complete",
+            "params": [
+              {
+                "name": "folder_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Complete a system folder sync operation and update metadata."
+        },
+        {
+          "info": {
+            "name": "Get System Folder Upload URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/:task_id/system-folders/:folder_type/upload-url",
+            "params": [
+              {
+                "name": "folder_type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a presigned URL for direct upload of a system folder archive to GCS."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

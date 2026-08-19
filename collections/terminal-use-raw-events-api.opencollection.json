@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Raw Events API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Raw Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish Raw SDK Event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/raw-events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Publish a raw SDK event for transformation and streaming.\n\n    This endpoint replaces the deprecated `/stream-events` endpoint.\n    Events are transformed via SDK-specific adapters (based on `sdk_type` and `sdk_version`)\n    and the resulting stream parts are published to Redis for real-time consumption.\n\n    Messages that should be stored (e.g., AssistantMessage, UserMessage) are\n    automatically persisted to MongoDB for later retrieval.\n\n    **Supported SDK Types:**\n    - `claude`: Claude Age"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

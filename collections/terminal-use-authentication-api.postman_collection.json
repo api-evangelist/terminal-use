@@ -1,0 +1,104 @@
+{
+  "item": [
+    {
+      "id": "c114f722-6023-477c-88d0-fe2bea0aedef",
+      "name": "Authentication",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c16c7253-8c1a-4824-8cba-72042828e6c9",
+          "name": "Authenticate Token",
+          "request": {
+            "name": "Authenticate Token",
+            "description": {
+              "content": "Validate a WorkOS JWT and return the principal context.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "authn"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3a53200c-b3a4-4eac-a678-6c4d405842d8",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "authn"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"member_id\": \"string\",\n  \"api_key_id\": \"string\",\n  \"email\": \"string\",\n  \"is_service_user\": false,\n  \"name\": \"string\",\n  \"org_id\": \"string\",\n  \"role\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c9fe1f31-68a8-4f4f-82df-2abc60aefbbb",
+    "name": "Sb0 Agent APIKeys Authentication API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

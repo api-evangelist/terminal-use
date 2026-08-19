@@ -1,0 +1,181 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Versions API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Versions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Register Container",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/versions/register",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Register an agent container that has started up.\n\n    Called by the agent container on startup to:\n    1. Register its ACP URL with the platform\n    2. Receive its API key for authenticating subsequent requests\n\n    This endpoint should be called from within the container's entrypoint\n    after the ACP server is ready to receive traffic."
+        },
+        {
+          "info": {
+            "name": "Get Version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get version details by ID."
+        },
+        {
+          "info": {
+            "name": "Stream Deployment Progress",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id/deploy/events",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "SSE endpoint for real-time deployment progress events."
+        },
+        {
+          "info": {
+            "name": "Get Version Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id/metrics",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get deployment metrics for a specific version.\n\n    Returns metrics related to the deployment process for this version,\n    including average and P95 deployment durations queried from ClickHouse traces."
+        },
+        {
+          "info": {
+            "name": "Get Version Pod Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id/pod-logs",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "pod",
+                "value": "",
+                "type": "query",
+                "description": "Filter by pod name"
+              },
+              {
+                "name": "container",
+                "value": "",
+                "type": "query",
+                "description": "Filter by container name"
+              },
+              {
+                "name": "stream",
+                "value": "",
+                "type": "query",
+                "description": "Filter by log stream (stdout/stderr)"
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Start timestamp filter (ISO 8601)"
+              },
+              {
+                "name": "until",
+                "value": "",
+                "type": "query",
+                "description": "End timestamp filter (ISO 8601)"
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search in log message"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for the next page, using the previous log_id"
+              }
+            ]
+          },
+          "docs": "Get Kubernetes pod/container logs for a specific deployment version.\n\n    Data is sourced from ClickHouse `otel.pod_logs`, populated by the dedicated\n    pod-log collector DaemonSet. This endpoint has no Kubernetes or event-snapshot\n    fallback path."
+        },
+        {
+          "info": {
+            "name": "Get Version Pod Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id/pod-metrics",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "window_minutes",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "step_seconds",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get pod-level resource metrics (CPU and memory) for a specific version.\n\n    Data is sourced from ClickHouse `otel_metrics_*` tables populated by the\n    OpenTelemetry Collector's Prometheus receiver scraping kubelet cAdvisor metrics."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

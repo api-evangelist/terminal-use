@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys CLI Authentication API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "CLI Authentication",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Refresh Cli Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/auth/cli/refresh",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Refresh an expired session JWT using a refresh token.\n\nNote: Refresh tokens are single-use. The response contains a new refresh_token\nthat must replace the old one for future refresh operations."
+        },
+        {
+          "info": {
+            "name": "Exchange Cli Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/auth/cli/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchange authorization code for session JWT using PKCE."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

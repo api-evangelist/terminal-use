@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Namespaces API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Namespaces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Namespaces",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/namespaces",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by owner organization ID"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of results"
+              },
+              {
+                "name": "page_number",
+                "value": "",
+                "type": "query",
+                "description": "Page number"
+              }
+            ]
+          },
+          "docs": "List all namespaces the user has access to, optionally filtered by org."
+        },
+        {
+          "info": {
+            "name": "Create Namespace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/namespaces",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new namespace for multi-tenant isolation."
+        },
+        {
+          "info": {
+            "name": "Check Slug Availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/namespaces/slug-availability/:slug",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Check if a namespace slug is available for use."
+        },
+        {
+          "info": {
+            "name": "Get Namespace by Slug",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/namespaces/slug/:slug",
+            "params": [
+              {
+                "name": "slug",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a namespace by its slug."
+        },
+        {
+          "info": {
+            "name": "Get Namespace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/namespaces/:namespace_id",
+            "params": [
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a namespace by ID."
+        },
+        {
+          "info": {
+            "name": "Update Namespace",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/namespaces/:namespace_id",
+            "params": [
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a namespace's properties."
+        },
+        {
+          "info": {
+            "name": "Delete Namespace",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/namespaces/:namespace_id",
+            "params": [
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a namespace (must be empty)."
+        },
+        {
+          "info": {
+            "name": "Retry Namespace Provisioning",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/namespaces/:namespace_id/retry-provisioning",
+            "params": [
+              {
+                "name": "namespace_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "force",
+                "value": "",
+                "type": "query",
+                "description": "Force retry even if status is PENDING (for stuck namespaces)"
+              }
+            ]
+          },
+          "docs": "Retry provisioning for a namespace that failed or is stuck."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

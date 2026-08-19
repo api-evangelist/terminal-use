@@ -1,0 +1,361 @@
+{
+  "item": [
+    {
+      "id": "a7abeb44-1b7f-432e-9877-109c20611d09",
+      "name": "Messages v2",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ea9ba64e-6a93-4167-97b4-1c3206b943cc",
+          "name": "List Messages (v2 - UIMessage format)",
+          "request": {
+            "name": "List Messages (v2 - UIMessage format)",
+            "description": {
+              "content": "List messages for a task in Vercel AI SDK UIMessage format.\n\n    This endpoint returns messages transformed from raw SDK events into\n    a normalized UIMessage format suitable for frontend consumption.\n\n    Features:\n    - Tool merging: tool_use and tool_result are combined into single tool parts\n    - Complete-units pagination: Never splits tool request/result pairs across pages\n    - Runtime transformation: Raw SDK messages are transformed on-demand\n\n    Args:\n        task_id: The task ID to filter messages by\n        limit: Maximum number of complete messages to return (default: 50)\n        cursor: Opaque cursor string for pagination\n        direction: Pagination direction - \"older\" (default) or \"newer\"\n        parent_tool_use_id: Filter messages by parent tool use ID (for subagent context)\n\n    Returns:\n        ListMessagesV2Response with UIMessages and pagination info",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "messages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "direction",
+                  "value": "older"
+                },
+                {
+                  "disabled": false,
+                  "key": "parent_tool_use_id",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<string>",
+                  "description": "(Required) The task ID"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "50af570d-ce69-4853-ab72-9043b27ae20e",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "older"
+                    },
+                    {
+                      "key": "parent_tool_use_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"role\": \"system\",\n      \"parts\": [\n        {\n          \"text\": \"string\",\n          \"type\": \"text\"\n        }\n      ],\n      \"createdAt\": \"string\",\n      \"metadata\": {\n        \"costUsd\": 261.83100403135205,\n        \"durationMs\": 2183,\n        \"model\": \"string\",\n        \"parentToolUseId\": \"string\",\n        \"usage\": {\n          \"inputTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outputTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"totalTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"text\": \"string\",\n          \"type\": \"text\"\n        }\n      ],\n      \"createdAt\": \"string\",\n      \"metadata\": {\n        \"costUsd\": 4103.797622730824,\n        \"durationMs\": 3794,\n        \"model\": \"string\",\n        \"parentToolUseId\": \"string\",\n        \"usage\": {\n          \"inputTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"outputTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"totalTokens\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    }\n  ],\n  \"hasMore\": false,\n  \"nextCursor\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc66b07a-8a52-4393-bbc6-0c487b6ccf5c",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "messages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "older"
+                    },
+                    {
+                      "key": "parent_tool_use_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c76e0cbc-dbfa-4cd1-91da-88820cef91c7",
+          "name": "Get Message (v2 - UIMessage format)",
+          "request": {
+            "name": "Get Message (v2 - UIMessage format)",
+            "description": {
+              "content": "Get a single message by ID in UIMessage format.\n\n    Returns the transformed UIMessage or null if not found.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "messages",
+                ":message_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "task_id",
+                  "value": "<string>",
+                  "description": "(Required) The task ID"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "message_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c78dee3b-effe-476d-8f95-69a357fbc35d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "messages",
+                    ":message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "message_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"role\": \"system\",\n  \"parts\": [\n    {\n      \"text\": \"string\",\n      \"type\": \"text\"\n    }\n  ],\n  \"createdAt\": \"string\",\n  \"metadata\": {\n    \"costUsd\": 8185.405648972774,\n    \"durationMs\": 7720,\n    \"model\": \"string\",\n    \"parentToolUseId\": \"string\",\n    \"usage\": {\n      \"inputTokens\": 3823,\n      \"outputTokens\": 1330,\n      \"totalTokens\": {\n        \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0bdf1f81-a51b-4376-baa7-d1c8e11a3ddf",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "messages",
+                    ":message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "task_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "message_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "862a3a58-6755-4b73-bd45-ddafafc34deb",
+    "name": "Sb0 Agent APIKeys Messages v2 API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

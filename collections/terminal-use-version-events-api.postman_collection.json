@@ -1,0 +1,240 @@
+{
+  "item": [
+    {
+      "id": "339e266a-9ea5-4232-95d1-e7d26557a641",
+      "name": "Version Events",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0e6b991f-3b48-45db-ad71-ee2484026532",
+          "name": "List Version Events",
+          "request": {
+            "name": "List Version Events",
+            "description": {
+              "content": "List lifecycle events for a version. Events are ordered by sequence_id.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "event_type",
+                  "value": "<string>",
+                  "description": "Filter by event type"
+                },
+                {
+                  "disabled": false,
+                  "key": "after_sequence_id",
+                  "value": "<integer>",
+                  "description": "Return events after this sequence_id (for ascending pagination)"
+                },
+                {
+                  "disabled": false,
+                  "key": "before_sequence_id",
+                  "value": "<integer>",
+                  "description": "Return events before this sequence_id (for descending pagination)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Maximum events to return"
+                },
+                {
+                  "disabled": false,
+                  "key": "descending",
+                  "value": "true",
+                  "description": "Order by sequence_id descending (newest first)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9cd1e9a5-2444-4686-aa3f-290f40e406c7",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_type",
+                      "value": "VERSION_CREATED"
+                    },
+                    {
+                      "key": "after_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "before_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "descending",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"events\": [\n    {\n      \"id\": \"string\",\n      \"sequence_id\": 2781,\n      \"version_id\": \"string\",\n      \"branch_id\": \"string\",\n      \"event_type\": \"VERSION_ACTIVATED\",\n      \"created_at\": \"2013-07-08T13:40:22.339Z\",\n      \"actor_id\": \"string\",\n      \"content\": {\n        \"actor_email\": \"string\",\n        \"container_logs\": \"string\",\n        \"container_logs_container_name\": \"string\",\n        \"container_logs_fetched_at\": \"2021-12-31T21:52:26.110Z\",\n        \"container_logs_pod_name\": \"string\",\n        \"container_logs_source\": \"string\",\n        \"container_logs_truncated\": true,\n        \"container_logs_unavailable_reason\": \"string\",\n        \"error_message\": \"string\",\n        \"failure_reason\": \"string\",\n        \"from_version_id\": \"string\",\n        \"git_hash\": \"string\",\n        \"migrated_task_count\": 3608,\n        \"migrated_task_ids\": [\n          \"string\",\n          \"string\"\n        ],\n        \"new_status\": \"ACTIVE\",\n        \"previous_status\": \"UNHEALTHY\",\n        \"target_version_id\": \"string\",\n        \"triggered_by\": \"hot_swap\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"sequence_id\": 8129,\n      \"version_id\": \"string\",\n      \"branch_id\": \"string\",\n      \"event_type\": \"VERSION_FAILED\",\n      \"created_at\": \"2020-10-06T20:40:47.007Z\",\n      \"actor_id\": \"string\",\n      \"content\": {\n        \"actor_email\": \"string\",\n        \"container_logs\": \"string\",\n        \"container_logs_container_name\": \"string\",\n        \"container_logs_fetched_at\": \"1965-02-27T22:25:47.991Z\",\n        \"container_logs_pod_name\": \"string\",\n        \"container_logs_source\": \"string\",\n        \"container_logs_truncated\": false,\n        \"container_logs_unavailable_reason\": \"string\",\n        \"error_message\": \"string\",\n        \"failure_reason\": \"string\",\n        \"from_version_id\": \"string\",\n        \"git_hash\": \"string\",\n        \"migrated_task_count\": 3730,\n        \"migrated_task_ids\": [\n          \"string\",\n          \"string\"\n        ],\n        \"new_status\": \"ROLLED_BACK\",\n        \"previous_status\": \"FAILED\",\n        \"target_version_id\": \"string\",\n        \"triggered_by\": \"redeploy\"\n      }\n    }\n  ],\n  \"total\": 668,\n  \"has_more\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6591f583-72e8-49c8-9d1a-9fa633ceaa1f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "event_type",
+                      "value": "VERSION_CREATED"
+                    },
+                    {
+                      "key": "after_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "before_sequence_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "descending",
+                      "value": "true"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "fcb9c545-db46-41da-9308-d9a9c10e0c61",
+    "name": "Sb0 Agent APIKeys Version Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

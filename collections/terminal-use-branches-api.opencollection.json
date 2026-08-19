@@ -1,0 +1,255 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Sb0 Agent APIKeys Branches API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Branches",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Deploy Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/deploy",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deploy an agent to the platform.\n\n    Called by CLI after pushing the container image to the registry.\n    Creates or updates agent, branch, and version records.\n\n    The deployment is asynchronous - poll GET /branches/{branch_id}\n    for status updates until status is READY or FAILED.\n\n    **Flow:**\n    1. CLI builds and pushes image to registry (using /registry/auth)\n    2. CLI calls POST /agents/deploy with image details\n    3. Platform creates records and triggers K8s deployment\n    4. Conta"
+        },
+        {
+          "info": {
+            "name": "Get Branch by Agent and Git Branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/branch",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "query",
+                "description": "Target branch (e.g., 'main', 'feature/login')"
+              }
+            ]
+          },
+          "docs": "Get a specific branch by agent name and git branch.\n\n    The git branch name will be normalized (lowercased, slashes converted to hyphens).\n    For example, \"feature/new-tool\" becomes \"feature-new-tool\"."
+        },
+        {
+          "info": {
+            "name": "List Branches by Agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/branches",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "include_retired",
+                "value": "",
+                "type": "query",
+                "description": "Include retired branches in results"
+              }
+            ]
+          },
+          "docs": "List all branches for an agent.\n\n    Each branch represents a git branch (e.g., main, staging, feature-x).\n    By default, retired branches are excluded."
+        },
+        {
+          "info": {
+            "name": "Rollback Branch by Git Branch Name",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/branches/:branch/rollback",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "branch",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Roll back a branch to a previous version by namespace, agent, and git branch name.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state"
+        },
+        {
+          "info": {
+            "name": "Rollback Environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/agents/:namespace_slug/:agent_name/environments/:env_name/rollback",
+            "params": [
+              {
+                "name": "namespace_slug",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "agent_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "env_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Roll back an environment to a previous version.\n\n    Resolves environment to branch via branch rules.\n    Only works for environments with a single, literal branch rule (no wildcards).\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state for next deploy)\n    - Uses Version.secrets_snapshot as deployed state"
+        },
+        {
+          "info": {
+            "name": "Get Branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branches/:branch_id",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get branch details by ID.\n\n    Used by CLI to poll for branch status after calling POST /agents/deploy.\n    Poll until status is READY (success) or FAILED/TIMEOUT (failure)."
+        },
+        {
+          "info": {
+            "name": "Redeploy with Updated Secrets",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/branches/:branch_id/redeploy",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Redeploy a branch with the current secrets from the EnvVar table.\n\n    Creates a new Version with:\n    - Same image as current version\n    - Fresh secrets_snapshot from current EnvVars\n\n    Use this after updating secrets to apply them to a running branch."
+        },
+        {
+          "info": {
+            "name": "Rollback Branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/branches/:branch_id/rollback",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Roll back a branch to a previous version by branch ID.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state"
+        },
+        {
+          "info": {
+            "name": "List Versions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/branches/:branch_id/versions",
+            "params": [
+              {
+                "name": "branch_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum versions to return"
+              }
+            ]
+          },
+          "docs": "List all versions for a branch.\n\n    Versions are ordered by deployed_at descending (most recent first).\n    Each version represents a git commit that was deployed."
+        },
+        {
+          "info": {
+            "name": "Get Version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/versions/:version_id",
+            "params": [
+              {
+                "name": "version_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get version details by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

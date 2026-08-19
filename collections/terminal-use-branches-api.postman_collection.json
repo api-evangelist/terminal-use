@@ -1,0 +1,1666 @@
+{
+  "item": [
+    {
+      "id": "3840bca2-5fad-4c64-95c7-a953ea61b049",
+      "name": "Branches",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "78f12ce7-a4ec-4636-9658-8ec32028deee",
+          "name": "Deploy Agent",
+          "request": {
+            "name": "Deploy Agent",
+            "description": {
+              "content": "Deploy an agent to the platform.\n\n    Called by CLI after pushing the container image to the registry.\n    Creates or updates agent, branch, and version records.\n\n    The deployment is asynchronous - poll GET /branches/{branch_id}\n    for status updates until status is READY or FAILED.\n\n    **Flow:**\n    1. CLI builds and pushes image to registry (using /registry/auth)\n    2. CLI calls POST /agents/deploy with image details\n    3. Platform creates records and triggers K8s deployment\n    4. Container starts and calls POST /versions/register\n    5. CLI polls GET /branches/{id} for status",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                "deploy"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"git_hash\": \"<string>\",\n  \"image_url\": \"<string>\",\n  \"author_name\": \"<string>\",\n  \"author_email\": \"<string>\",\n  \"acp_type\": \"async\",\n  \"are_tasks_sticky\": \"<boolean>\",\n  \"description\": \"<string>\",\n  \"git_message\": \"<string>\",\n  \"is_dirty\": false,\n  \"replicas\": 1,\n  \"resources\": {\n    \"key_0\": false\n  },\n  \"sdk_type\": \"claude_agent_sdk\",\n  \"source_filesystem_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1937c9a2-8650-4499-a2c0-2de47b075527",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    "deploy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"git_hash\": \"<string>\",\n  \"image_url\": \"<string>\",\n  \"author_name\": \"<string>\",\n  \"author_email\": \"<string>\",\n  \"acp_type\": \"async\",\n  \"are_tasks_sticky\": \"<boolean>\",\n  \"description\": \"<string>\",\n  \"git_message\": \"<string>\",\n  \"is_dirty\": false,\n  \"replicas\": 1,\n  \"resources\": {\n    \"key_0\": 6696,\n    \"key_1\": 4902,\n    \"key_2\": 3959\n  },\n  \"sdk_type\": \"claude_agent_sdk\",\n  \"source_filesystem_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"agent_id\": \"string\",\n  \"branch_id\": \"string\",\n  \"version_id\": \"string\",\n  \"version_status\": \"DRAINING\",\n  \"message\": \"string\",\n  \"tasks_migrated\": 1546\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bd5d7f4-20b8-4ce7-b596-2e17e513f92d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    "deploy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"agent_name\": \"<string>\",\n  \"branch\": \"<string>\",\n  \"git_hash\": \"<string>\",\n  \"image_url\": \"<string>\",\n  \"author_name\": \"<string>\",\n  \"author_email\": \"<string>\",\n  \"acp_type\": \"async\",\n  \"are_tasks_sticky\": \"<boolean>\",\n  \"description\": \"<string>\",\n  \"git_message\": \"<string>\",\n  \"is_dirty\": false,\n  \"replicas\": 1,\n  \"resources\": {\n    \"key_0\": 6696,\n    \"key_1\": 4902,\n    \"key_2\": 3959\n  },\n  \"sdk_type\": \"claude_agent_sdk\",\n  \"source_filesystem_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "bad82e40-3df5-4440-8140-eeb8f9fdb3ab",
+          "name": "Get Branch by Agent and Git Branch",
+          "request": {
+            "name": "Get Branch by Agent and Git Branch",
+            "description": {
+              "content": "Get a specific branch by agent name and git branch.\n\n    The git branch name will be normalized (lowercased, slashes converted to hyphens).\n    For example, \"feature/new-tool\" becomes \"feature-new-tool\".",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":namespace_slug",
+                ":agent_name",
+                "branch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "branch",
+                  "value": "<string>",
+                  "description": "(Required) Target branch (e.g., 'main', 'feature/login')"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "namespace_slug",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d0a6b7ac-52ef-417d-bb95-5425d9504ed3",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"agent_id\": \"string\",\n  \"git_branch\": \"string\",\n  \"git_branch_normalized\": \"string\",\n  \"replicas\": 7868,\n  \"created_at\": \"1995-06-11T08:25:51.570Z\",\n  \"current_version\": {\n    \"id\": \"string\",\n    \"git_hash\": \"string\",\n    \"status\": \"UNHEALTHY\",\n    \"deployed_at\": \"2001-11-23T18:56:50.395Z\",\n    \"git_message\": \"\",\n    \"source_filesystem_id\": \"string\"\n  },\n  \"retired_at\": \"2024-08-13T01:33:28.538Z\",\n  \"retired_reason\": \"string\",\n  \"updated_at\": \"1967-03-08T23:29:20.729Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "69831358-d503-428c-8344-12e879fcae96",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "branch",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8abc90b2-a4e7-48ae-80e2-836f1b54509b",
+          "name": "List Branches by Agent",
+          "request": {
+            "name": "List Branches by Agent",
+            "description": {
+              "content": "List all branches for an agent.\n\n    Each branch represents a git branch (e.g., main, staging, feature-x).\n    By default, retired branches are excluded.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":namespace_slug",
+                ":agent_name",
+                "branches"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "include_retired",
+                  "value": "false",
+                  "description": "Include retired branches in results"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "namespace_slug",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b9d07c42-2c6f-4358-ac60-e0e585c24f4d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_retired",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"branches\": [\n    {\n      \"id\": \"string\",\n      \"agent_id\": \"string\",\n      \"git_branch\": \"string\",\n      \"git_branch_normalized\": \"string\",\n      \"replicas\": 5923,\n      \"created_at\": \"2000-05-30T03:52:16.111Z\",\n      \"current_version\": {\n        \"id\": \"string\",\n        \"git_hash\": \"string\",\n        \"status\": \"RETIRED\",\n        \"deployed_at\": \"1965-04-10T21:21:14.689Z\",\n        \"git_message\": \"\",\n        \"source_filesystem_id\": \"string\"\n      },\n      \"retired_at\": \"1977-03-13T04:48:03.781Z\",\n      \"retired_reason\": \"string\",\n      \"updated_at\": \"1983-05-10T00:53:49.981Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"agent_id\": \"string\",\n      \"git_branch\": \"string\",\n      \"git_branch_normalized\": \"string\",\n      \"replicas\": 5409,\n      \"created_at\": \"1950-07-01T00:38:09.687Z\",\n      \"current_version\": {\n        \"id\": \"string\",\n        \"git_hash\": \"string\",\n        \"status\": \"UNHEALTHY\",\n        \"deployed_at\": \"1951-01-12T12:00:13.125Z\",\n        \"git_message\": \"\",\n        \"source_filesystem_id\": \"string\"\n      },\n      \"retired_at\": \"1963-03-20T23:00:01.058Z\",\n      \"retired_reason\": \"string\",\n      \"updated_at\": \"1971-08-12T22:13:57.516Z\"\n    }\n  ],\n  \"total\": 9229\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "40b460ee-099d-47c2-b79d-335f769a049a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "include_retired",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "280fd265-3219-4cf7-87e4-cc7d1ee46bea",
+          "name": "Rollback Branch by Git Branch Name",
+          "request": {
+            "name": "Rollback Branch by Git Branch Name",
+            "description": {
+              "content": "Roll back a branch to a previous version by namespace, agent, and git branch name.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":namespace_slug",
+                ":agent_name",
+                "branches",
+                ":branch",
+                "rollback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "namespace_slug",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4d3c9151-a014-4119-ad66-d974daca5333",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branches",
+                    ":branch",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"branch_id\": \"string\",\n  \"from_version_id\": \"string\",\n  \"to_version_id\": \"string\",\n  \"from_git_hash\": \"string\",\n  \"to_git_hash\": \"string\",\n  \"version_status\": \"ROLLED_BACK\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "550ca364-bab7-4a0b-9d3e-84f8014e023c",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "branches",
+                    ":branch",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2d764ec3-d1b8-45ef-b315-5e14bf24f139",
+          "name": "Rollback Environment",
+          "request": {
+            "name": "Rollback Environment",
+            "description": {
+              "content": "Roll back an environment to a previous version.\n\n    Resolves environment to branch via branch rules.\n    Only works for environments with a single, literal branch rule (no wildcards).\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state for next deploy)\n    - Uses Version.secrets_snapshot as deployed state",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "agents",
+                ":namespace_slug",
+                ":agent_name",
+                "environments",
+                ":env_name",
+                "rollback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "namespace_slug",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "agent_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "env_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "19d8b634-c2c3-43fa-ac37-7d22376e6efd",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "environments",
+                    ":env_name",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "env_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"branch_id\": \"string\",\n  \"from_version_id\": \"string\",\n  \"to_version_id\": \"string\",\n  \"from_git_hash\": \"string\",\n  \"to_git_hash\": \"string\",\n  \"version_status\": \"ROLLED_BACK\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a68c741b-74da-4e2d-ac60-42fa04077eb1",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "agents",
+                    ":namespace_slug",
+                    ":agent_name",
+                    "environments",
+                    ":env_name",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "namespace_slug",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "agent_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "env_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e69a5d69-c3a9-4b7a-ae93-df4541156156",
+          "name": "Get Branch",
+          "request": {
+            "name": "Get Branch",
+            "description": {
+              "content": "Get branch details by ID.\n\n    Used by CLI to poll for branch status after calling POST /agents/deploy.\n    Poll until status is READY (success) or FAILED/TIMEOUT (failure).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "branches",
+                ":branch_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f8393a01-b349-4200-920b-f4f1826fbaae",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"agent_id\": \"string\",\n  \"git_branch\": \"string\",\n  \"git_branch_normalized\": \"string\",\n  \"replicas\": 7868,\n  \"created_at\": \"1995-06-11T08:25:51.570Z\",\n  \"current_version\": {\n    \"id\": \"string\",\n    \"git_hash\": \"string\",\n    \"status\": \"UNHEALTHY\",\n    \"deployed_at\": \"2001-11-23T18:56:50.395Z\",\n    \"git_message\": \"\",\n    \"source_filesystem_id\": \"string\"\n  },\n  \"retired_at\": \"2024-08-13T01:33:28.538Z\",\n  \"retired_reason\": \"string\",\n  \"updated_at\": \"1967-03-08T23:29:20.729Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1abe30e2-74e5-43da-96e6-e71ebb961a2a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0d64b1ec-e086-4e00-85c2-a9d74ad591f0",
+          "name": "Redeploy with Updated Secrets",
+          "request": {
+            "name": "Redeploy with Updated Secrets",
+            "description": {
+              "content": "Redeploy a branch with the current secrets from the EnvVar table.\n\n    Creates a new Version with:\n    - Same image as current version\n    - Fresh secrets_snapshot from current EnvVars\n\n    Use this after updating secrets to apply them to a running branch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "branches",
+                ":branch_id",
+                "redeploy"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e7977bf1-9e26-44ae-945d-28fed9cd0d19",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "redeploy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"branch_id\": \"string\",\n  \"version_id\": \"string\",\n  \"version_status\": \"ROLLED_BACK\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "109aa1af-dd1e-4ae5-bece-efe1c3eb5497",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "redeploy"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8eff65a2-b9fd-4516-be3b-c5ff7e4ba4e1",
+          "name": "Rollback Branch",
+          "request": {
+            "name": "Rollback Branch",
+            "description": {
+              "content": "Roll back a branch to a previous version by branch ID.\n\n    Key behavior:\n    - EnvVar table is NOT modified (remains pending state)\n    - Uses Version.secrets_snapshot as deployed state",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "branches",
+                ":branch_id",
+                "rollback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f41b83c1-9bc8-4f87-b51c-805b2f10280f",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"branch_id\": \"string\",\n  \"from_version_id\": \"string\",\n  \"to_version_id\": \"string\",\n  \"from_git_hash\": \"string\",\n  \"to_git_hash\": \"string\",\n  \"version_status\": \"ROLLED_BACK\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e05ba64-7d0c-4f61-b8b4-28ae3095181f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "rollback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"target_version_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b791d087-5f0b-4deb-ac9b-3cbea529f413",
+          "name": "List Versions",
+          "request": {
+            "name": "List Versions",
+            "description": {
+              "content": "List all versions for a branch.\n\n    Versions are ordered by deployed_at descending (most recent first).\n    Each version represents a git commit that was deployed.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "branches",
+                ":branch_id",
+                "versions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Maximum versions to return"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "branch_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c961db8d-0369-491a-a2ee-e560b261521c",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "versions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"versions\": [\n    {\n      \"id\": \"string\",\n      \"branch_id\": \"string\",\n      \"git_hash\": \"string\",\n      \"git_branch\": \"string\",\n      \"author_name\": \"string\",\n      \"author_email\": \"string\",\n      \"image_url\": \"string\",\n      \"status\": \"RETIRED\",\n      \"deployed_at\": \"1951-10-09T16:11:57.750Z\",\n      \"sdk_type\": \"claude_agent_sdk\",\n      \"acp_type\": \"async\",\n      \"created_at\": \"1975-01-17T14:13:32.436Z\",\n      \"failure_diagnostics\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\"\n      },\n      \"failure_reason\": \"string\",\n      \"git_message\": \"\",\n      \"image_expires_at\": \"1993-01-16T21:40:09.115Z\",\n      \"is_dirty\": false,\n      \"last_rollback_at\": \"2018-10-16T07:06:40.802Z\",\n      \"replicas\": 0,\n      \"retired_at\": \"2022-04-13T07:12:47.993Z\",\n      \"rollback_count\": 0,\n      \"rolled_back_at\": \"1990-12-30T06:33:52.592Z\",\n      \"source_filesystem_id\": \"string\",\n      \"updated_at\": \"1974-09-13T12:29:48.825Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"branch_id\": \"string\",\n      \"git_hash\": \"string\",\n      \"git_branch\": \"string\",\n      \"author_name\": \"string\",\n      \"author_email\": \"string\",\n      \"image_url\": \"string\",\n      \"status\": \"ROLLED_BACK\",\n      \"deployed_at\": \"1977-10-01T05:07:32.790Z\",\n      \"sdk_type\": \"codex_agent_sdk\",\n      \"acp_type\": \"sync\",\n      \"created_at\": \"1968-10-14T14:43:45.021Z\",\n      \"failure_diagnostics\": {\n        \"key_0\": \"string\"\n      },\n      \"failure_reason\": \"string\",\n      \"git_message\": \"\",\n      \"image_expires_at\": \"1964-01-27T05:42:40.694Z\",\n      \"is_dirty\": false,\n      \"last_rollback_at\": \"2002-12-29T19:50:44.661Z\",\n      \"replicas\": 0,\n      \"retired_at\": \"2001-02-26T04:45:21.061Z\",\n      \"rollback_count\": 0,\n      \"rolled_back_at\": \"1983-11-18T20:52:54.744Z\",\n      \"source_filesystem_id\": \"string\",\n      \"updated_at\": \"2014-11-08T18:18:19.215Z\"\n    }\n  ],\n  \"total\": 5213,\n  \"branch_id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fb29aded-c240-483e-aa77-ebbfbc1a397f",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "branches",
+                    ":branch_id",
+                    "versions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "branch_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6697baca-c5e3-43f1-9e18-055e7d6fda1f",
+          "name": "Get Version",
+          "request": {
+            "name": "Get Version",
+            "description": {
+              "content": "Get version details by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "versions",
+                ":version_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "version_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6dc1d9d7-5c2b-4331-ae12-b5a0374e5d8d",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"branch_id\": \"string\",\n  \"git_hash\": \"string\",\n  \"git_branch\": \"string\",\n  \"author_name\": \"string\",\n  \"author_email\": \"string\",\n  \"image_url\": \"string\",\n  \"status\": \"RETIRED\",\n  \"deployed_at\": \"1978-03-06T14:23:38.543Z\",\n  \"sdk_type\": \"codex_agent_sdk\",\n  \"acp_type\": \"async\",\n  \"created_at\": \"1990-04-26T11:03:44.892Z\",\n  \"failure_diagnostics\": {\n    \"key_0\": \"string\"\n  },\n  \"failure_reason\": \"string\",\n  \"git_message\": \"\",\n  \"image_expires_at\": \"1994-08-16T14:20:06.256Z\",\n  \"is_dirty\": false,\n  \"last_rollback_at\": \"1985-07-19T02:37:42.401Z\",\n  \"replicas\": 0,\n  \"retired_at\": \"1952-02-07T16:14:19.969Z\",\n  \"rollback_count\": 0,\n  \"rolled_back_at\": \"2005-08-26T14:14:40.248Z\",\n  \"source_filesystem_id\": \"string\",\n  \"updated_at\": \"1952-03-18T08:43:45.770Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "41a0b348-9852-49ce-9efd-a15dc98f6c5a",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "versions",
+                    ":version_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "version_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9c8293b3-ac99-4280-93fc-d5028edb45cc",
+    "name": "Sb0 Agent APIKeys Branches API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

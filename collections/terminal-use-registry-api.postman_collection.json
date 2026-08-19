@@ -1,0 +1,157 @@
+{
+  "item": [
+    {
+      "id": "b84fa213-f15b-4a78-879a-60709b0e98e6",
+      "name": "Registry",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0a855ee5-aad2-417b-b662-ed0f5daeb08b",
+          "name": "Get registry credentials for pushing agent images",
+          "request": {
+            "name": "Get registry credentials for pushing agent images",
+            "description": {
+              "content": "Get short-lived credentials for pushing images to a namespace's registry.\n\n    Each namespace has its own isolated registry repository. The token returned\n    can ONLY push images to the specified namespace's repository.\n\n    The CLI uses this endpoint to authenticate with Docker before pushing\n    agent images. Returns a token valid for approximately 1 hour.\n\n    **Usage with Docker:**\n    ```bash\n    docker login {registry_url} -u {username} -p {token}\n    docker push {registry_url}/{repository}/{agent}:{tag}\n    ```",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "registry",
+                "auth"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "namespace",
+                  "value": "<string>",
+                  "description": "(Required) Target namespace slug for the image push"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0e7558fe-8ca8-49bc-bfcb-14938384d30c",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "registry",
+                    "auth"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "namespace",
+                      "value": "acme"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"registry_url\": \"string\",\n  \"repository\": \"string\",\n  \"token\": \"string\",\n  \"expires_at\": \"1968-02-22T17:28:13.864Z\",\n  \"username\": \"oauth2accesstoken\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c0536832-fa98-4fd0-b3dd-94071a3f17f0",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "registry",
+                    "auth"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "namespace",
+                      "value": "acme"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "27885df8-ce48-4530-8cce-2ae754e6ebf2",
+    "name": "Sb0 Agent APIKeys Registry API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}
