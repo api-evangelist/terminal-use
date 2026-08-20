@@ -52,6 +52,19 @@ tags:
 - Deployment
 - Orchestration
 - Sandboxed Compute
+- Filesystem
+- Developer Tools
+- SDK
+- CLI
+tags_raw:
+- Company
+- Agents
+- AI Agents
+- Background Agents
+- Agent Infrastructure
+- Deployment
+- Orchestration
+- Sandboxed Compute
 - Filesystems
 - Developer Tools
 - SDK
@@ -105,6 +118,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -203,6 +218,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -217,6 +234,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Filesystem
+  tags_raw:
   - Filesystems
   properties:
   - type: OpenAPI
@@ -231,6 +250,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -287,6 +308,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -301,6 +324,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -315,6 +340,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -413,6 +440,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
