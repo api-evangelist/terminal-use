@@ -64,7 +64,7 @@ tags:
 - Deployment
 - Orchestration
 - Sandboxed Compute
-- Filesystem
+- Filesystems
 - Developer Tools
 - SDK
 - CLI
@@ -246,7 +246,7 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
-  - Filesystem
+  - Filesystems
   tags_raw:
   - Filesystems
   properties:
