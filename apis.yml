@@ -475,16 +475,16 @@ apis:
     url: https://docs.terminaluse.com
   - type: APIReference
     url: https://docs.terminaluse.com/api-reference/authentication
-- aid: terminal-use:terminal-use-o-auth-api
+- aid: terminal-use:terminal-use-oauth-api
   name: Terminal Use O Auth API
-  description: The O Auth API from Terminal Use — 2 operation(s) for o auth.
+  description: The OAuth API from Terminal Use — 2 operation(s) for oauth.
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
-  - O Auth
+  - OAuth
   properties:
   - type: OpenAPI
-    url: openapi/terminal-use-o-auth-api-openapi.yml
+    url: openapi/terminal-use-oauth-api-openapi.yml
   - type: Documentation
     url: https://docs.terminaluse.com
   - type: APIReference
