@@ -217,6 +217,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Environment
+  tags_raw:
   - Environments
   properties:
   - type: OpenAPI
@@ -381,6 +383,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Schedule
+  tags_raw:
   - Schedules
   properties:
   - type: OpenAPI
@@ -481,6 +485,8 @@ apis:
   humanURL: https://docs.terminaluse.com
   baseURL: https://api.terminaluse.com
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
