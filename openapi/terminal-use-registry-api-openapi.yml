@@ -1,13 +1,34 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Registry API
+  title: Sb0 Registry API
   version: 0.1.0
 tags:
 - name: Registry
 paths:
   /registry/auth:
     get:
-      description: "Get short-lived credentials for pushing images to a namespace's registry.\n\n    Each namespace has its own isolated registry repository. The token returned\n    can ONLY push images to the specified namespace's repository.\n\n    The CLI uses this endpoint to authenticate with Docker before pushing\n    agent images. Returns a token valid for approximately 1 hour.\n\n    **Usage with Docker:**\n    ```bash\n    docker login {registry_url} -u {username} -p {token}\n    docker push {registry_url}/{repository}/{agent}:{tag}\n    ```"
+      description: 'Get short-lived credentials for pushing images to a namespace''s registry.
+
+
+        Each namespace has its own isolated registry repository. The token returned
+
+        can ONLY push images to the specified namespace''s repository.
+
+
+        The CLI uses this endpoint to authenticate with Docker before pushing
+
+        agent images. Returns a token valid for approximately 1 hour.
+
+
+        **Usage with Docker:**
+
+        ```bash
+
+        docker login {registry_url} -u {username} -p {token}
+
+        docker push {registry_url}/{repository}/{agent}:{tag}
+
+        ```'
       operationId: registry_auth
       parameters:
       - description: Target namespace slug for the image push
@@ -39,6 +60,15 @@ paths:
       - Registry
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     RegistryAuthResponse:
       description: Response containing short-lived registry credentials for pushing agent images.
       properties:
@@ -70,15 +100,6 @@ components:
       - token
       - expires_at
       title: RegistryAuthResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     ValidationError:
       properties:

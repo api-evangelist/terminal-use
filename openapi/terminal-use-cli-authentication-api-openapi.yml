@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys CLI Authentication API
+  title: Sb0 CLI Authentication API
   version: 0.1.0
 tags:
 - name: CLI Authentication
@@ -64,6 +64,31 @@ paths:
       - CLI Authentication
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    CLITokenRequest:
+      description: Request body for CLI token exchange with PKCE.
+      properties:
+        code:
+          description: Authorization code from OAuth callback
+          title: Code
+          type: string
+        code_verifier:
+          description: PKCE code verifier
+          title: Code Verifier
+          type: string
+      required:
+      - code
+      - code_verifier
+      title: CLITokenRequest
+      type: object
     CLIRefreshRequest:
       description: Request body for CLI token refresh.
       properties:
@@ -74,15 +99,6 @@ components:
       required:
       - refresh_token
       title: CLIRefreshRequest
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     ValidationError:
       properties:
@@ -171,22 +187,6 @@ components:
       - refresh_token
       - expires_in
       title: CLIRefreshResponse
-      type: object
-    CLITokenRequest:
-      description: Request body for CLI token exchange with PKCE.
-      properties:
-        code:
-          description: Authorization code from OAuth callback
-          title: Code
-          type: string
-        code_verifier:
-          description: PKCE code verifier
-          title: Code Verifier
-          type: string
-      required:
-      - code
-      - code_verifier
-      title: CLITokenRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

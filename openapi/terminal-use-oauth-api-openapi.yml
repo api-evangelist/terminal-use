@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys OAuth API
+  title: Sb0 O Auth API
   version: 0.1.0
 tags:
 - name: OAuth
@@ -95,6 +95,31 @@ paths:
       - OAuth
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OAuthInitiateResponse:
+      description: Response for OAuth initiation.
+      properties:
+        authorization_url:
+          description: URL to redirect user for authentication
+          title: Authorization Url
+          type: string
+        state:
+          description: State parameter for CSRF protection
+          title: State
+          type: string
+      required:
+      - authorization_url
+      - state
+      title: OAuthInitiateResponse
+      type: object
     OAuthTokenResponse:
       description: Response for token exchange.
       properties:
@@ -121,31 +146,6 @@ components:
       - access_token
       - expires_in
       title: OAuthTokenResponse
-      type: object
-    OAuthInitiateResponse:
-      description: Response for OAuth initiation.
-      properties:
-        authorization_url:
-          description: URL to redirect user for authentication
-          title: Authorization Url
-          type: string
-        state:
-          description: State parameter for CSRF protection
-          title: State
-          type: string
-      required:
-      - authorization_url
-      - state
-      title: OAuthInitiateResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     ValidationError:
       properties:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Agent Task Tracker API
+  title: Sb0 Agent Task Tracker API
   version: 0.1.0
 tags:
 - name: Agent Task Tracker
@@ -179,6 +179,15 @@ components:
           title: Status Reason
       title: UpdateAgentTaskTrackerRequest
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     AgentTaskTracker:
       properties:
         agent_id:
@@ -229,15 +238,6 @@ components:
       - task_id
       - created_at
       title: AgentTaskTracker
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     ValidationError:
       properties:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Filesystems API
+  title: Sb0 Filesystems API
   version: 0.1.0
 tags:
 - name: Filesystems
@@ -515,48 +515,13 @@ paths:
       - Filesystems
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    PresignedUrlResponse:
-      description: Response model for presigned URL operations.
-      properties:
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Content-Type header to use (required for PUT uploads).
-          title: Content Type
-        expires_at:
-          description: When the presigned URL expires.
-          format: date-time
-          title: Expires At
-          type: string
-        instructions:
-          description: Instructions for using the presigned URL.
-          title: Instructions
-          type: string
-        method:
-          description: 'HTTP method to use: ''PUT'' for upload, ''GET'' for download.'
-          title: Method
-          type: string
-        url:
-          description: The presigned URL for direct GCS upload/download.
-          title: Url
-          type: string
-      required:
-      - url
-      - expires_at
-      - method
-      - instructions
-      title: PresignedUrlResponse
-      type: object
+    FileUploadWriteMode:
+      description: Single-file upload write semantics.
+      enum:
+      - overwrite
+      - conditional
+      title: FileUploadWriteMode
+      type: string
     FilesystemFile:
       description: File metadata - used for both input (sync-complete) and as base for response.
       properties:
@@ -613,168 +578,6 @@ components:
       - modified_at
       title: FilesystemFile
       type: object
-    ListFilesResponse:
-      description: Response model for listing files in a filesystem.
-      properties:
-        files:
-          description: List of file entries.
-          items:
-            $ref: '#/components/schemas/FilesystemFileResponse'
-          title: Files
-          type: array
-        filesystem_id:
-          description: The filesystem ID.
-          title: Filesystem Id
-          type: string
-        synced_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: When the manifest was last synced.
-          title: Synced At
-        total_count:
-          description: Total number of matching files.
-          title: Total Count
-          type: integer
-      required:
-      - filesystem_id
-      - total_count
-      - files
-      title: ListFilesResponse
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    FileUploadWriteMode:
-      description: Single-file upload write semantics.
-      enum:
-      - overwrite
-      - conditional
-      title: FileUploadWriteMode
-      type: string
-    FilesystemFileResponse:
-      description: File metadata response - adds server-side fields.
-      properties:
-        checksum:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: SHA256 checksum (None for directories).
-          title: Checksum
-        content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: File contents (None for binary/large files).
-          title: Content
-        content_truncated:
-          default: false
-          description: True if content was truncated due to size.
-          title: Content Truncated
-          type: boolean
-        is_binary:
-          default: false
-          description: True if file is binary.
-          title: Is Binary
-          type: boolean
-        is_directory:
-          default: false
-          description: Whether this entry is a directory.
-          title: Is Directory
-          type: boolean
-        mime_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: MIME type (None for directories).
-          title: Mime Type
-        modified_at:
-          description: File's last modification time.
-          format: date-time
-          title: Modified At
-          type: string
-        path:
-          description: Relative path within filesystem (e.g., 'src/index.ts').
-          title: Path
-          type: string
-        size_bytes:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: File size in bytes (None for directories).
-          title: Size Bytes
-        synced_at:
-          description: When this entry was last synced.
-          format: date-time
-          title: Synced At
-          type: string
-      required:
-      - path
-      - modified_at
-      - synced_at
-      title: FilesystemFileResponse
-      type: object
-    FilesystemStatus:
-      description: Filesystem lifecycle status states.
-      enum:
-      - CREATING
-      - READY
-      - SYNCING_UP
-      - SYNCING_DOWN
-      - FAILED
-      title: FilesystemStatus
-      type: string
-    PresignedUrlRequest:
-      description: Request model for presigned URL generation.
-      properties:
-        expiration_seconds:
-          default: 3600
-          description: URL expiration time in seconds (default 1 hour, max 7 days).
-          maximum: 604800
-          minimum: 60
-          title: Expiration Seconds
-          type: integer
-      title: PresignedUrlRequest
-      type: object
-    FilesystemCreate:
-      description: 'Request model for creating a filesystem.
-
-
-        Filesystems inherit permissions from their parent project.'
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional human-readable name for the filesystem (unique per namespace).
-          title: Name
-        project_id:
-          description: Project ID. Filesystem inherits permissions from the project.
-          title: Project Id
-          type: string
-      required:
-      - project_id
-      title: FilesystemCreate
-      type: object
     SyncCompleteResponse:
       description: Response model for sync-complete operation.
       properties:
@@ -801,45 +604,85 @@ components:
       - status
       title: SyncCompleteResponse
       type: object
-    SingleFileUploadResponse:
-      description: Response model for single-file upload operations.
+    FilesystemCreate:
+      description: 'Request model for creating a filesystem.
+
+
+        Filesystems inherit permissions from their parent project.'
       properties:
-        archive_version:
-          description: New archive version token after this commit.
-          title: Archive Version
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional human-readable name for the filesystem (unique per namespace).
+          title: Name
+        project_id:
+          description: Project ID. Filesystem inherits permissions from the project.
+          title: Project Id
           type: string
-        created:
-          description: True when the upload created a previously missing file.
-          title: Created
-          type: boolean
-        file_version:
-          description: New per-file version token (SHA256 of file content).
-          title: File Version
-          type: string
-        filesystem_id:
-          description: The filesystem ID.
-          title: Filesystem Id
-          type: string
-        path:
-          description: Normalized relative path written.
-          title: Path
-          type: string
-        size_bytes:
-          description: Uploaded file size in bytes.
-          title: Size Bytes
-          type: integer
-        write_mode:
-          $ref: '#/components/schemas/FileUploadWriteMode'
-          description: Applied upload write mode.
       required:
-      - filesystem_id
-      - path
-      - write_mode
-      - created
-      - size_bytes
-      - file_version
-      - archive_version
-      title: SingleFileUploadResponse
+      - project_id
+      title: FilesystemCreate
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    FilesystemStatus:
+      description: Filesystem lifecycle status states.
+      enum:
+      - CREATING
+      - READY
+      - SYNCING_UP
+      - SYNCING_DOWN
+      - FAILED
+      title: FilesystemStatus
+      type: string
+    SyncCompleteRequest:
+      description: Request model for completing a sync operation.
+      properties:
+        archive_checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum of the archive.
+          title: Archive Checksum
+        archive_size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Size of the archive in bytes.
+          title: Archive Size Bytes
+        direction:
+          description: 'Sync direction: ''UP'' or ''DOWN''.'
+          title: Direction
+          type: string
+        files:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/FilesystemFile'
+            type: array
+          - type: 'null'
+          description: List of files in the filesystem (empty if status is FAILED).
+          title: Files
+        status:
+          description: 'Sync status: ''SUCCESS'' or ''FAILED''.'
+          title: Status
+          type: string
+        sync_id:
+          description: Unique ID for this sync operation (idempotency key).
+          title: Sync Id
+          type: string
+      required:
+      - sync_id
+      - direction
+      - status
+      title: SyncCompleteRequest
       type: object
     FilesystemResponse:
       description: Response model for filesystem operations.
@@ -912,46 +755,203 @@ components:
       - status
       title: FilesystemResponse
       type: object
-    SyncCompleteRequest:
-      description: Request model for completing a sync operation.
+    PresignedUrlResponse:
+      description: Response model for presigned URL operations.
       properties:
-        archive_checksum:
+        content_type:
           anyOf:
           - type: string
           - type: 'null'
-          description: SHA256 checksum of the archive.
-          title: Archive Checksum
-        archive_size_bytes:
+          description: Content-Type header to use (required for PUT uploads).
+          title: Content Type
+        expires_at:
+          description: When the presigned URL expires.
+          format: date-time
+          title: Expires At
+          type: string
+        instructions:
+          description: Instructions for using the presigned URL.
+          title: Instructions
+          type: string
+        method:
+          description: 'HTTP method to use: ''PUT'' for upload, ''GET'' for download.'
+          title: Method
+          type: string
+        url:
+          description: The presigned URL for direct GCS upload/download.
+          title: Url
+          type: string
+      required:
+      - url
+      - expires_at
+      - method
+      - instructions
+      title: PresignedUrlResponse
+      type: object
+    FilesystemFileResponse:
+      description: File metadata response - adds server-side fields.
+      properties:
+        checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum (None for directories).
+          title: Checksum
+        content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: File contents (None for binary/large files).
+          title: Content
+        content_truncated:
+          default: false
+          description: True if content was truncated due to size.
+          title: Content Truncated
+          type: boolean
+        is_binary:
+          default: false
+          description: True if file is binary.
+          title: Is Binary
+          type: boolean
+        is_directory:
+          default: false
+          description: Whether this entry is a directory.
+          title: Is Directory
+          type: boolean
+        mime_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: MIME type (None for directories).
+          title: Mime Type
+        modified_at:
+          description: File's last modification time.
+          format: date-time
+          title: Modified At
+          type: string
+        path:
+          description: Relative path within filesystem (e.g., 'src/index.ts').
+          title: Path
+          type: string
+        size_bytes:
           anyOf:
           - type: integer
           - type: 'null'
-          description: Size of the archive in bytes.
-          title: Archive Size Bytes
-        direction:
-          description: 'Sync direction: ''UP'' or ''DOWN''.'
-          title: Direction
-          type: string
-        files:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/FilesystemFile'
-            type: array
-          - type: 'null'
-          description: List of files in the filesystem (empty if status is FAILED).
-          title: Files
-        status:
-          description: 'Sync status: ''SUCCESS'' or ''FAILED''.'
-          title: Status
-          type: string
-        sync_id:
-          description: Unique ID for this sync operation (idempotency key).
-          title: Sync Id
+          description: File size in bytes (None for directories).
+          title: Size Bytes
+        synced_at:
+          description: When this entry was last synced.
+          format: date-time
+          title: Synced At
           type: string
       required:
-      - sync_id
-      - direction
-      - status
-      title: SyncCompleteRequest
+      - path
+      - modified_at
+      - synced_at
+      title: FilesystemFileResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    PresignedUrlRequest:
+      description: Request model for presigned URL generation.
+      properties:
+        expiration_seconds:
+          default: 3600
+          description: URL expiration time in seconds (default 1 hour, max 7 days).
+          maximum: 604800
+          minimum: 60
+          title: Expiration Seconds
+          type: integer
+      title: PresignedUrlRequest
+      type: object
+    ListFilesResponse:
+      description: Response model for listing files in a filesystem.
+      properties:
+        files:
+          description: List of file entries.
+          items:
+            $ref: '#/components/schemas/FilesystemFileResponse'
+          title: Files
+          type: array
+        filesystem_id:
+          description: The filesystem ID.
+          title: Filesystem Id
+          type: string
+        synced_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the manifest was last synced.
+          title: Synced At
+        total_count:
+          description: Total number of matching files.
+          title: Total Count
+          type: integer
+      required:
+      - filesystem_id
+      - total_count
+      - files
+      title: ListFilesResponse
+      type: object
+    SingleFileUploadResponse:
+      description: Response model for single-file upload operations.
+      properties:
+        archive_version:
+          description: New archive version token after this commit.
+          title: Archive Version
+          type: string
+        created:
+          description: True when the upload created a previously missing file.
+          title: Created
+          type: boolean
+        file_version:
+          description: New per-file version token (SHA256 of file content).
+          title: File Version
+          type: string
+        filesystem_id:
+          description: The filesystem ID.
+          title: Filesystem Id
+          type: string
+        path:
+          description: Normalized relative path written.
+          title: Path
+          type: string
+        size_bytes:
+          description: Uploaded file size in bytes.
+          title: Size Bytes
+          type: integer
+        write_mode:
+          $ref: '#/components/schemas/FileUploadWriteMode'
+          description: Applied upload write mode.
+      required:
+      - filesystem_id
+      - path
+      - write_mode
+      - created
+      - size_bytes
+      - file_version
+      - archive_version
+      title: SingleFileUploadResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

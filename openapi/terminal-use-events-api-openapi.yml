@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Events API
+  title: Sb0 Events API
   version: 0.1.0
 tags:
 - name: Events
@@ -100,21 +100,14 @@ paths:
       - Events
 components:
   schemas:
-    DataPart:
-      description: Generic data part for unknown/passthrough content.
+    HTTPValidationError:
       properties:
-        data:
-          description: Arbitrary data content
-          title: Data
-        type:
-          const: data
-          default: data
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - data
-      title: DataPart
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     TextPart:
       description: Text content part.
@@ -132,15 +125,6 @@ components:
       required:
       - text
       title: TextPart
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     ValidationError:
       properties:
@@ -213,6 +197,22 @@ components:
       - task_id
       - agent_id
       title: Event
+      type: object
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
+      properties:
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - data
+      title: DataPart
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

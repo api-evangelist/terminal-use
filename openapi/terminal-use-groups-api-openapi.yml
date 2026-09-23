@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Groups API
+  title: Sb0 Groups API
   version: 0.1.0
 tags:
 - name: Groups
@@ -432,17 +432,6 @@ paths:
       - Groups
 components:
   schemas:
-    UpdateAccessGroupRequest:
-      properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional group description.
-          title: Description
-      title: UpdateAccessGroupRequest
-      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -451,42 +440,6 @@ components:
           title: Detail
           type: array
       title: HTTPValidationError
-      type: object
-    AccessGroupMember:
-      properties:
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp.
-          title: Created At
-        group_id:
-          description: Access group id.
-          title: Group Id
-          type: string
-        id:
-          description: Group membership row id.
-          title: Id
-          type: string
-        member_id:
-          description: WorkOS member id.
-          title: Member Id
-          type: string
-      required:
-      - id
-      - group_id
-      - member_id
-      title: AccessGroupMember
-      type: object
-    AccessGroupManagersResponse:
-      properties:
-        managers:
-          items:
-            $ref: '#/components/schemas/AccessGroupManager'
-          title: Managers
-          type: array
-      title: AccessGroupManagersResponse
       type: object
     DeleteResponse:
       properties:
@@ -500,6 +453,62 @@ components:
       - id
       - message
       title: DeleteResponse
+      type: object
+    AccessGroupManagersResponse:
+      properties:
+        managers:
+          items:
+            $ref: '#/components/schemas/AccessGroupManager'
+          title: Managers
+          type: array
+      title: AccessGroupManagersResponse
+      type: object
+    AccessGroupManager:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Group manager row id.
+          title: Id
+          type: string
+        member_id:
+          description: WorkOS member id.
+          title: Member Id
+          type: string
+      required:
+      - id
+      - group_id
+      - member_id
+      title: AccessGroupManager
+      type: object
+    AccessGroupListResponse:
+      properties:
+        groups:
+          items:
+            $ref: '#/components/schemas/AccessGroup'
+          title: Groups
+          type: array
+      title: AccessGroupListResponse
+      type: object
+    UpdateAccessGroupRequest:
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional group description.
+          title: Description
+      title: UpdateAccessGroupRequest
       type: object
     AccessGroupVisibleOrg:
       properties:
@@ -528,6 +537,51 @@ components:
       - org_id
       title: AccessGroupVisibleOrg
       type: object
+    AccessGroupVisibleOrgsResponse:
+      properties:
+        visible_orgs:
+          items:
+            $ref: '#/components/schemas/AccessGroupVisibleOrg'
+          title: Visible Orgs
+          type: array
+      title: AccessGroupVisibleOrgsResponse
+      type: object
+    AccessGroupMember:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Group membership row id.
+          title: Id
+          type: string
+        member_id:
+          description: WorkOS member id.
+          title: Member Id
+          type: string
+      required:
+      - id
+      - group_id
+      - member_id
+      title: AccessGroupMember
+      type: object
+    AccessGroupMembersResponse:
+      properties:
+        members:
+          items:
+            $ref: '#/components/schemas/AccessGroupMember'
+          title: Members
+          type: array
+      title: AccessGroupMembersResponse
+      type: object
     ValidationError:
       properties:
         loc:
@@ -549,15 +603,6 @@ components:
       - type
       title: ValidationError
       type: object
-    AccessGroupListResponse:
-      properties:
-        groups:
-          items:
-            $ref: '#/components/schemas/AccessGroup'
-          title: Groups
-          type: array
-      title: AccessGroupListResponse
-      type: object
     CreateAccessGroupRequest:
       properties:
         description:
@@ -576,51 +621,6 @@ components:
       required:
       - name
       title: CreateAccessGroupRequest
-      type: object
-    AccessGroupVisibleOrgsResponse:
-      properties:
-        visible_orgs:
-          items:
-            $ref: '#/components/schemas/AccessGroupVisibleOrg'
-          title: Visible Orgs
-          type: array
-      title: AccessGroupVisibleOrgsResponse
-      type: object
-    AccessGroupMembersResponse:
-      properties:
-        members:
-          items:
-            $ref: '#/components/schemas/AccessGroupMember'
-          title: Members
-          type: array
-      title: AccessGroupMembersResponse
-      type: object
-    AccessGroupManager:
-      properties:
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp.
-          title: Created At
-        group_id:
-          description: Access group id.
-          title: Group Id
-          type: string
-        id:
-          description: Group manager row id.
-          title: Id
-          type: string
-        member_id:
-          description: WorkOS member id.
-          title: Member Id
-          type: string
-      required:
-      - id
-      - group_id
-      - member_id
-      title: AccessGroupManager
       type: object
     AccessGroup:
       properties:

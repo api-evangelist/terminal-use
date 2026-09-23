@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Branch Events API
+  title: Sb0 Branch Events API
   version: 0.1.0
 tags:
 - name: Branch Events
@@ -88,6 +88,146 @@ paths:
       x-fern-sdk-method-name: list
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    VersionEventResponse:
+      description: Response model for a single version event.
+      properties:
+        actor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: User ID who triggered this event
+          title: Actor Id
+        branch_id:
+          description: Branch ID (denormalized)
+          title: Branch Id
+          type: string
+        content:
+          anyOf:
+          - $ref: '#/components/schemas/VersionEventContent'
+          - type: 'null'
+          description: Event-specific metadata
+        created_at:
+          description: When this event was created
+          format: date-time
+          title: Created At
+          type: string
+        event_type:
+          $ref: '#/components/schemas/VersionEventType'
+          description: Type of lifecycle event
+        id:
+          description: Event ID
+          title: Id
+          type: string
+        sequence_id:
+          description: Monotonically increasing sequence ID for ordering
+          title: Sequence Id
+          type: integer
+        version_id:
+          description: Version ID this event belongs to
+          title: Version Id
+          type: string
+      required:
+      - id
+      - sequence_id
+      - version_id
+      - branch_id
+      - event_type
+      - created_at
+      title: VersionEventResponse
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    VersionEventListResponse:
+      description: Response model for listing version events.
+      properties:
+        events:
+          description: List of version events
+          items:
+            $ref: '#/components/schemas/VersionEventResponse'
+          title: Events
+          type: array
+        has_more:
+          description: Whether there are more events after the last one
+          title: Has More
+          type: boolean
+        total:
+          description: Total number of events returned
+          title: Total
+          type: integer
+      required:
+      - events
+      - total
+      - has_more
+      title: VersionEventListResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    VersionEventTrigger:
+      description: What triggered a version event.
+      enum:
+      - deploy
+      - container_register
+      - rollback
+      - hot_swap
+      - helm_failure
+      - redeploy
+      - cleanup
+      - manual
+      title: VersionEventTrigger
+      type: string
+    VersionEventType:
+      description: Types of version lifecycle events.
+      enum:
+      - VERSION_CREATED
+      - VERSION_ACTIVATED
+      - VERSION_FAILED
+      - VERSION_DRAINING
+      - VERSION_RETIRED
+      - VERSION_ROLLED_BACK_FROM
+      - VERSION_ROLLED_BACK_TO
+      - VERSION_REDEPLOYED
+      - TASKS_MIGRATED
+      - VERSION_CLEANUP_FAILED
+      title: VersionEventType
+      type: string
     VersionEventContent:
       description: Typed content for version events stored as JSONB.
       properties:
@@ -200,146 +340,6 @@ components:
           - type: 'null'
           description: What triggered this event
       title: VersionEventContent
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    VersionEventTrigger:
-      description: What triggered a version event.
-      enum:
-      - deploy
-      - container_register
-      - rollback
-      - hot_swap
-      - helm_failure
-      - redeploy
-      - cleanup
-      - manual
-      title: VersionEventTrigger
-      type: string
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    VersionEventResponse:
-      description: Response model for a single version event.
-      properties:
-        actor_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: User ID who triggered this event
-          title: Actor Id
-        branch_id:
-          description: Branch ID (denormalized)
-          title: Branch Id
-          type: string
-        content:
-          anyOf:
-          - $ref: '#/components/schemas/VersionEventContent'
-          - type: 'null'
-          description: Event-specific metadata
-        created_at:
-          description: When this event was created
-          format: date-time
-          title: Created At
-          type: string
-        event_type:
-          $ref: '#/components/schemas/VersionEventType'
-          description: Type of lifecycle event
-        id:
-          description: Event ID
-          title: Id
-          type: string
-        sequence_id:
-          description: Monotonically increasing sequence ID for ordering
-          title: Sequence Id
-          type: integer
-        version_id:
-          description: Version ID this event belongs to
-          title: Version Id
-          type: string
-      required:
-      - id
-      - sequence_id
-      - version_id
-      - branch_id
-      - event_type
-      - created_at
-      title: VersionEventResponse
-      type: object
-    VersionEventType:
-      description: Types of version lifecycle events.
-      enum:
-      - VERSION_CREATED
-      - VERSION_ACTIVATED
-      - VERSION_FAILED
-      - VERSION_DRAINING
-      - VERSION_RETIRED
-      - VERSION_ROLLED_BACK_FROM
-      - VERSION_ROLLED_BACK_TO
-      - VERSION_REDEPLOYED
-      - TASKS_MIGRATED
-      - VERSION_CLEANUP_FAILED
-      title: VersionEventType
-      type: string
-    VersionEventListResponse:
-      description: Response model for listing version events.
-      properties:
-        events:
-          description: List of version events
-          items:
-            $ref: '#/components/schemas/VersionEventResponse'
-          title: Events
-          type: array
-        has_more:
-          description: Whether there are more events after the last one
-          title: Has More
-          type: boolean
-        total:
-          description: Total number of events returned
-          title: Total
-          type: integer
-      required:
-      - events
-      - total
-      - has_more
-      title: VersionEventListResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

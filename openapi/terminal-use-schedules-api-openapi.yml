@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Schedules API
+  title: Sb0 Schedules API
   version: 0.1.0
 tags:
 - name: Schedules
@@ -264,38 +264,6 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    PauseScheduleRequest:
-      description: Request model for pausing a schedule
-      properties:
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional note explaining why the schedule was paused
-          title: Note
-      title: PauseScheduleRequest
-      type: object
     DeleteResponse:
       properties:
         id:
@@ -308,94 +276,6 @@ components:
       - id
       - message
       title: DeleteResponse
-      type: object
-    ScheduleActionInfo:
-      description: Information about the scheduled action
-      properties:
-        task_queue:
-          description: Task queue for the workflow
-          title: Task Queue
-          type: string
-        workflow_id_prefix:
-          description: Prefix for workflow execution IDs
-          title: Workflow ID Prefix
-          type: string
-        workflow_name:
-          description: Name of the workflow being executed
-          title: Workflow Name
-          type: string
-        workflow_params:
-          anyOf:
-          - items: {}
-            type: array
-          - type: 'null'
-          description: Parameters passed to the workflow
-          title: Workflow Parameters
-      required:
-      - workflow_name
-      - workflow_id_prefix
-      - task_queue
-      title: ScheduleActionInfo
-      type: object
-    UnpauseScheduleRequest:
-      description: Request model for unpausing a schedule
-      properties:
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional note explaining why the schedule was unpaused
-          title: Note
-      title: UnpauseScheduleRequest
-      type: object
-    ScheduleListResponse:
-      description: Response model for listing schedules
-      properties:
-        schedules:
-          description: List of schedules
-          items:
-            $ref: '#/components/schemas/ScheduleListItem'
-          title: Schedules
-          type: array
-        total:
-          description: Total number of schedules
-          title: Total
-          type: integer
-      required:
-      - schedules
-      - total
-      title: ScheduleListResponse
-      type: object
-    ScheduleSpecInfo:
-      description: Information about the schedule specification
-      properties:
-        cron_expressions:
-          description: Cron expressions for the schedule
-          items:
-            type: string
-          title: Cron Expressions
-          type: array
-        end_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: When the schedule stops being active
-          title: End At
-        intervals_seconds:
-          description: Interval specifications in seconds
-          items:
-            type: integer
-          title: Interval Seconds
-          type: array
-        start_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: When the schedule starts being active
-          title: Start At
-      title: ScheduleSpecInfo
       type: object
     ScheduleListItem:
       description: Abbreviated schedule info for list responses
@@ -435,6 +315,199 @@ components:
       - agent_id
       - state
       title: ScheduleListItem
+      type: object
+    ScheduleResponse:
+      description: Response model for schedule operations
+      properties:
+        action:
+          $ref: '#/components/schemas/ScheduleActionInfo'
+          title: Action
+        agent_id:
+          description: ID of the agent this schedule belongs to
+          title: Agent ID
+          type: string
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the schedule was created
+          title: Created At
+        last_action_time:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the schedule last executed
+          title: Last Action Time
+        name:
+          description: Human-readable name for the schedule
+          title: Schedule Name
+          type: string
+        next_action_times:
+          description: Upcoming scheduled execution times
+          items:
+            format: date-time
+            type: string
+          title: Next Action Times
+          type: array
+        num_actions_missed:
+          default: 0
+          description: Number of scheduled executions that were missed
+          title: Number of Actions Missed
+          type: integer
+        num_actions_taken:
+          default: 0
+          description: Number of times the schedule has executed
+          title: Number of Actions Taken
+          type: integer
+        schedule_id:
+          description: Unique identifier for the schedule
+          title: Schedule ID
+          type: string
+        spec:
+          $ref: '#/components/schemas/ScheduleSpecInfo'
+          description: Schedule specification
+          title: Spec
+        state:
+          $ref: '#/components/schemas/ScheduleState'
+          description: Current state of the schedule
+          title: State
+      required:
+      - schedule_id
+      - name
+      - agent_id
+      - state
+      - action
+      - spec
+      title: ScheduleResponse
+      type: object
+    ScheduleState:
+      description: Schedule state enum
+      enum:
+      - ACTIVE
+      - PAUSED
+      title: ScheduleState
+      type: string
+    PauseScheduleRequest:
+      description: Request model for pausing a schedule
+      properties:
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional note explaining why the schedule was paused
+          title: Note
+      title: PauseScheduleRequest
+      type: object
+    ScheduleActionInfo:
+      description: Information about the scheduled action
+      properties:
+        task_queue:
+          description: Task queue for the workflow
+          title: Task Queue
+          type: string
+        workflow_id_prefix:
+          description: Prefix for workflow execution IDs
+          title: Workflow ID Prefix
+          type: string
+        workflow_name:
+          description: Name of the workflow being executed
+          title: Workflow Name
+          type: string
+        workflow_params:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          description: Parameters passed to the workflow
+          title: Workflow Parameters
+      required:
+      - workflow_name
+      - workflow_id_prefix
+      - task_queue
+      title: ScheduleActionInfo
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    ScheduleSpecInfo:
+      description: Information about the schedule specification
+      properties:
+        cron_expressions:
+          description: Cron expressions for the schedule
+          items:
+            type: string
+          title: Cron Expressions
+          type: array
+        end_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the schedule stops being active
+          title: End At
+        intervals_seconds:
+          description: Interval specifications in seconds
+          items:
+            type: integer
+          title: Interval Seconds
+          type: array
+        start_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: When the schedule starts being active
+          title: Start At
+      title: ScheduleSpecInfo
+      type: object
+    UnpauseScheduleRequest:
+      description: Request model for unpausing a schedule
+      properties:
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional note explaining why the schedule was unpaused
+          title: Note
+      title: UnpauseScheduleRequest
+      type: object
+    ScheduleListResponse:
+      description: Response model for listing schedules
+      properties:
+        schedules:
+          description: List of schedules
+          items:
+            $ref: '#/components/schemas/ScheduleListItem'
+          title: Schedules
+          type: array
+        total:
+          description: Total number of schedules
+          title: Total
+          type: integer
+      required:
+      - schedules
+      - total
+      title: ScheduleListResponse
       type: object
     CreateScheduleRequest:
       description: Request model for creating a new schedule for an agent
@@ -506,79 +579,6 @@ components:
       - workflow_name
       - task_queue
       title: CreateScheduleRequest
-      type: object
-    ScheduleState:
-      description: Schedule state enum
-      enum:
-      - ACTIVE
-      - PAUSED
-      title: ScheduleState
-      type: string
-    ScheduleResponse:
-      description: Response model for schedule operations
-      properties:
-        action:
-          $ref: '#/components/schemas/ScheduleActionInfo'
-          title: Action
-        agent_id:
-          description: ID of the agent this schedule belongs to
-          title: Agent ID
-          type: string
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: When the schedule was created
-          title: Created At
-        last_action_time:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: When the schedule last executed
-          title: Last Action Time
-        name:
-          description: Human-readable name for the schedule
-          title: Schedule Name
-          type: string
-        next_action_times:
-          description: Upcoming scheduled execution times
-          items:
-            format: date-time
-            type: string
-          title: Next Action Times
-          type: array
-        num_actions_missed:
-          default: 0
-          description: Number of scheduled executions that were missed
-          title: Number of Actions Missed
-          type: integer
-        num_actions_taken:
-          default: 0
-          description: Number of times the schedule has executed
-          title: Number of Actions Taken
-          type: integer
-        schedule_id:
-          description: Unique identifier for the schedule
-          title: Schedule ID
-          type: string
-        spec:
-          $ref: '#/components/schemas/ScheduleSpecInfo'
-          description: Schedule specification
-          title: Spec
-        state:
-          $ref: '#/components/schemas/ScheduleState'
-          description: Current state of the schedule
-          title: State
-      required:
-      - schedule_id
-      - name
-      - agent_id
-      - state
-      - action
-      - spec
-      title: ScheduleResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

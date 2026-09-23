@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Sb0 Agent APIKeys Tasks API
+  title: Sb0 Tasks API
   version: 0.1.0
 tags:
 - name: Tasks
@@ -309,7 +309,17 @@ paths:
       - Tasks
   /tasks/name/{task_name}/stream:
     get:
-      description: "Stream events for a task by its unique name using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format)."
+      description: 'Stream events for a task by its unique name using Server-Sent Events (SSE).
+
+
+        Supports automatic reconnection with Last-Event-ID header. When the client
+
+        reconnects, it sends the Last-Event-ID header with the last received event ID,
+
+        and the server resumes from that point.
+
+
+        Returns TextStreamPart events (Vercel AI SDK compatible format).'
       operationId: tasks_stream_by_name
       parameters:
       - in: path
@@ -536,7 +546,17 @@ paths:
       - Tasks
   /tasks/{task_id}/stream:
     get:
-      description: "Stream events for a task by its unique ID using Server-Sent Events (SSE).\n\n    Supports automatic reconnection with Last-Event-ID header. When the client\n    reconnects, it sends the Last-Event-ID header with the last received event ID,\n    and the server resumes from that point.\n\n    Returns TextStreamPart events (Vercel AI SDK compatible format)."
+      description: 'Stream events for a task by its unique ID using Server-Sent Events (SSE).
+
+
+        Supports automatic reconnection with Last-Event-ID header. When the client
+
+        reconnects, it sends the Last-Event-ID header with the last received event ID,
+
+        and the server resumes from that point.
+
+
+        Returns TextStreamPart events (Vercel AI SDK compatible format).'
       operationId: tasks_stream
       parameters:
       - in: path
@@ -751,40 +771,6 @@ paths:
       - Tasks
 components:
   schemas:
-    ToolInputEndPart:
-      description: Marks the end of tool input streaming.
-      properties:
-        id:
-          description: Tool call ID
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        type:
-          const: tool-input-end
-          default: tool-input-end
-          title: Type
-          type: string
-      required:
-      - id
-      title: ToolInputEndPart
-      type: object
-    HandlerEndResponse:
-      properties:
-        handler_status:
-          title: Handler Status
-          type: string
-        task_status:
-          title: Task Status
-          type: string
-      required:
-      - handler_status
-      - task_status
-      title: HandlerEndResponse
-      type: object
     StreamUsage:
       description: Token usage for streaming events.
       properties:
@@ -807,6 +793,349 @@ components:
       - outputTokens
       title: StreamUsage
       type: object
+    SystemFolderSyncCompleteRequest:
+      description: Request model for completing a system folder sync operation.
+      properties:
+        archive_checksum:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: SHA256 checksum of the archive.
+          title: Archive Checksum
+        archive_size_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Size of the archive in bytes.
+          title: Archive Size Bytes
+        direction:
+          description: 'Sync direction: ''UP'' or ''DOWN''.'
+          title: Direction
+          type: string
+        status:
+          description: 'Sync status: ''SUCCESS'' or ''FAILED''.'
+          title: Status
+          type: string
+        sync_id:
+          description: Unique ID for this sync operation (idempotency key).
+          title: Sync Id
+          type: string
+      required:
+      - sync_id
+      - direction
+      - status
+      title: SystemFolderSyncCompleteRequest
+      type: object
+    ReasoningStartPart:
+      description: Marks the start of a reasoning block.
+      properties:
+        id:
+          description: Unique ID for this reasoning block
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        type:
+          const: reasoning-start
+          default: reasoning-start
+          title: Type
+          type: string
+      required:
+      - id
+      title: ReasoningStartPart
+      type: object
+    TextPart:
+      description: Text content part.
+      properties:
+        text:
+          description: The text content
+          title: Text
+          type: string
+        type:
+          const: text
+          default: text
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: TextPart
+      type: object
+    ToolInputStartPart:
+      description: Marks the start of tool input streaming.
+      properties:
+        id:
+          description: Tool call ID (e.g., toolu_01XYZ)
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        toolName:
+          description: Name of the tool
+          title: Toolname
+          type: string
+        type:
+          const: tool-input-start
+          default: tool-input-start
+          title: Type
+          type: string
+      required:
+      - id
+      - toolName
+      title: ToolInputStartPart
+      type: object
+    ReasoningEndPart:
+      description: Marks the end of a reasoning block.
+      properties:
+        id:
+          description: ID of the completed reasoning block
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        type:
+          const: reasoning-end
+          default: reasoning-end
+          title: Type
+          type: string
+      required:
+      - id
+      title: ReasoningEndPart
+      type: object
+    ToolCallPart:
+      description: Complete tool call with parsed input.
+      properties:
+        input:
+          additionalProperties: true
+          description: Parsed input arguments
+          title: Input
+          type: object
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        toolCallId:
+          description: Unique tool call ID
+          title: Toolcallid
+          type: string
+        toolName:
+          description: Name of the tool
+          title: Toolname
+          type: string
+        type:
+          const: tool-call
+          default: tool-call
+          title: Type
+          type: string
+      required:
+      - toolCallId
+      - toolName
+      - input
+      title: ToolCallPart
+      type: object
+    FinishStepPart:
+      description: Marks the end of a step (API call).
+      properties:
+        finishReason:
+          $ref: '#/components/schemas/FinishReason'
+          description: Reason step finished
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        type:
+          const: finish-step
+          default: finish-step
+          title: Type
+          type: string
+        usage:
+          $ref: '#/components/schemas/StreamUsage'
+          description: Token usage for this step
+      required:
+      - finishReason
+      - usage
+      title: FinishStepPart
+      type: object
+    SystemFolderSyncCompleteResponse:
+      description: Response model for system folder sync-complete operation.
+      properties:
+        folder_type:
+          description: The system folder type.
+          title: Folder Type
+          type: string
+        status:
+          description: 'Result status: ''COMPLETED''.'
+          title: Status
+          type: string
+        sync_id:
+          description: The sync operation ID (for idempotency).
+          title: Sync Id
+          type: string
+        task_id:
+          description: The task ID.
+          title: Task Id
+          type: string
+      required:
+      - task_id
+      - folder_type
+      - sync_id
+      - status
+      title: SystemFolderSyncCompleteResponse
+      type: object
+    Agent:
+      properties:
+        agent_input_type:
+          anyOf:
+          - $ref: '#/components/schemas/AgentInputType'
+          - type: 'null'
+          description: The type of input the agent expects.
+        created_at:
+          description: The timestamp when the agent was created
+          format: date-time
+          title: Created At
+          type: string
+        description:
+          description: The description of the action.
+          title: Description
+          type: string
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        registered_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the agent was last registered
+          title: Registered At
+        registration_metadata:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: The metadata for the agent's registration.
+          title: Registration Metadata
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The reason for the status of the action.
+          title: Status Reason
+        updated_at:
+          description: The timestamp when the agent was last updated
+          format: date-time
+          title: Updated At
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      - description
+      - created_at
+      - updated_at
+      title: Agent
+      type: object
+    TextStartPart:
+      description: Marks the start of a text block.
+      properties:
+        id:
+          description: Unique ID for this text block
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        type:
+          const: text-start
+          default: text-start
+          title: Type
+          type: string
+      required:
+      - id
+      title: TextStartPart
+      type: object
+    CreateTaskRequest:
+      description: Request for POST /tasks
+      properties:
+        agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent ID (provide this OR agent_name)
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent name as 'namespace/name' (provide this OR agent_id)
+          title: Agent Name
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Target branch for version routing
+          title: Branch
+        filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Existing filesystem ID
+          title: Filesystem Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Task name
+          title: Name
+        params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Task parameters
+          title: Params
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Project ID for new filesystem
+          title: Project Id
+      title: CreateTaskRequest
+      type: object
+    AgentStatus:
+      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+      enum:
+      - ACTIVE
+      - DELETED
+      title: AgentStatus
+      type: string
     VersionResponse:
       description: Full version details.
       properties:
@@ -948,219 +1277,6 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    ACPType:
-      description: Type of ACP server.
-      enum:
-      - sync
-      - async
-      title: ACPType
-      type: string
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    TextPart:
-      description: Text content part.
-      properties:
-        text:
-          description: The text content
-          title: Text
-          type: string
-        type:
-          const: text
-          default: text
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - text
-      title: TextPart
-      type: object
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
-      type: object
-    ToolResultPart:
-      description: Tool execution result.
-      properties:
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        output:
-          description: Tool output
-          title: Output
-        toolCallId:
-          description: Tool call ID
-          title: Toolcallid
-          type: string
-        toolName:
-          description: Name of the tool
-          title: Toolname
-          type: string
-        type:
-          const: tool-result
-          default: tool-result
-          title: Type
-          type: string
-      required:
-      - toolCallId
-      - toolName
-      - output
-      title: ToolResultPart
-      type: object
-    PresignedUrlResponse:
-      description: Response model for presigned URL operations.
-      properties:
-        content_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Content-Type header to use (required for PUT uploads).
-          title: Content Type
-        expires_at:
-          description: When the presigned URL expires.
-          format: date-time
-          title: Expires At
-          type: string
-        instructions:
-          description: Instructions for using the presigned URL.
-          title: Instructions
-          type: string
-        method:
-          description: 'HTTP method to use: ''PUT'' for upload, ''GET'' for download.'
-          title: Method
-          type: string
-        url:
-          description: The presigned URL for direct GCS upload/download.
-          title: Url
-          type: string
-      required:
-      - url
-      - expires_at
-      - method
-      - instructions
-      title: PresignedUrlResponse
-      type: object
-    PresignedUrlRequest:
-      description: Request model for presigned URL generation.
-      properties:
-        expiration_seconds:
-          default: 3600
-          description: URL expiration time in seconds (default 1 hour, max 7 days).
-          maximum: 604800
-          minimum: 60
-          title: Expiration Seconds
-          type: integer
-      title: PresignedUrlRequest
-      type: object
-    CreateTaskEventRequest:
-      description: 'Request for POST /tasks/{task_id}/events
-
-
-        Content accepts TextPart or DataPart only. Other message types (tool calls,
-
-        reasoning, etc.) are agent-generated and sent via the /raw-events endpoint.'
-      properties:
-        content:
-          anyOf:
-          - $ref: '#/components/schemas/TextPart'
-          - $ref: '#/components/schemas/DataPart'
-          - type: 'null'
-          description: Event content
-          title: Content
-        idempotency_key:
-          anyOf:
-          - maxLength: 256
-            minLength: 1
-            type: string
-          - type: 'null'
-          description: Optional idempotency key for retry-safe event delivery.
-          title: Idempotency Key
-        persist_message:
-          default: true
-          description: Whether to also create a message record for this event. Defaults to True.
-          title: Persist Message
-          type: boolean
-      title: CreateTaskEventRequest
-      type: object
-    FinishStepPart:
-      description: Marks the end of a step (API call).
-      properties:
-        finishReason:
-          $ref: '#/components/schemas/FinishReason'
-          description: Reason step finished
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        type:
-          const: finish-step
-          default: finish-step
-          title: Type
-          type: string
-        usage:
-          $ref: '#/components/schemas/StreamUsage'
-          description: Token usage for this step
-      required:
-      - finishReason
-      - usage
-      title: FinishStepPart
-      type: object
-    SystemFolderSyncCompleteResponse:
-      description: Response model for system folder sync-complete operation.
-      properties:
-        folder_type:
-          description: The system folder type.
-          title: Folder Type
-          type: string
-        status:
-          description: 'Result status: ''COMPLETED''.'
-          title: Status
-          type: string
-        sync_id:
-          description: The sync operation ID (for idempotency).
-          title: Sync Id
-          type: string
-        task_id:
-          description: The task ID.
-          title: Task Id
-          type: string
-      required:
-      - task_id
-      - folder_type
-      - sync_id
-      - status
-      title: SystemFolderSyncCompleteResponse
-      type: object
     SystemFolderResponse:
       description: Response model for a task's system folder record.
       properties:
@@ -1221,47 +1337,139 @@ components:
       - folder_type
       title: SystemFolderResponse
       type: object
-    TextStreamPartWrapper:
-      description: Wrapper for TextStreamPart union for proper serialization.
-      discriminator:
-        mapping:
-          error: '#/components/schemas/StreamErrorPart'
-          finish: '#/components/schemas/FinishPart'
-          finish-step: '#/components/schemas/FinishStepPart'
-          handler-complete: '#/components/schemas/HandlerCompletePart'
-          reasoning-delta: '#/components/schemas/ReasoningDeltaPart'
-          reasoning-end: '#/components/schemas/ReasoningEndPart'
-          reasoning-start: '#/components/schemas/ReasoningStartPart'
-          start: '#/components/schemas/StartPart'
-          start-step: '#/components/schemas/StartStepPart'
-          text-delta: '#/components/schemas/TextDeltaPart'
-          text-end: '#/components/schemas/TextEndPart'
-          text-start: '#/components/schemas/TextStartPart'
-          tool-call: '#/components/schemas/ToolCallPart'
-          tool-input-delta: '#/components/schemas/ToolInputDeltaPart'
-          tool-input-end: '#/components/schemas/ToolInputEndPart'
-          tool-input-start: '#/components/schemas/ToolInputStartPart'
-          tool-result: '#/components/schemas/ToolResultPart'
-        propertyName: type
-      oneOf:
-      - $ref: '#/components/schemas/StartPart'
-      - $ref: '#/components/schemas/StartStepPart'
-      - $ref: '#/components/schemas/FinishStepPart'
-      - $ref: '#/components/schemas/FinishPart'
-      - $ref: '#/components/schemas/HandlerCompletePart'
-      - $ref: '#/components/schemas/TextStartPart'
-      - $ref: '#/components/schemas/TextDeltaPart'
-      - $ref: '#/components/schemas/TextEndPart'
-      - $ref: '#/components/schemas/ReasoningStartPart'
-      - $ref: '#/components/schemas/ReasoningDeltaPart'
-      - $ref: '#/components/schemas/ReasoningEndPart'
-      - $ref: '#/components/schemas/ToolInputStartPart'
-      - $ref: '#/components/schemas/ToolInputDeltaPart'
-      - $ref: '#/components/schemas/ToolInputEndPart'
-      - $ref: '#/components/schemas/ToolCallPart'
-      - $ref: '#/components/schemas/ToolResultPart'
-      - $ref: '#/components/schemas/StreamErrorPart'
-      title: TextStreamPartWrapper
+    StreamErrorPart:
+      description: Error during streaming.
+      properties:
+        error:
+          description: Error message
+          title: Error
+          type: string
+        rawContent:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Original content that caused the error
+          title: Rawcontent
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - error
+      title: StreamErrorPart
+      type: object
+    MigrateTasksRequest:
+      description: Request model for migrating tasks between versions.
+      properties:
+        from_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Migrate ALL RUNNING tasks from this version
+          title: From Version Id
+        task_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: OR migrate specific task IDs
+          title: Task Ids
+        to_latest:
+          default: false
+          description: OR migrate to ACTIVE/DEPLOYING version on branch
+          title: To Latest
+          type: boolean
+        to_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Explicit target version ID
+          title: To Version Id
+      title: MigrateTasksRequest
+      type: object
+    CreateTaskEventRequest:
+      description: 'Request for POST /tasks/{task_id}/events
+
+
+        Content accepts TextPart or DataPart only. Other message types (tool calls,
+
+        reasoning, etc.) are agent-generated and sent via the /raw-events endpoint.'
+      properties:
+        content:
+          anyOf:
+          - $ref: '#/components/schemas/TextPart'
+          - $ref: '#/components/schemas/DataPart'
+          - type: 'null'
+          description: Event content
+          title: Content
+        idempotency_key:
+          anyOf:
+          - maxLength: 256
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Optional idempotency key for retry-safe event delivery.
+          title: Idempotency Key
+        persist_message:
+          default: true
+          description: Whether to also create a message record for this event. Defaults to True.
+          title: Persist Message
+          type: boolean
+      title: CreateTaskEventRequest
+      type: object
+    Event:
+      description: 'Event returned from the events API.
+
+
+        Content is TextPart or DataPart (human-readable content only).'
+      properties:
+        agent_id:
+          description: The UUID of the agent that the event belongs to
+          title: Agent Id
+          type: string
+        content:
+          anyOf:
+          - $ref: '#/components/schemas/TextPart'
+          - $ref: '#/components/schemas/DataPart'
+          - type: 'null'
+          description: The content of the event (TextPart or DataPart)
+          title: Content
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp of the event
+          title: Created At
+        id:
+          description: The UUID of the event
+          title: Id
+          type: string
+        sequence_id:
+          description: The sequence ID of the event
+          title: Sequence Id
+          type: integer
+        streamCapabilities:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: Server-advertised stream lifecycle capabilities for this event
+          title: Streamcapabilities
+        task_id:
+          description: The UUID of the task that the event belongs to
+          title: Task Id
+          type: string
+      required:
+      - id
+      - sequence_id
+      - task_id
+      - agent_id
+      title: Event
+      type: object
     TaskResponse:
       description: Task response model with optional related data based on relationships
       properties:
@@ -1338,6 +1546,162 @@ components:
       - namespace_id
       title: TaskResponse
       type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    AgentInputType:
+      enum:
+      - text
+      - json
+      title: AgentInputType
+      type: string
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    TextDeltaPart:
+      description: Incremental text content.
+      properties:
+        id:
+          description: ID of the text block this belongs to
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        text:
+          description: Text delta content
+          title: Text
+          type: string
+        type:
+          const: text-delta
+          default: text-delta
+          title: Type
+          type: string
+      required:
+      - id
+      - text
+      title: TextDeltaPart
+      type: object
+    TextStreamPartWrapper:
+      description: Wrapper for TextStreamPart union for proper serialization.
+      discriminator:
+        mapping:
+          error: '#/components/schemas/StreamErrorPart'
+          finish: '#/components/schemas/FinishPart'
+          finish-step: '#/components/schemas/FinishStepPart'
+          handler-complete: '#/components/schemas/HandlerCompletePart'
+          reasoning-delta: '#/components/schemas/ReasoningDeltaPart'
+          reasoning-end: '#/components/schemas/ReasoningEndPart'
+          reasoning-start: '#/components/schemas/ReasoningStartPart'
+          start: '#/components/schemas/StartPart'
+          start-step: '#/components/schemas/StartStepPart'
+          text-delta: '#/components/schemas/TextDeltaPart'
+          text-end: '#/components/schemas/TextEndPart'
+          text-start: '#/components/schemas/TextStartPart'
+          tool-call: '#/components/schemas/ToolCallPart'
+          tool-input-delta: '#/components/schemas/ToolInputDeltaPart'
+          tool-input-end: '#/components/schemas/ToolInputEndPart'
+          tool-input-start: '#/components/schemas/ToolInputStartPart'
+          tool-result: '#/components/schemas/ToolResultPart'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/StartPart'
+      - $ref: '#/components/schemas/StartStepPart'
+      - $ref: '#/components/schemas/FinishStepPart'
+      - $ref: '#/components/schemas/FinishPart'
+      - $ref: '#/components/schemas/HandlerCompletePart'
+      - $ref: '#/components/schemas/TextStartPart'
+      - $ref: '#/components/schemas/TextDeltaPart'
+      - $ref: '#/components/schemas/TextEndPart'
+      - $ref: '#/components/schemas/ReasoningStartPart'
+      - $ref: '#/components/schemas/ReasoningDeltaPart'
+      - $ref: '#/components/schemas/ReasoningEndPart'
+      - $ref: '#/components/schemas/ToolInputStartPart'
+      - $ref: '#/components/schemas/ToolInputDeltaPart'
+      - $ref: '#/components/schemas/ToolInputEndPart'
+      - $ref: '#/components/schemas/ToolCallPart'
+      - $ref: '#/components/schemas/ToolResultPart'
+      - $ref: '#/components/schemas/StreamErrorPart'
+      title: TextStreamPartWrapper
+    StreamMetadata:
+      description: Extended metadata for finish events.
+      properties:
+        cacheCreationInputTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Cache creation input tokens
+          title: Cachecreationinputtokens
+        cacheReadInputTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Cache read input tokens
+          title: Cachereadinputtokens
+        costUsd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Total cost in USD
+          title: Costusd
+        durationMs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Total duration in milliseconds
+          title: Durationms
+        parentToolUseId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Parent tool use ID for subagent context
+          title: Parenttooluseid
+      title: StreamMetadata
+      type: object
+    SystemFolderTypeResponse:
+      description: Response model for a system folder type from the registry.
+      properties:
+        host_path:
+          description: Relative path from $DATA_ROOT/tasks/{task_id}/ on the host.
+          title: Host Path
+          type: string
+        sandbox_mount_path:
+          description: Absolute path where this folder is mounted in the sandbox.
+          title: Sandbox Mount Path
+          type: string
+        type:
+          description: The system folder type identifier (e.g., 'dot_claude').
+          title: Type
+          type: string
+      required:
+      - type
+      - host_path
+      - sandbox_mount_path
+      title: SystemFolderTypeResponse
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
     HandlerEndRequest:
       properties:
         duration_ms:
@@ -1366,6 +1730,111 @@ components:
           type: boolean
       title: HandlerEndRequest
       type: object
+    StartStepPart:
+      description: Marks the start of a new step (API call).
+      properties:
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        request:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Request details for this step
+          title: Request
+        type:
+          const: start-step
+          default: start-step
+          title: Type
+          type: string
+        warnings:
+          anyOf:
+          - items: {}
+            type: array
+          - type: 'null'
+          description: Warnings from this step
+          title: Warnings
+      title: StartStepPart
+      type: object
+    TaskStatus:
+      enum:
+      - IDLE
+      - CANCELED
+      - COMPLETED
+      - FAILED
+      - RUNNING
+      - TERMINATED
+      - TIMED_OUT
+      - DELETED
+      title: TaskStatus
+      type: string
+    ToolResultPart:
+      description: Tool execution result.
+      properties:
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        output:
+          description: Tool output
+          title: Output
+        toolCallId:
+          description: Tool call ID
+          title: Toolcallid
+          type: string
+        toolName:
+          description: Name of the tool
+          title: Toolname
+          type: string
+        type:
+          const: tool-result
+          default: tool-result
+          title: Type
+          type: string
+      required:
+      - toolCallId
+      - toolName
+      - output
+      title: ToolResultPart
+      type: object
+    HandlerEndResponse:
+      properties:
+        handler_status:
+          title: Handler Status
+          type: string
+        task_status:
+          title: Task Status
+          type: string
+      required:
+      - handler_status
+      - task_status
+      title: HandlerEndResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
     SystemFolderType:
       description: Enumeration of system folder types that can be synced per-task.
       enum:
@@ -1373,70 +1842,15 @@ components:
       - dot_codex
       title: SystemFolderType
       type: string
-    FinishReason:
-      description: Reason for stream completion.
-      enum:
-      - stop
-      - tool-calls
-      - length
-      - content-filter
-      - error
-      - other
-      title: FinishReason
-      type: string
-    CreateTaskRequest:
-      description: Request for POST /tasks
+    ToolInputDeltaPart:
+      description: Incremental tool input JSON.
       properties:
-        agent_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Agent ID (provide this OR agent_name)
-          title: Agent Id
-        agent_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Agent name as 'namespace/name' (provide this OR agent_id)
-          title: Agent Name
-        branch:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Target branch for version routing
-          title: Branch
-        filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Existing filesystem ID
-          title: Filesystem Id
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Task name
-          title: Name
-        params:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Task parameters
-          title: Params
-        project_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Project ID for new filesystem
-          title: Project Id
-      title: CreateTaskRequest
-      type: object
-    ReasoningEndPart:
-      description: Marks the end of a reasoning block.
-      properties:
+        delta:
+          description: Partial JSON input
+          title: Delta
+          type: string
         id:
-          description: ID of the completed reasoning block
+          description: Tool call ID
           title: Id
           type: string
         metadata:
@@ -1445,98 +1859,44 @@ components:
           - type: 'null'
           description: Metadata including parentToolUseId for subagents
         type:
-          const: reasoning-end
-          default: reasoning-end
+          const: tool-input-delta
+          default: tool-input-delta
           title: Type
           type: string
       required:
       - id
-      title: ReasoningEndPart
+      - delta
+      title: ToolInputDeltaPart
       type: object
-    SystemFolderSyncCompleteRequest:
-      description: Request model for completing a system folder sync operation.
+    PresignedUrlRequest:
+      description: Request model for presigned URL generation.
       properties:
-        archive_checksum:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: SHA256 checksum of the archive.
-          title: Archive Checksum
-        archive_size_bytes:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Size of the archive in bytes.
-          title: Archive Size Bytes
-        direction:
-          description: 'Sync direction: ''UP'' or ''DOWN''.'
-          title: Direction
-          type: string
-        status:
-          description: 'Sync status: ''SUCCESS'' or ''FAILED''.'
-          title: Status
-          type: string
-        sync_id:
-          description: Unique ID for this sync operation (idempotency key).
-          title: Sync Id
-          type: string
-      required:
-      - sync_id
-      - direction
-      - status
-      title: SystemFolderSyncCompleteRequest
-      type: object
-    Event:
-      description: 'Event returned from the events API.
-
-
-        Content is TextPart or DataPart (human-readable content only).'
-      properties:
-        agent_id:
-          description: The UUID of the agent that the event belongs to
-          title: Agent Id
-          type: string
-        content:
-          anyOf:
-          - $ref: '#/components/schemas/TextPart'
-          - $ref: '#/components/schemas/DataPart'
-          - type: 'null'
-          description: The content of the event (TextPart or DataPart)
-          title: Content
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: The timestamp of the event
-          title: Created At
-        id:
-          description: The UUID of the event
-          title: Id
-          type: string
-        sequence_id:
-          description: The sequence ID of the event
-          title: Sequence Id
+        expiration_seconds:
+          default: 3600
+          description: URL expiration time in seconds (default 1 hour, max 7 days).
+          maximum: 604800
+          minimum: 60
+          title: Expiration Seconds
           type: integer
-        streamCapabilities:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          description: Server-advertised stream lifecycle capabilities for this event
-          title: Streamcapabilities
-        task_id:
-          description: The UUID of the task that the event belongs to
-          title: Task Id
-          type: string
-      required:
-      - id
-      - sequence_id
-      - task_id
-      - agent_id
-      title: Event
+      title: PresignedUrlRequest
       type: object
+    UpdateTaskRequest:
+      properties:
+        task_metadata:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: If provided, replaces task_metadata with this value
+      title: UpdateTaskRequest
+      type: object
+    TaskRelationships:
+      description: Task relationships that can be loaded
+      enum:
+      - agents
+      title: TaskRelationships
+      type: string
     FinishPart:
       description: Marks the end of the entire streaming session.
       properties:
@@ -1561,11 +1921,20 @@ components:
       - totalUsage
       title: FinishPart
       type: object
-    ReasoningDeltaPart:
-      description: Incremental reasoning content.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ToolInputEndPart:
+      description: Marks the end of tool input streaming.
       properties:
         id:
-          description: ID of the reasoning block this belongs to
+          description: Tool call ID
           title: Id
           type: string
         metadata:
@@ -1573,181 +1942,147 @@ components:
           - $ref: '#/components/schemas/StreamMetadata'
           - type: 'null'
           description: Metadata including parentToolUseId for subagents
-        text:
-          description: Reasoning delta content
-          title: Text
-          type: string
         type:
-          const: reasoning-delta
-          default: reasoning-delta
+          const: tool-input-end
+          default: tool-input-end
           title: Type
           type: string
       required:
       - id
-      - text
-      title: ReasoningDeltaPart
+      title: ToolInputEndPart
       type: object
-    AgentInputType:
+    FinishReason:
+      description: Reason for stream completion.
       enum:
-      - text
-      - json
-      title: AgentInputType
+      - stop
+      - tool-calls
+      - length
+      - content-filter
+      - error
+      - other
+      title: FinishReason
       type: string
-    ToolCallPart:
-      description: Complete tool call with parsed input.
-      properties:
-        input:
-          additionalProperties: true
-          description: Parsed input arguments
-          title: Input
-          type: object
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        toolCallId:
-          description: Unique tool call ID
-          title: Toolcallid
-          type: string
-        toolName:
-          description: Name of the tool
-          title: Toolname
-          type: string
-        type:
-          const: tool-call
-          default: tool-call
-          title: Type
-          type: string
-      required:
-      - toolCallId
-      - toolName
-      - input
-      title: ToolCallPart
-      type: object
-    TextEndPart:
-      description: Marks the end of a text block.
-      properties:
-        id:
-          description: ID of the completed text block
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        type:
-          const: text-end
-          default: text-end
-          title: Type
-          type: string
-      required:
-      - id
-      title: TextEndPart
-      type: object
-    TaskRelationships:
-      description: Task relationships that can be loaded
+    VersionStatus:
+      description: Status of a version in its lifecycle.
       enum:
-      - agents
-      title: TaskRelationships
-      type: string
-    SystemFolderTypeResponse:
-      description: Response model for a system folder type from the registry.
-      properties:
-        host_path:
-          description: Relative path from $DATA_ROOT/tasks/{task_id}/ on the host.
-          title: Host Path
-          type: string
-        sandbox_mount_path:
-          description: Absolute path where this folder is mounted in the sandbox.
-          title: Sandbox Mount Path
-          type: string
-        type:
-          description: The system folder type identifier (e.g., 'dot_claude').
-          title: Type
-          type: string
-      required:
-      - type
-      - host_path
-      - sandbox_mount_path
-      title: SystemFolderTypeResponse
-      type: object
-    DataPart:
-      description: Generic data part for unknown/passthrough content.
-      properties:
-        data:
-          description: Arbitrary data content
-          title: Data
-        type:
-          const: data
-          default: data
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - data
-      title: DataPart
-      type: object
-    TextStartPart:
-      description: Marks the start of a text block.
-      properties:
-        id:
-          description: Unique ID for this text block
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        type:
-          const: text-start
-          default: text-start
-          title: Type
-          type: string
-      required:
-      - id
-      title: TextStartPart
-      type: object
-    TextDeltaPart:
-      description: Incremental text content.
-      properties:
-        id:
-          description: ID of the text block this belongs to
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        text:
-          description: Text delta content
-          title: Text
-          type: string
-        type:
-          const: text-delta
-          default: text-delta
-          title: Type
-          type: string
-      required:
-      - id
-      - text
-      title: TextDeltaPart
-      type: object
-    TaskStatus:
-      enum:
-      - IDLE
-      - CANCELED
-      - COMPLETED
+      - DEPLOYING
+      - ACTIVE
       - FAILED
-      - RUNNING
-      - TERMINATED
-      - TIMED_OUT
-      - DELETED
-      title: TaskStatus
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
       type: string
+    StartPart:
+      description: Marks the start of a streaming session.
+      properties:
+        type:
+          const: start
+          default: start
+          title: Type
+          type: string
+      title: StartPart
+      type: object
+    PresignedUrlResponse:
+      description: Response model for presigned URL operations.
+      properties:
+        content_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Content-Type header to use (required for PUT uploads).
+          title: Content Type
+        expires_at:
+          description: When the presigned URL expires.
+          format: date-time
+          title: Expires At
+          type: string
+        instructions:
+          description: Instructions for using the presigned URL.
+          title: Instructions
+          type: string
+        method:
+          description: 'HTTP method to use: ''PUT'' for upload, ''GET'' for download.'
+          title: Method
+          type: string
+        url:
+          description: The presigned URL for direct GCS upload/download.
+          title: Url
+          type: string
+      required:
+      - url
+      - expires_at
+      - method
+      - instructions
+      title: PresignedUrlResponse
+      type: object
+    MigrateTasksResponse:
+      description: Response model for task migration operation.
+      properties:
+        branch_id:
+          description: Branch both versions belong to
+          title: Branch Id
+          type: string
+        from_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Source version (if bulk mode)
+          title: From Version Id
+        tasks:
+          description: Migrated tasks
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+          title: Tasks
+          type: array
+        to_version:
+          $ref: '#/components/schemas/VersionResponse'
+          description: Target version details
+      required:
+      - to_version
+      - branch_id
+      - tasks
+      title: MigrateTasksResponse
+      type: object
+    HandlerCompletePart:
+      description: Marks completion of event/send handler lifecycle for a specific event.
+      properties:
+        durationMs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Handler runtime in milliseconds
+          title: Durationms
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Handler error text when execution failed
+          title: Error
+        eventId:
+          description: Event ID correlated to this handler completion
+          title: Eventid
+          type: string
+        success:
+          description: Whether handler execution succeeded
+          title: Success
+          type: boolean
+        taskId:
+          description: Task ID whose handler lifecycle completed
+          title: Taskid
+          type: string
+        type:
+          const: handler-complete
+          default: handler-complete
+          title: Type
+          type: string
+      required:
+      - eventId
+      - taskId
+      - success
+      title: HandlerCompletePart
+      type: object
     Task:
       properties:
         created_at:
@@ -1816,45 +2151,53 @@ components:
       - namespace_id
       title: Task
       type: object
-    MigrateTasksRequest:
-      description: Request model for migrating tasks between versions.
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
       properties:
-        from_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Migrate ALL RUNNING tasks from this version
-          title: From Version Id
-        task_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          description: OR migrate specific task IDs
-          title: Task Ids
-        to_latest:
-          default: false
-          description: OR migrate to ACTIVE/DEPLOYING version on branch
-          title: To Latest
-          type: boolean
-        to_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Explicit target version ID
-          title: To Version Id
-      title: MigrateTasksRequest
-      type: object
-    ToolInputDeltaPart:
-      description: Incremental tool input JSON.
-      properties:
-        delta:
-          description: Partial JSON input
-          title: Delta
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
+          description: Part type discriminator
+          title: Type
           type: string
+      required:
+      - data
+      title: DataPart
+      type: object
+    ReasoningDeltaPart:
+      description: Incremental reasoning content.
+      properties:
         id:
-          description: Tool call ID
+          description: ID of the reasoning block this belongs to
+          title: Id
+          type: string
+        metadata:
+          anyOf:
+          - $ref: '#/components/schemas/StreamMetadata'
+          - type: 'null'
+          description: Metadata including parentToolUseId for subagents
+        text:
+          description: Reasoning delta content
+          title: Text
+          type: string
+        type:
+          const: reasoning-delta
+          default: reasoning-delta
+          title: Type
+          type: string
+      required:
+      - id
+      - text
+      title: ReasoningDeltaPart
+      type: object
+    TextEndPart:
+      description: Marks the end of a text block.
+      properties:
+        id:
+          description: ID of the completed text block
           title: Id
           type: string
         metadata:
@@ -1863,336 +2206,13 @@ components:
           - type: 'null'
           description: Metadata including parentToolUseId for subagents
         type:
-          const: tool-input-delta
-          default: tool-input-delta
+          const: text-end
+          default: text-end
           title: Type
           type: string
       required:
       - id
-      - delta
-      title: ToolInputDeltaPart
-      type: object
-    SDKType:
-      description: SDK type for agent runtime.
-      enum:
-      - claude_agent_sdk
-      - codex_agent_sdk
-      title: SDKType
-      type: string
-    StartStepPart:
-      description: Marks the start of a new step (API call).
-      properties:
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        request:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Request details for this step
-          title: Request
-        type:
-          const: start-step
-          default: start-step
-          title: Type
-          type: string
-        warnings:
-          anyOf:
-          - items: {}
-            type: array
-          - type: 'null'
-          description: Warnings from this step
-          title: Warnings
-      title: StartStepPart
-      type: object
-    HandlerCompletePart:
-      description: Marks completion of event/send handler lifecycle for a specific event.
-      properties:
-        durationMs:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Handler runtime in milliseconds
-          title: Durationms
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Handler error text when execution failed
-          title: Error
-        eventId:
-          description: Event ID correlated to this handler completion
-          title: Eventid
-          type: string
-        success:
-          description: Whether handler execution succeeded
-          title: Success
-          type: boolean
-        taskId:
-          description: Task ID whose handler lifecycle completed
-          title: Taskid
-          type: string
-        type:
-          const: handler-complete
-          default: handler-complete
-          title: Type
-          type: string
-      required:
-      - eventId
-      - taskId
-      - success
-      title: HandlerCompletePart
-      type: object
-    UpdateTaskRequest:
-      properties:
-        task_metadata:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: If provided, replaces task_metadata with this value
-      title: UpdateTaskRequest
-      type: object
-    ReasoningStartPart:
-      description: Marks the start of a reasoning block.
-      properties:
-        id:
-          description: Unique ID for this reasoning block
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        type:
-          const: reasoning-start
-          default: reasoning-start
-          title: Type
-          type: string
-      required:
-      - id
-      title: ReasoningStartPart
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    MigrateTasksResponse:
-      description: Response model for task migration operation.
-      properties:
-        branch_id:
-          description: Branch both versions belong to
-          title: Branch Id
-          type: string
-        from_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Source version (if bulk mode)
-          title: From Version Id
-        tasks:
-          description: Migrated tasks
-          items:
-            $ref: '#/components/schemas/TaskResponse'
-          title: Tasks
-          type: array
-        to_version:
-          $ref: '#/components/schemas/VersionResponse'
-          description: Target version details
-      required:
-      - to_version
-      - branch_id
-      - tasks
-      title: MigrateTasksResponse
-      type: object
-    StartPart:
-      description: Marks the start of a streaming session.
-      properties:
-        type:
-          const: start
-          default: start
-          title: Type
-          type: string
-      title: StartPart
-      type: object
-    ToolInputStartPart:
-      description: Marks the start of tool input streaming.
-      properties:
-        id:
-          description: Tool call ID (e.g., toolu_01XYZ)
-          title: Id
-          type: string
-        metadata:
-          anyOf:
-          - $ref: '#/components/schemas/StreamMetadata'
-          - type: 'null'
-          description: Metadata including parentToolUseId for subagents
-        toolName:
-          description: Name of the tool
-          title: Toolname
-          type: string
-        type:
-          const: tool-input-start
-          default: tool-input-start
-          title: Type
-          type: string
-      required:
-      - id
-      - toolName
-      title: ToolInputStartPart
-      type: object
-    StreamMetadata:
-      description: Extended metadata for finish events.
-      properties:
-        cacheCreationInputTokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Cache creation input tokens
-          title: Cachecreationinputtokens
-        cacheReadInputTokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Cache read input tokens
-          title: Cachereadinputtokens
-        costUsd:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Total cost in USD
-          title: Costusd
-        durationMs:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Total duration in milliseconds
-          title: Durationms
-        parentToolUseId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Parent tool use ID for subagent context
-          title: Parenttooluseid
-      title: StreamMetadata
-      type: object
-    AgentStatus:
-      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-      enum:
-      - ACTIVE
-      - DELETED
-      title: AgentStatus
-      type: string
-    Agent:
-      properties:
-        agent_input_type:
-          anyOf:
-          - $ref: '#/components/schemas/AgentInputType'
-          - type: 'null'
-          description: The type of input the agent expects.
-        created_at:
-          description: The timestamp when the agent was created
-          format: date-time
-          title: Created At
-          type: string
-        description:
-          description: The description of the action.
-          title: Description
-          type: string
-        id:
-          description: The unique identifier of the agent.
-          title: Id
-          type: string
-        name:
-          description: The agent name (unique within namespace).
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace ID this agent belongs to.
-          title: Namespace Id
-          type: string
-        registered_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: The timestamp when the agent was last registered
-          title: Registered At
-        registration_metadata:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: The metadata for the agent's registration.
-          title: Registration Metadata
-        status:
-          $ref: '#/components/schemas/AgentStatus'
-          default: ACTIVE
-          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-        status_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The reason for the status of the action.
-          title: Status Reason
-        updated_at:
-          description: The timestamp when the agent was last updated
-          format: date-time
-          title: Updated At
-          type: string
-      required:
-      - id
-      - namespace_id
-      - name
-      - description
-      - created_at
-      - updated_at
-      title: Agent
-      type: object
-    StreamErrorPart:
-      description: Error during streaming.
-      properties:
-        error:
-          description: Error message
-          title: Error
-          type: string
-        rawContent:
-          anyOf:
-          - {}
-          - type: 'null'
-          description: Original content that caused the error
-          title: Rawcontent
-        type:
-          const: error
-          default: error
-          title: Type
-          type: string
-      required:
-      - error
-      title: StreamErrorPart
+      title: TextEndPart
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key
