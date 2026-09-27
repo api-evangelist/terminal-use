@@ -457,6 +457,51 @@ paths:
       x-fern-sdk-method-name: list
 components:
   schemas:
+    AgentInputType:
+      enum:
+      - text
+      - json
+      title: AgentInputType
+      type: string
+    DeployResponse:
+      description: 'Immediate response from deploy request.
+
+
+        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
+      properties:
+        agent_id:
+          description: Agent ID (created or existing)
+          title: Agent Id
+          type: string
+        branch_id:
+          description: Branch ID for this git branch
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        tasks_migrated:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated from old version (if any)
+          title: Tasks Migrated
+        version_id:
+          description: New version ID
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Initial version status
+      required:
+      - agent_id
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: DeployResponse
+      type: object
     DeleteResponse:
       properties:
         id:
@@ -470,6 +515,277 @@ components:
       - message
       title: DeleteResponse
       type: object
+    VersionListResponse:
+      description: Response for listing versions of a branch.
+      properties:
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID
+          title: Branch Id
+        total:
+          description: Total count
+          title: Total
+          type: integer
+        versions:
+          description: List of versions
+          items:
+            $ref: '#/components/schemas/VersionResponse'
+          title: Versions
+          type: array
+      required:
+      - versions
+      - total
+      title: VersionListResponse
+      type: object
+    AgentMetricsResponse:
+      description: Aggregated metrics for an agent.
+      properties:
+        avg_task_duration_seconds:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Average duration of completed/failed tasks in seconds. None if no tasks have finished in the time window.
+          examples:
+          - 12.5
+          title: Avg Task Duration Seconds
+        error_log_count_24h:
+          description: Number of ERROR/CRITICAL level logs in the last 24 hours
+          examples:
+          - 3
+          title: Error Log Count 24H
+          type: integer
+        task_count_24h:
+          description: Total number of tasks created in the last 24 hours
+          examples:
+          - 142
+          title: Task Count 24H
+          type: integer
+        task_success_rate_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Percentage of successful tasks (COMPLETED) vs failed tasks. None if no tasks have finished in the time window.
+          examples:
+          - 95.5
+          title: Task Success Rate Pct
+      required:
+      - task_count_24h
+      - error_log_count_24h
+      title: AgentMetricsResponse
+      type: object
+    Agent:
+      properties:
+        agent_input_type:
+          anyOf:
+          - $ref: '#/components/schemas/AgentInputType'
+          - type: 'null'
+          description: The type of input the agent expects.
+        created_at:
+          description: The timestamp when the agent was created
+          format: date-time
+          title: Created At
+          type: string
+        description:
+          description: The description of the action.
+          title: Description
+          type: string
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        registered_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the agent was last registered
+          title: Registered At
+        registration_metadata:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: The metadata for the agent's registration.
+          title: Registration Metadata
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The reason for the status of the action.
+          title: Status Reason
+        updated_at:
+          description: The timestamp when the agent was last updated
+          format: date-time
+          title: Updated At
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      - description
+      - created_at
+      - updated_at
+      title: Agent
+      type: object
+    AgentStatus:
+      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+      enum:
+      - ACTIVE
+      - DELETED
+      title: AgentStatus
+      type: string
+    AgentListItem:
+      description: 'Minimal agent shape for discovery/listing.
+
+
+        The /agents list endpoint is authorized via `discover` and must not leak
+
+        read-level fields (e.g. description, registration metadata).'
+      properties:
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status (ACTIVE/DELETED).
+      required:
+      - id
+      - namespace_id
+      - name
+      title: AgentListItem
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    DeployRequest:
+      description: 'Request model for deploying an agent.
+
+
+        Called by CLI after pushing the container image to the registry.'
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          default: async
+          description: ACP server type (sync or async)
+        agent_name:
+          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
+          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
+          title: Agent Name
+          type: string
+        are_tasks_sticky:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
+          title: Are Tasks Sticky
+        author_email:
+          description: Git commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Git commit author name
+          title: Author Name
+          type: string
+        branch:
+          description: Git branch name (e.g., 'main', 'feature/new-tool')
+          title: Branch
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent description (used when creating new agent)
+          title: Description
+        git_hash:
+          description: Git commit hash (short or full)
+          maxLength: 40
+          minLength: 7
+          title: Git Hash
+          type: string
+        git_message:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Git commit message (truncated if too long)
+          title: Git Message
+        image_url:
+          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the working directory had uncommitted changes at deploy time
+          title: Is Dirty
+          type: boolean
+        replicas:
+          default: 1
+          description: Desired replica count (1-10)
+          maximum: 10
+          minimum: 1
+          title: Replicas
+          type: integer
+        resources:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
+          title: Resources
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          default: claude_agent_sdk
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot containing the deploy source for Builder reopenability
+          title: Source Filesystem Id
+      required:
+      - agent_name
+      - branch
+      - git_hash
+      - image_url
+      - author_name
+      - author_email
+      title: DeployRequest
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -479,6 +795,13 @@ components:
           type: array
       title: HTTPValidationError
       type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
     VersionResponse:
       description: Full version details.
       properties:
@@ -620,42 +943,6 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    VersionListResponse:
-      description: Response for listing versions of a branch.
-      properties:
-        branch_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Branch ID
-          title: Branch Id
-        total:
-          description: Total count
-          title: Total
-          type: integer
-        versions:
-          description: List of versions
-          items:
-            $ref: '#/components/schemas/VersionResponse'
-          title: Versions
-          type: array
-      required:
-      - versions
-      - total
-      title: VersionListResponse
-      type: object
     ValidationError:
       properties:
         loc:
@@ -677,244 +964,6 @@ components:
       - type
       title: ValidationError
       type: object
-    DeployRequest:
-      description: 'Request model for deploying an agent.
-
-
-        Called by CLI after pushing the container image to the registry.'
-      properties:
-        acp_type:
-          $ref: '#/components/schemas/ACPType'
-          default: async
-          description: ACP server type (sync or async)
-        agent_name:
-          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
-          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
-          title: Agent Name
-          type: string
-        are_tasks_sticky:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
-          title: Are Tasks Sticky
-        author_email:
-          description: Git commit author email
-          title: Author Email
-          type: string
-        author_name:
-          description: Git commit author name
-          title: Author Name
-          type: string
-        branch:
-          description: Git branch name (e.g., 'main', 'feature/new-tool')
-          title: Branch
-          type: string
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Agent description (used when creating new agent)
-          title: Description
-        git_hash:
-          description: Git commit hash (short or full)
-          maxLength: 40
-          minLength: 7
-          title: Git Hash
-          type: string
-        git_message:
-          anyOf:
-          - maxLength: 500
-            type: string
-          - type: 'null'
-          description: Git commit message (truncated if too long)
-          title: Git Message
-        image_url:
-          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
-          title: Image Url
-          type: string
-        is_dirty:
-          default: false
-          description: Whether the working directory had uncommitted changes at deploy time
-          title: Is Dirty
-          type: boolean
-        replicas:
-          default: 1
-          description: Desired replica count (1-10)
-          maximum: 10
-          minimum: 1
-          title: Replicas
-          type: integer
-        resources:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
-          title: Resources
-        sdk_type:
-          $ref: '#/components/schemas/SDKType'
-          default: claude_agent_sdk
-          description: SDK type for agent runtime
-        source_filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Filesystem snapshot containing the deploy source for Builder reopenability
-          title: Source Filesystem Id
-      required:
-      - agent_name
-      - branch
-      - git_hash
-      - image_url
-      - author_name
-      - author_email
-      title: DeployRequest
-      type: object
-    DeployResponse:
-      description: 'Immediate response from deploy request.
-
-
-        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
-      properties:
-        agent_id:
-          description: Agent ID (created or existing)
-          title: Agent Id
-          type: string
-        branch_id:
-          description: Branch ID for this git branch
-          title: Branch Id
-          type: string
-        message:
-          description: Human-readable status message
-          title: Message
-          type: string
-        tasks_migrated:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Number of tasks migrated from old version (if any)
-          title: Tasks Migrated
-        version_id:
-          description: New version ID
-          title: Version Id
-          type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Initial version status
-      required:
-      - agent_id
-      - branch_id
-      - version_id
-      - version_status
-      - message
-      title: DeployResponse
-      type: object
-    ACPType:
-      description: Type of ACP server.
-      enum:
-      - sync
-      - async
-      title: ACPType
-      type: string
-    Agent:
-      properties:
-        agent_input_type:
-          anyOf:
-          - $ref: '#/components/schemas/AgentInputType'
-          - type: 'null'
-          description: The type of input the agent expects.
-        created_at:
-          description: The timestamp when the agent was created
-          format: date-time
-          title: Created At
-          type: string
-        description:
-          description: The description of the action.
-          title: Description
-          type: string
-        id:
-          description: The unique identifier of the agent.
-          title: Id
-          type: string
-        name:
-          description: The agent name (unique within namespace).
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace ID this agent belongs to.
-          title: Namespace Id
-          type: string
-        registered_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: The timestamp when the agent was last registered
-          title: Registered At
-        registration_metadata:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: The metadata for the agent's registration.
-          title: Registration Metadata
-        status:
-          $ref: '#/components/schemas/AgentStatus'
-          default: ACTIVE
-          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-        status_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The reason for the status of the action.
-          title: Status Reason
-        updated_at:
-          description: The timestamp when the agent was last updated
-          format: date-time
-          title: Updated At
-          type: string
-      required:
-      - id
-      - namespace_id
-      - name
-      - description
-      - created_at
-      - updated_at
-      title: Agent
-      type: object
-    AgentListItem:
-      description: 'Minimal agent shape for discovery/listing.
-
-
-        The /agents list endpoint is authorized via `discover` and must not leak
-
-        read-level fields (e.g. description, registration metadata).'
-      properties:
-        id:
-          description: The unique identifier of the agent.
-          title: Id
-          type: string
-        name:
-          description: The agent name (unique within namespace).
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace ID this agent belongs to.
-          title: Namespace Id
-          type: string
-        status:
-          $ref: '#/components/schemas/AgentStatus'
-          default: ACTIVE
-          description: Agent status (ACTIVE/DELETED).
-      required:
-      - id
-      - namespace_id
-      - name
-      title: AgentListItem
-      type: object
     SDKType:
       description: SDK type for agent runtime.
       enum:
@@ -922,55 +971,6 @@ components:
       - codex_agent_sdk
       title: SDKType
       type: string
-    AgentInputType:
-      enum:
-      - text
-      - json
-      title: AgentInputType
-      type: string
-    AgentStatus:
-      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-      enum:
-      - ACTIVE
-      - DELETED
-      title: AgentStatus
-      type: string
-    AgentMetricsResponse:
-      description: Aggregated metrics for an agent.
-      properties:
-        avg_task_duration_seconds:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Average duration of completed/failed tasks in seconds. None if no tasks have finished in the time window.
-          examples:
-          - 12.5
-          title: Avg Task Duration Seconds
-        error_log_count_24h:
-          description: Number of ERROR/CRITICAL level logs in the last 24 hours
-          examples:
-          - 3
-          title: Error Log Count 24H
-          type: integer
-        task_count_24h:
-          description: Total number of tasks created in the last 24 hours
-          examples:
-          - 142
-          title: Task Count 24H
-          type: integer
-        task_success_rate_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Percentage of successful tasks (COMPLETED) vs failed tasks. None if no tasks have finished in the time window.
-          examples:
-          - 95.5
-          title: Task Success Rate Pct
-      required:
-      - task_count_24h
-      - error_log_count_24h
-      title: AgentMetricsResponse
-      type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key
   name: idempotency_key

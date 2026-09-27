@@ -197,6 +197,27 @@ paths:
       - States
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -206,23 +227,23 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    UpdateStateRequest:
+    CreateStateRequest:
       properties:
         agent_id:
-          title: The unique id of the agent to update the state of
+          title: The unique id of the agent to send the state to
           type: string
         state:
           additionalProperties: true
-          title: The state to update the state with.
+          title: The state to send to the task.
           type: object
         task_id:
-          title: The unique id of the task to update the state of
+          title: The unique id of the task to send the state to
           type: string
       required:
       - task_id
       - agent_id
       - state
-      title: UpdateStateRequest
+      title: CreateStateRequest
       type: object
     State:
       description: 'Represents a state in the agent system. A state is associated uniquely with a task and an agent.
@@ -269,44 +290,23 @@ components:
       - created_at
       title: State
       type: object
-    CreateStateRequest:
+    UpdateStateRequest:
       properties:
         agent_id:
-          title: The unique id of the agent to send the state to
+          title: The unique id of the agent to update the state of
           type: string
         state:
           additionalProperties: true
-          title: The state to send to the task.
+          title: The state to update the state with.
           type: object
         task_id:
-          title: The unique id of the task to send the state to
+          title: The unique id of the task to update the state of
           type: string
       required:
       - task_id
       - agent_id
       - state
-      title: CreateStateRequest
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: UpdateStateRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

@@ -465,14 +465,105 @@ paths:
       x-fern-sdk-method-name: retrieve
 components:
   schemas:
-    HTTPValidationError:
+    VersionListResponse:
+      description: Response for listing versions of a branch.
       properties:
-        detail:
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID
+          title: Branch Id
+        total:
+          description: Total count
+          title: Total
+          type: integer
+        versions:
+          description: List of versions
           items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
+            $ref: '#/components/schemas/VersionResponse'
+          title: Versions
           type: array
-      title: HTTPValidationError
+      required:
+      - versions
+      - total
+      title: VersionListResponse
+      type: object
+    DeployResponse:
+      description: 'Immediate response from deploy request.
+
+
+        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
+      properties:
+        agent_id:
+          description: Agent ID (created or existing)
+          title: Agent Id
+          type: string
+        branch_id:
+          description: Branch ID for this git branch
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        tasks_migrated:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated from old version (if any)
+          title: Tasks Migrated
+        version_id:
+          description: New version ID
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Initial version status
+      required:
+      - agent_id
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: DeployResponse
+      type: object
+    VersionSummary:
+      description: Abbreviated version info for embedding in branch responses.
+      properties:
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+      required:
+      - id
+      - git_hash
+      - status
+      - deployed_at
+      title: VersionSummary
       type: object
     BranchResponse:
       description: Full branch details including current version.
@@ -537,60 +628,6 @@ components:
       - replicas
       title: BranchResponse
       type: object
-    BranchListResponse:
-      description: Response for listing branches.
-      properties:
-        branches:
-          description: List of branches
-          items:
-            $ref: '#/components/schemas/BranchResponse'
-          title: Branches
-          type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
-      required:
-      - branches
-      - total
-      title: BranchListResponse
-      type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    VersionListResponse:
-      description: Response for listing versions of a branch.
-      properties:
-        branch_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Branch ID
-          title: Branch Id
-        total:
-          description: Total count
-          title: Total
-          type: integer
-        versions:
-          description: List of versions
-          items:
-            $ref: '#/components/schemas/VersionResponse'
-          title: Versions
-          type: array
-      required:
-      - versions
-      - total
-      title: VersionListResponse
-      type: object
     RollbackResponse:
       description: Response from a rollback operation.
       properties:
@@ -631,43 +668,18 @@ components:
       - message
       title: RollbackResponse
       type: object
-    VersionSummary:
-      description: Abbreviated version info for embedding in branch responses.
-      properties:
-        deployed_at:
-          description: When this version was deployed
-          format: date-time
-          title: Deployed At
-          type: string
-        git_hash:
-          description: Git commit hash
-          title: Git Hash
-          type: string
-        git_message:
-          default: ''
-          description: Git commit message
-          title: Git Message
-          type: string
-        id:
-          description: Version ID
-          title: Id
-          type: string
-        source_filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Filesystem snapshot that can reopen this version in Agent Builder
-          title: Source Filesystem Id
-        status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version lifecycle status
-      required:
-      - id
-      - git_hash
-      - status
-      - deployed_at
-      title: VersionSummary
-      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
     DeployRequest:
       description: 'Request model for deploying an agent.
 
@@ -763,84 +775,31 @@ components:
       - author_email
       title: DeployRequest
       type: object
-    RollbackRequest:
-      description: Request model for rolling back a branch.
+    RedeployResponse:
+      description: Response from a redeploy operation.
       properties:
-        target_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Version ID to rollback to (defaults to previous version if not specified)
-          title: Target Version Id
-      title: RollbackRequest
-      type: object
-    DeployResponse:
-      description: 'Immediate response from deploy request.
-
-
-        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
-      properties:
-        agent_id:
-          description: Agent ID (created or existing)
-          title: Agent Id
-          type: string
         branch_id:
-          description: Branch ID for this git branch
+          description: Branch ID
           title: Branch Id
           type: string
         message:
           description: Human-readable status message
           title: Message
           type: string
-        tasks_migrated:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Number of tasks migrated from old version (if any)
-          title: Tasks Migrated
         version_id:
-          description: New version ID
+          description: New version ID created for redeploy
           title: Version Id
           type: string
         version_status:
           $ref: '#/components/schemas/VersionStatus'
-          description: Initial version status
+          description: Version status after redeploy
       required:
-      - agent_id
       - branch_id
       - version_id
       - version_status
       - message
-      title: DeployResponse
+      title: RedeployResponse
       type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    SDKType:
-      description: SDK type for agent runtime.
-      enum:
-      - claude_agent_sdk
-      - codex_agent_sdk
-      title: SDKType
-      type: string
     ACPType:
       description: Type of ACP server.
       enum:
@@ -848,6 +807,33 @@ components:
       - async
       title: ACPType
       type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    BranchListResponse:
+      description: Response for listing branches.
+      properties:
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - branches
+      - total
+      title: BranchListResponse
+      type: object
     VersionResponse:
       description: Full version details.
       properties:
@@ -989,30 +975,44 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    RedeployResponse:
-      description: Response from a redeploy operation.
+    ValidationError:
       properties:
-        branch_id:
-          description: Branch ID
-          title: Branch Id
-          type: string
-        message:
-          description: Human-readable status message
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
           title: Message
           type: string
-        version_id:
-          description: New version ID created for redeploy
-          title: Version Id
+        type:
+          title: Error Type
           type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version status after redeploy
       required:
-      - branch_id
-      - version_id
-      - version_status
-      - message
-      title: RedeployResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    RollbackRequest:
+      description: Request model for rolling back a branch.
+      properties:
+        target_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Version ID to rollback to (defaults to previous version if not specified)
+          title: Target Version Id
+      title: RollbackRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

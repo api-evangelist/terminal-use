@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Sb0 O Auth API
+  title: Sb0 OAuth API
   version: 0.1.0
 tags:
 - name: OAuth
@@ -104,22 +104,6 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    OAuthInitiateResponse:
-      description: Response for OAuth initiation.
-      properties:
-        authorization_url:
-          description: URL to redirect user for authentication
-          title: Authorization Url
-          type: string
-        state:
-          description: State parameter for CSRF protection
-          title: State
-          type: string
-      required:
-      - authorization_url
-      - state
-      title: OAuthInitiateResponse
-      type: object
     OAuthTokenResponse:
       description: Response for token exchange.
       properties:
@@ -167,6 +151,22 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    OAuthInitiateResponse:
+      description: Response for OAuth initiation.
+      properties:
+        authorization_url:
+          description: URL to redirect user for authentication
+          title: Authorization Url
+          type: string
+        state:
+          description: State parameter for CSRF protection
+          title: State
+          type: string
+      required:
+      - authorization_url
+      - state
+      title: OAuthInitiateResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

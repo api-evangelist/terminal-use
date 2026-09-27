@@ -69,6 +69,22 @@ paths:
         disabled: true
 components:
   schemas:
+    PublishRawEventResponse:
+      description: Response after publishing a raw event.
+      properties:
+        published_count:
+          description: Number of stream parts published to Redis
+          title: Published Count
+          type: integer
+        stored:
+          description: Whether the message was persisted to storage
+          title: Stored
+          type: boolean
+      required:
+      - published_count
+      - stored
+      title: PublishRawEventResponse
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -77,6 +93,27 @@ components:
           title: Detail
           type: array
       title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
       type: object
     RawEventPayload:
       description: Request payload for publishing a raw SDK event.
@@ -113,43 +150,6 @@ components:
       - task_id
       - raw_event
       title: RawEventPayload
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    PublishRawEventResponse:
-      description: Response after publishing a raw event.
-      properties:
-        published_count:
-          description: Number of stream parts published to Redis
-          title: Published Count
-          type: integer
-        stored:
-          description: Whether the message was persisted to storage
-          title: Stored
-          type: boolean
-      required:
-      - published_count
-      - stored
-      title: PublishRawEventResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

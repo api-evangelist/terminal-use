@@ -210,6 +210,74 @@ paths:
       - Organizations
 components:
   schemas:
+    UpdateOrganizationMemberRequest:
+      description: Request model for updating organization member role.
+      properties:
+        role_slug:
+          description: Organization role slug for the target member
+          enum:
+          - admin
+          - member
+          title: Role Slug
+          type: string
+      required:
+      - role_slug
+      title: UpdateOrganizationMemberRequest
+      type: object
+    OrganizationInvitationResponse:
+      description: Response model for organization invitation details.
+      properties:
+        accepted_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Accepted WorkOS user ID
+          title: Accepted User Id
+        created_at:
+          description: Invitation created timestamp
+          title: Created At
+          type: string
+        email:
+          description: Invitee email
+          title: Email
+          type: string
+        expires_at:
+          description: Invitation expiration timestamp
+          title: Expires At
+          type: string
+        id:
+          description: The WorkOS invitation ID
+          title: Id
+          type: string
+        inviter_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Inviter WorkOS user ID
+          title: Inviter User Id
+        role_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Invitation role slug
+          title: Role Slug
+        state:
+          description: Invitation state
+          title: State
+          type: string
+        updated_at:
+          description: Invitation updated timestamp
+          title: Updated At
+          type: string
+      required:
+      - id
+      - email
+      - state
+      - expires_at
+      - created_at
+      - updated_at
+      title: OrganizationInvitationResponse
+      type: object
     DeleteResponse:
       properties:
         id:
@@ -222,15 +290,6 @@ components:
       - id
       - message
       title: DeleteResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     CreateOrganizationInvitationRequest:
       description: Request model for creating organization invitations.
@@ -250,6 +309,52 @@ components:
       required:
       - email
       title: CreateOrganizationInvitationRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    CreateOrganizationInvitationResponse:
+      description: Response model for create invitation endpoint.
+      properties:
+        already_exists:
+          default: false
+          description: True when a pending invite already exists for this email
+          title: Already Exists
+          type: boolean
+        invitation:
+          $ref: '#/components/schemas/OrganizationInvitationResponse'
+      required:
+      - invitation
+      title: CreateOrganizationInvitationResponse
+      type: object
+    OrganizationResponse:
+      description: Response model for organization info.
+      properties:
+        id:
+          description: The WorkOS organization ID
+          title: Id
+          type: string
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization display name
+          title: Name
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization slug (URL-friendly)
+          title: Slug
+      required:
+      - id
+      title: OrganizationResponse
       type: object
     ValidationError:
       properties:
@@ -319,111 +424,6 @@ components:
       - created_at
       - updated_at
       title: OrganizationMemberResponse
-      type: object
-    OrganizationInvitationResponse:
-      description: Response model for organization invitation details.
-      properties:
-        accepted_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Accepted WorkOS user ID
-          title: Accepted User Id
-        created_at:
-          description: Invitation created timestamp
-          title: Created At
-          type: string
-        email:
-          description: Invitee email
-          title: Email
-          type: string
-        expires_at:
-          description: Invitation expiration timestamp
-          title: Expires At
-          type: string
-        id:
-          description: The WorkOS invitation ID
-          title: Id
-          type: string
-        inviter_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Inviter WorkOS user ID
-          title: Inviter User Id
-        role_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Invitation role slug
-          title: Role Slug
-        state:
-          description: Invitation state
-          title: State
-          type: string
-        updated_at:
-          description: Invitation updated timestamp
-          title: Updated At
-          type: string
-      required:
-      - id
-      - email
-      - state
-      - expires_at
-      - created_at
-      - updated_at
-      title: OrganizationInvitationResponse
-      type: object
-    CreateOrganizationInvitationResponse:
-      description: Response model for create invitation endpoint.
-      properties:
-        already_exists:
-          default: false
-          description: True when a pending invite already exists for this email
-          title: Already Exists
-          type: boolean
-        invitation:
-          $ref: '#/components/schemas/OrganizationInvitationResponse'
-      required:
-      - invitation
-      title: CreateOrganizationInvitationResponse
-      type: object
-    UpdateOrganizationMemberRequest:
-      description: Request model for updating organization member role.
-      properties:
-        role_slug:
-          description: Organization role slug for the target member
-          enum:
-          - admin
-          - member
-          title: Role Slug
-          type: string
-      required:
-      - role_slug
-      title: UpdateOrganizationMemberRequest
-      type: object
-    OrganizationResponse:
-      description: Response model for organization info.
-      properties:
-        id:
-          description: The WorkOS organization ID
-          title: Id
-          type: string
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Organization display name
-          title: Name
-        slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Organization slug (URL-friendly)
-          title: Slug
-      required:
-      - id
-      title: OrganizationResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

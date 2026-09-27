@@ -432,37 +432,6 @@ paths:
       - Groups
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
-      type: object
-    AccessGroupManagersResponse:
-      properties:
-        managers:
-          items:
-            $ref: '#/components/schemas/AccessGroupManager'
-          title: Managers
-          type: array
-      title: AccessGroupManagersResponse
-      type: object
     AccessGroupManager:
       properties:
         created_at:
@@ -489,53 +458,6 @@ components:
       - group_id
       - member_id
       title: AccessGroupManager
-      type: object
-    AccessGroupListResponse:
-      properties:
-        groups:
-          items:
-            $ref: '#/components/schemas/AccessGroup'
-          title: Groups
-          type: array
-      title: AccessGroupListResponse
-      type: object
-    UpdateAccessGroupRequest:
-      properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional group description.
-          title: Description
-      title: UpdateAccessGroupRequest
-      type: object
-    AccessGroupVisibleOrg:
-      properties:
-        created_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: Creation timestamp.
-          title: Created At
-        group_id:
-          description: Access group id.
-          title: Group Id
-          type: string
-        id:
-          description: Visible org row id.
-          title: Id
-          type: string
-        org_id:
-          description: Organization id with visibility.
-          title: Org Id
-          type: string
-      required:
-      - id
-      - group_id
-      - org_id
-      title: AccessGroupVisibleOrg
       type: object
     AccessGroupVisibleOrgsResponse:
       properties:
@@ -573,6 +495,57 @@ components:
       - member_id
       title: AccessGroupMember
       type: object
+    AccessGroupVisibleOrg:
+      properties:
+        created_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: Creation timestamp.
+          title: Created At
+        group_id:
+          description: Access group id.
+          title: Group Id
+          type: string
+        id:
+          description: Visible org row id.
+          title: Id
+          type: string
+        org_id:
+          description: Organization id with visibility.
+          title: Org Id
+          type: string
+      required:
+      - id
+      - group_id
+      - org_id
+      title: AccessGroupVisibleOrg
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    UpdateAccessGroupRequest:
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional group description.
+          title: Description
+      title: UpdateAccessGroupRequest
+      type: object
     AccessGroupMembersResponse:
       properties:
         members:
@@ -581,27 +554,6 @@ components:
           title: Members
           type: array
       title: AccessGroupMembersResponse
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
       type: object
     CreateAccessGroupRequest:
       properties:
@@ -666,6 +618,54 @@ components:
       - name
       - created_by
       title: AccessGroup
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    AccessGroupListResponse:
+      properties:
+        groups:
+          items:
+            $ref: '#/components/schemas/AccessGroup'
+          title: Groups
+          type: array
+      title: AccessGroupListResponse
+      type: object
+    AccessGroupManagersResponse:
+      properties:
+        managers:
+          items:
+            $ref: '#/components/schemas/AccessGroupManager'
+          title: Managers
+          type: array
+      title: AccessGroupManagersResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

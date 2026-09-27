@@ -238,15 +238,6 @@ paths:
       - Agent APIKeys
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     AgentAPIKey:
       properties:
         agent_id:
@@ -278,6 +269,47 @@ components:
       - name
       - api_key_type
       title: AgentAPIKey
+      type: object
+    CreateAPIKeyRequest:
+      properties:
+        agent_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The UUID of the agent
+          title: Agent Id
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The name of the agent - if not provided, the agent_id must be set.
+          title: Agent Name
+        api_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optionally provide the API key value - if not set, one will be generated.
+          title: Api Key
+        api_key_type:
+          $ref: '#/components/schemas/AgentAPIKeyType'
+          default: external
+          description: The type of the agent API key (external by default).
+        name:
+          description: The name of the agent's API key.
+          title: Name
+          type: string
+      required:
+      - name
+      title: CreateAPIKeyRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     AgentAPIKeyType:
       enum:
@@ -344,38 +376,6 @@ components:
       - api_key_type
       - api_key
       title: CreateAPIKeyResponse
-      type: object
-    CreateAPIKeyRequest:
-      properties:
-        agent_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The UUID of the agent
-          title: Agent Id
-        agent_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The name of the agent - if not provided, the agent_id must be set.
-          title: Agent Name
-        api_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optionally provide the API key value - if not set, one will be generated.
-          title: Api Key
-        api_key_type:
-          $ref: '#/components/schemas/AgentAPIKeyType'
-          default: external
-          description: The type of the agent API key (external by default).
-        name:
-          description: The name of the agent's API key.
-          title: Name
-          type: string
-      required:
-      - name
-      title: CreateAPIKeyRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

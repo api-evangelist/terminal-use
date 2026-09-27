@@ -88,15 +88,6 @@ paths:
       x-fern-sdk-method-name: list
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     VersionEventResponse:
       description: Response model for a single version event.
       properties:
@@ -144,6 +135,19 @@ components:
       - created_at
       title: VersionEventResponse
       type: object
+    VersionEventTrigger:
+      description: What triggered a version event.
+      enum:
+      - deploy
+      - container_register
+      - rollback
+      - hot_swap
+      - helm_failure
+      - redeploy
+      - cleanup
+      - manual
+      title: VersionEventTrigger
+      type: string
     VersionStatus:
       description: Status of a version in its lifecycle.
       enum:
@@ -155,6 +159,30 @@ components:
       - RETIRED
       - ROLLED_BACK
       title: VersionStatus
+      type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    VersionEventType:
+      description: Types of version lifecycle events.
+      enum:
+      - VERSION_CREATED
+      - VERSION_ACTIVATED
+      - VERSION_FAILED
+      - VERSION_DRAINING
+      - VERSION_RETIRED
+      - VERSION_ROLLED_BACK_FROM
+      - VERSION_ROLLED_BACK_TO
+      - VERSION_REDEPLOYED
+      - TASKS_MIGRATED
+      - VERSION_CLEANUP_FAILED
+      title: VersionEventType
       type: string
     VersionEventListResponse:
       description: Response model for listing version events.
@@ -200,34 +228,6 @@ components:
       - type
       title: ValidationError
       type: object
-    VersionEventTrigger:
-      description: What triggered a version event.
-      enum:
-      - deploy
-      - container_register
-      - rollback
-      - hot_swap
-      - helm_failure
-      - redeploy
-      - cleanup
-      - manual
-      title: VersionEventTrigger
-      type: string
-    VersionEventType:
-      description: Types of version lifecycle events.
-      enum:
-      - VERSION_CREATED
-      - VERSION_ACTIVATED
-      - VERSION_FAILED
-      - VERSION_DRAINING
-      - VERSION_RETIRED
-      - VERSION_ROLLED_BACK_FROM
-      - VERSION_ROLLED_BACK_TO
-      - VERSION_REDEPLOYED
-      - TASKS_MIGRATED
-      - VERSION_CLEANUP_FAILED
-      title: VersionEventType
-      type: string
     VersionEventContent:
       description: Typed content for version events stored as JSONB.
       properties:

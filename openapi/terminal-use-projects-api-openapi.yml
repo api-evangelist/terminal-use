@@ -270,14 +270,26 @@ paths:
       - Projects
 components:
   schemas:
-    HTTPValidationError:
+    ProjectCollaboratorResponse:
+      description: Response model for project collaborator.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        member_id:
+          description: The WorkOS user ID of the collaborator.
+          title: Member Id
+          type: string
+        role:
+          description: Collaborator role.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - member_id
+      - role
+      title: ProjectCollaboratorResponse
       type: object
     DeleteResponse:
       properties:
@@ -291,6 +303,31 @@ components:
       - id
       - message
       title: DeleteResponse
+      type: object
+    CreateProjectRequest:
+      description: Request model for creating a project.
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        name:
+          description: Project name (unique within namespace).
+          maxLength: 255
+          minLength: 1
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - namespace_id
+      - name
+      title: CreateProjectRequest
       type: object
     Project:
       description: Response model for project.
@@ -351,6 +388,32 @@ components:
           title: Name
       title: UpdateProjectRequest
       type: object
+    ProjectCollaboratorsResponse:
+      description: Response model for project collaborators list.
+      properties:
+        can_manage:
+          description: Whether the current user can manage collaborators.
+          title: Can Manage
+          type: boolean
+        collaborators:
+          description: Project collaborators with explicit direct roles.
+          items:
+            $ref: '#/components/schemas/ProjectCollaboratorResponse'
+          title: Collaborators
+          type: array
+      required:
+      - can_manage
+      title: ProjectCollaboratorsResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     ProjectListItem:
       description: 'Minimal project shape for discovery/listing.
 
@@ -377,40 +440,11 @@ components:
       - name
       title: ProjectListItem
       type: object
-    CreateProjectRequest:
-      description: Request model for creating a project.
+    UpsertProjectCollaboratorRequest:
+      description: Request model for setting/updating a project collaborator role.
       properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional project description.
-          title: Description
-        name:
-          description: Project name (unique within namespace).
-          maxLength: 255
-          minLength: 1
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace this project belongs to.
-          title: Namespace Id
-          type: string
-      required:
-      - namespace_id
-      - name
-      title: CreateProjectRequest
-      type: object
-    ProjectCollaboratorResponse:
-      description: Response model for project collaborator.
-      properties:
-        member_id:
-          description: The WorkOS user ID of the collaborator.
-          title: Member Id
-          type: string
         role:
-          description: Collaborator role.
+          description: Role to assign.
           enum:
           - discoverer
           - viewer
@@ -419,9 +453,8 @@ components:
           title: Role
           type: string
       required:
-      - member_id
       - role
-      title: ProjectCollaboratorResponse
+      title: UpsertProjectCollaboratorRequest
       type: object
     ValidationError:
       properties:
@@ -443,39 +476,6 @@ components:
       - msg
       - type
       title: ValidationError
-      type: object
-    ProjectCollaboratorsResponse:
-      description: Response model for project collaborators list.
-      properties:
-        can_manage:
-          description: Whether the current user can manage collaborators.
-          title: Can Manage
-          type: boolean
-        collaborators:
-          description: Project collaborators with explicit direct roles.
-          items:
-            $ref: '#/components/schemas/ProjectCollaboratorResponse'
-          title: Collaborators
-          type: array
-      required:
-      - can_manage
-      title: ProjectCollaboratorsResponse
-      type: object
-    UpsertProjectCollaboratorRequest:
-      description: Request model for setting/updating a project collaborator role.
-      properties:
-        role:
-          description: Role to assign.
-          enum:
-          - discoverer
-          - viewer
-          - editor
-          - owner
-          title: Role
-          type: string
-      required:
-      - role
-      title: UpsertProjectCollaboratorRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

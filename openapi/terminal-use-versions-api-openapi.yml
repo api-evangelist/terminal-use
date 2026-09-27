@@ -312,121 +312,67 @@ paths:
       x-fern-sdk-method-name: pod_metrics
 components:
   schemas:
-    DeployStreamConnectedEvent:
-      description: 'Sent when SSE deploy stream connection is established.
+    DeployStreamCompleteEvent:
+      description: 'Stream is complete - deployment has reached a terminal state.
 
 
-        Indicates the client is now subscribed and will receive deployment progress events.'
+        Sent by the SSE endpoint when the version status is terminal (ACTIVE, FAILED, etc.).'
       properties:
+        status:
+          description: Final version status (e.g., 'active', 'failed')
+          title: Status
+          type: string
         type:
-          const: connected
-          default: connected
+          const: complete
+          default: complete
+          title: Type
+          type: string
+      required:
+      - status
+      title: DeployStreamCompleteEvent
+      type: object
+    DeployStreamQueuedEvent:
+      description: Deployment has been queued for processing.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: queued
+          default: queued
           title: Type
           type: string
         version_id:
-          description: Version ID this stream is subscribed to
+          description: Version ID being deployed
           title: Version Id
           type: string
       required:
       - version_id
-      title: DeployStreamConnectedEvent
-      type: object
-    RegisterContainerResponse:
-      description: Response from container registration.
-      properties:
-        agent_api_key:
-          description: API key for the agent
-          title: Agent Api Key
-          type: string
-        agent_id:
-          description: Agent ID
-          title: Agent Id
-          type: string
-        agent_name:
-          description: Agent name
-          title: Agent Name
-          type: string
-        branch_id:
-          description: Branch ID
-          title: Branch Id
-          type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version status after registration
-      required:
-      - agent_id
-      - agent_name
-      - agent_api_key
-      - branch_id
-      - version_status
-      title: RegisterContainerResponse
-      type: object
-    VersionPodLogEntry:
-      description: A single pod log entry returned for a deployment version.
-      properties:
-        agent_id:
-          description: Agent ID associated with this log
-          title: Agent Id
-          type: string
-        branch_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Branch ID associated with this log
-          title: Branch Id
-        cluster:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Cluster name
-          title: Cluster
-        container_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Container name
-          title: Container Name
-        k8s_namespace:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Kubernetes namespace containing the pod
-          title: K8S Namespace
-        log_id:
-          description: Stable pod log identifier for pagination
-          title: Log Id
-          type: string
-        message:
-          description: Pod log message
-          title: Message
-          type: string
-        pod_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Kubernetes pod name
-          title: Pod Name
-        stream:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Container log stream (stdout/stderr)
-          title: Stream
-        timestamp:
-          description: ISO 8601 log timestamp
-          title: Timestamp
-          type: string
-        version_id:
-          description: Version ID associated with this log
-          title: Version Id
-          type: string
-      required:
-      - log_id
       - timestamp
-      - version_id
-      - agent_id
-      - message
-      title: VersionPodLogEntry
+      title: DeployStreamQueuedEvent
+      type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     VersionResponse:
       description: Full version details.
@@ -569,22 +515,28 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    DeployStreamQueuedEvent:
-      description: Deployment has been queued for processing.
+    DeployStreamFailedEvent:
+      description: Deployment failed.
       properties:
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Detailed failure reason
+          title: Failure Reason
         message:
           anyOf:
           - type: string
           - type: 'null'
-          description: Optional status message
+          description: Error message
           title: Message
         timestamp:
           description: ISO 8601 timestamp
           title: Timestamp
           type: string
         type:
-          const: queued
-          default: queued
+          const: failed
+          default: failed
           title: Type
           type: string
         version_id:
@@ -594,79 +546,15 @@ components:
       required:
       - version_id
       - timestamp
-      title: DeployStreamQueuedEvent
+      title: DeployStreamFailedEvent
       type: object
-    VersionMetricsResponse:
-      description: Response model for version deployment metrics.
-      properties:
-        deployment_duration_p95_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: P95 deployment duration in seconds for this version
-          title: Deployment Duration P95 Seconds
-        deployment_duration_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Average deployment duration in seconds for this version
-          title: Deployment Duration Seconds
-      title: VersionMetricsResponse
-      type: object
-    DeployStreamHelmWaitingEvent:
-      description: Waiting for Helm deployment to complete (pods becoming ready).
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: helm_waiting
-          default: helm_waiting
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamHelmWaitingEvent
-      type: object
-    DeployStreamHelmStartedEvent:
-      description: Helm deployment has started.
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: helm_started
-          default: helm_started
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamHelmStartedEvent
-      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
     VersionPodMetricsResponse:
       description: Pod-level CPU + memory metrics for a deployed version (last N minutes).
       properties:
@@ -713,35 +601,73 @@ components:
       - step_seconds
       title: VersionPodMetricsResponse
       type: object
-    SDKType:
-      description: SDK type for agent runtime.
-      enum:
-      - claude_agent_sdk
-      - codex_agent_sdk
-      title: SDKType
-      type: string
-    DeployStreamFailedEvent:
-      description: Deployment failed.
+    DeployStreamErrorEvent:
+      description: 'Sent when an error occurs in the deploy stream.
+
+
+        After this event, the stream may close.'
       properties:
-        failure_reason:
+        message:
+          description: Error description
+          title: Message
+          type: string
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - message
+      title: DeployStreamErrorEvent
+      type: object
+    RegisterContainerRequest:
+      description: 'Request model for container registration.
+
+
+        Called by agent container on startup to register its ACP URL.
+
+        Includes a registration token for security (CVE-2026-0001 fix).'
+      properties:
+        acp_url:
+          description: ACP server URL (e.g., 'http://agent-main-abc123.agents.svc.cluster.local:8000')
+          title: Acp Url
+          type: string
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        registration_token:
           anyOf:
           - type: string
           - type: 'null'
-          description: Detailed failure reason
-          title: Failure Reason
+          description: Single-use registration token provided during deployment (required when configured)
+          title: Registration Token
+        version_id:
+          description: Version ID being registered
+          title: Version Id
+          type: string
+      required:
+      - branch_id
+      - version_id
+      - acp_url
+      title: RegisterContainerRequest
+      type: object
+    DeployStreamHelmWaitingEvent:
+      description: Waiting for Helm deployment to complete (pods becoming ready).
+      properties:
         message:
           anyOf:
           - type: string
           - type: 'null'
-          description: Error message
+          description: Optional status message
           title: Message
         timestamp:
           description: ISO 8601 timestamp
           title: Timestamp
           type: string
         type:
-          const: failed
-          default: failed
+          const: helm_waiting
+          default: helm_waiting
           title: Type
           type: string
         version_id:
@@ -751,15 +677,65 @@ components:
       required:
       - version_id
       - timestamp
-      title: DeployStreamFailedEvent
+      title: DeployStreamHelmWaitingEvent
       type: object
-    ACPType:
-      description: Type of ACP server.
-      enum:
-      - sync
-      - async
-      title: ACPType
-      type: string
+    DeployStreamReadyEvent:
+      description: Deployment completed successfully.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: ready
+          default: ready
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamReadyEvent
+      type: object
+    RegisterContainerResponse:
+      description: Response from container registration.
+      properties:
+        agent_api_key:
+          description: API key for the agent
+          title: Agent Api Key
+          type: string
+        agent_id:
+          description: Agent ID
+          title: Agent Id
+          type: string
+        agent_name:
+          description: Agent name
+          title: Agent Name
+          type: string
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version status after registration
+      required:
+      - agent_id
+      - agent_name
+      - agent_api_key
+      - branch_id
+      - version_status
+      title: RegisterContainerResponse
+      type: object
     DeployStreamEvent:
       description: 'Union of all possible deploy stream SSE events.
 
@@ -806,6 +782,102 @@ components:
       - $ref: '#/components/schemas/DeployStreamCompleteEvent'
       - $ref: '#/components/schemas/DeployStreamErrorEvent'
       title: DeployStreamEvent
+    TimeSeriesPoint:
+      description: A single time series data point.
+      properties:
+        ts:
+          description: Timestamp for the data point
+          format: date-time
+          title: Ts
+          type: string
+        value:
+          description: Metric value at timestamp
+          title: Value
+          type: number
+      required:
+      - ts
+      - value
+      title: TimeSeriesPoint
+      type: object
+    VersionPodLogEntry:
+      description: A single pod log entry returned for a deployment version.
+      properties:
+        agent_id:
+          description: Agent ID associated with this log
+          title: Agent Id
+          type: string
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID associated with this log
+          title: Branch Id
+        cluster:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cluster name
+          title: Cluster
+        container_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Container name
+          title: Container Name
+        k8s_namespace:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Kubernetes namespace containing the pod
+          title: K8S Namespace
+        log_id:
+          description: Stable pod log identifier for pagination
+          title: Log Id
+          type: string
+        message:
+          description: Pod log message
+          title: Message
+          type: string
+        pod_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Kubernetes pod name
+          title: Pod Name
+        stream:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Container log stream (stdout/stderr)
+          title: Stream
+        timestamp:
+          description: ISO 8601 log timestamp
+          title: Timestamp
+          type: string
+        version_id:
+          description: Version ID associated with this log
+          title: Version Id
+          type: string
+      required:
+      - log_id
+      - timestamp
+      - version_id
+      - agent_id
+      - message
+      title: VersionPodLogEntry
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
     DeployStreamRollingBackEvent:
       description: Deployment is being rolled back.
       properties:
@@ -833,50 +905,6 @@ components:
       - timestamp
       title: DeployStreamRollingBackEvent
       type: object
-    TimeSeriesPoint:
-      description: A single time series data point.
-      properties:
-        ts:
-          description: Timestamp for the data point
-          format: date-time
-          title: Ts
-          type: string
-        value:
-          description: Metric value at timestamp
-          title: Value
-          type: number
-      required:
-      - ts
-      - value
-      title: TimeSeriesPoint
-      type: object
-    DeployStreamReadyEvent:
-      description: Deployment completed successfully.
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: ready
-          default: ready
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamReadyEvent
-      type: object
     ValidationError:
       properties:
         loc:
@@ -898,24 +926,24 @@ components:
       - type
       title: ValidationError
       type: object
-    DeployStreamErrorEvent:
-      description: 'Sent when an error occurs in the deploy stream.
+    DeployStreamConnectedEvent:
+      description: 'Sent when SSE deploy stream connection is established.
 
 
-        After this event, the stream may close.'
+        Indicates the client is now subscribed and will receive deployment progress events.'
       properties:
-        message:
-          description: Error description
-          title: Message
-          type: string
         type:
-          const: error
-          default: error
+          const: connected
+          default: connected
           title: Type
           type: string
+        version_id:
+          description: Version ID this stream is subscribed to
+          title: Version Id
+          type: string
       required:
-      - message
-      title: DeployStreamErrorEvent
+      - version_id
+      title: DeployStreamConnectedEvent
       type: object
     VersionPodLogsResponse:
       description: Paginated pod logs for a deployed version.
@@ -938,77 +966,49 @@ components:
       - has_more
       title: VersionPodLogsResponse
       type: object
-    HTTPValidationError:
+    VersionMetricsResponse:
+      description: Response model for version deployment metrics.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        deployment_duration_p95_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: P95 deployment duration in seconds for this version
+          title: Deployment Duration P95 Seconds
+        deployment_duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Average deployment duration in seconds for this version
+          title: Deployment Duration Seconds
+      title: VersionMetricsResponse
       type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    DeployStreamCompleteEvent:
-      description: 'Stream is complete - deployment has reached a terminal state.
-
-
-        Sent by the SSE endpoint when the version status is terminal (ACTIVE, FAILED, etc.).'
+    DeployStreamHelmStartedEvent:
+      description: Helm deployment has started.
       properties:
-        status:
-          description: Final version status (e.g., 'active', 'failed')
-          title: Status
-          type: string
-        type:
-          const: complete
-          default: complete
-          title: Type
-          type: string
-      required:
-      - status
-      title: DeployStreamCompleteEvent
-      type: object
-    RegisterContainerRequest:
-      description: 'Request model for container registration.
-
-
-        Called by agent container on startup to register its ACP URL.
-
-        Includes a registration token for security (CVE-2026-0001 fix).'
-      properties:
-        acp_url:
-          description: ACP server URL (e.g., 'http://agent-main-abc123.agents.svc.cluster.local:8000')
-          title: Acp Url
-          type: string
-        branch_id:
-          description: Branch ID
-          title: Branch Id
-          type: string
-        registration_token:
+        message:
           anyOf:
           - type: string
           - type: 'null'
-          description: Single-use registration token provided during deployment (required when configured)
-          title: Registration Token
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: helm_started
+          default: helm_started
+          title: Type
+          type: string
         version_id:
-          description: Version ID being registered
+          description: Version ID being deployed
           title: Version Id
           type: string
       required:
-      - branch_id
       - version_id
-      - acp_url
-      title: RegisterContainerRequest
+      - timestamp
+      title: DeployStreamHelmStartedEvent
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key
