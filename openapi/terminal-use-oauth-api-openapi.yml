@@ -95,14 +95,21 @@ paths:
       - OAuth
 components:
   schemas:
-    HTTPValidationError:
+    OAuthInitiateResponse:
+      description: Response for OAuth initiation.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        authorization_url:
+          description: URL to redirect user for authentication
+          title: Authorization Url
+          type: string
+        state:
+          description: State parameter for CSRF protection
+          title: State
+          type: string
+      required:
+      - authorization_url
+      - state
+      title: OAuthInitiateResponse
       type: object
     OAuthTokenResponse:
       description: Response for token exchange.
@@ -131,6 +138,15 @@ components:
       - expires_in
       title: OAuthTokenResponse
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     ValidationError:
       properties:
         loc:
@@ -151,22 +167,6 @@ components:
       - msg
       - type
       title: ValidationError
-      type: object
-    OAuthInitiateResponse:
-      description: Response for OAuth initiation.
-      properties:
-        authorization_url:
-          description: URL to redirect user for authentication
-          title: Authorization Url
-          type: string
-        state:
-          description: State parameter for CSRF protection
-          title: State
-          type: string
-      required:
-      - authorization_url
-      - state
-      title: OAuthInitiateResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

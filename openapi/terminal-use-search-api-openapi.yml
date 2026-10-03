@@ -73,45 +73,6 @@ paths:
       - Search
 components:
   schemas:
-    SearchResultType:
-      description: Types of resources that can be returned in search results.
-      enum:
-      - agent
-      - task
-      - workspace
-      title: SearchResultType
-      type: string
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    SearchResponse:
-      description: Response from the search endpoint.
-      properties:
-        query:
-          description: The search query that was used
-          title: Query
-          type: string
-        results:
-          description: List of search results
-          items:
-            $ref: '#/components/schemas/SearchResultItem'
-          title: Results
-          type: array
-        total:
-          description: Total number of results across all types
-          title: Total
-          type: integer
-      required:
-      - total
-      - query
-      title: SearchResponse
-      type: object
     SearchResultItem:
       description: A single search result item.
       properties:
@@ -164,6 +125,45 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    SearchResultType:
+      description: Types of resources that can be returned in search results.
+      enum:
+      - agent
+      - task
+      - workspace
+      title: SearchResultType
+      type: string
+    SearchResponse:
+      description: Response from the search endpoint.
+      properties:
+        query:
+          description: The search query that was used
+          title: Query
+          type: string
+        results:
+          description: List of search results
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+          title: Results
+          type: array
+        total:
+          description: Total number of results across all types
+          title: Total
+          type: integer
+      required:
+      - total
+      - query
+      title: SearchResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

@@ -361,6 +361,74 @@ paths:
       x-fern-sdk-method-name: resolve_env
 components:
   schemas:
+    BranchListResponse:
+      description: Response for listing branches.
+      properties:
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - branches
+      - total
+      title: BranchListResponse
+      type: object
+    DeleteEnvResponse:
+      description: Response after deleting an environment.
+      properties:
+        deleted:
+          description: Whether the environment was deleted
+          title: Deleted
+          type: boolean
+        name:
+          description: The name of the deleted environment
+          title: Name
+          type: string
+      required:
+      - deleted
+      - name
+      title: DeleteEnvResponse
+      type: object
+    CreateEnvRequest:
+      description: Request to create a new environment.
+      properties:
+        branch_rules:
+          description: Branch patterns for matching (e.g., ['feature/*'], ['develop'])
+          items:
+            type: string
+          minItems: 1
+          title: Branch Rules
+          type: array
+        name:
+          description: Environment name (lowercase alphanumeric and hyphens only)
+          maxLength: 100
+          minLength: 1
+          pattern: ^[a-z0-9-]+$
+          title: Name
+          type: string
+      required:
+      - name
+      - branch_rules
+      title: CreateEnvRequest
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
     EnvResponse:
       description: Full environment details.
       properties:
@@ -408,23 +476,41 @@ components:
       - is_prod
       title: EnvResponse
       type: object
-    EnvListResponse:
-      description: Response for listing environments.
+    ValidationError:
       properties:
-        environments:
-          description: List of environments
+        loc:
           items:
-            $ref: '#/components/schemas/EnvResponse'
-          title: Environments
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
           type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
       required:
-      - environments
-      - total
-      title: EnvListResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    ResolveEnvResponse:
+      description: Response for resolving which environment matches a branch.
+      properties:
+        branch:
+          description: The branch that was resolved
+          title: Branch
+          type: string
+        environment:
+          $ref: '#/components/schemas/EnvResponse'
+          description: The environment that matches the branch
+      required:
+      - environment
+      - branch
+      title: ResolveEnvResponse
       type: object
     VersionSummary:
       description: Abbreviated version info for embedding in branch responses.
@@ -463,20 +549,23 @@ components:
       - deployed_at
       title: VersionSummary
       type: object
-    ResolveEnvResponse:
-      description: Response for resolving which environment matches a branch.
+    EnvListResponse:
+      description: Response for listing environments.
       properties:
-        branch:
-          description: The branch that was resolved
-          title: Branch
-          type: string
-        environment:
-          $ref: '#/components/schemas/EnvResponse'
-          description: The environment that matches the branch
+        environments:
+          description: List of environments
+          items:
+            $ref: '#/components/schemas/EnvResponse'
+          title: Environments
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
       required:
-      - environment
-      - branch
-      title: ResolveEnvResponse
+      - environments
+      - total
+      title: EnvListResponse
       type: object
     BranchResponse:
       description: Full branch details including current version.
@@ -541,34 +630,15 @@ components:
       - replicas
       title: BranchResponse
       type: object
-    DeleteEnvResponse:
-      description: Response after deleting an environment.
+    HTTPValidationError:
       properties:
-        deleted:
-          description: Whether the environment was deleted
-          title: Deleted
-          type: boolean
-        name:
-          description: The name of the deleted environment
-          title: Name
-          type: string
-      required:
-      - deleted
-      - name
-      title: DeleteEnvResponse
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
     UpdateEnvRequest:
       description: Request to update an environment (partial update).
       properties:
@@ -582,76 +652,6 @@ components:
           description: Branch patterns for matching
           title: Branch Rules
       title: UpdateEnvRequest
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    BranchListResponse:
-      description: Response for listing branches.
-      properties:
-        branches:
-          description: List of branches
-          items:
-            $ref: '#/components/schemas/BranchResponse'
-          title: Branches
-          type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
-      required:
-      - branches
-      - total
-      title: BranchListResponse
-      type: object
-    CreateEnvRequest:
-      description: Request to create a new environment.
-      properties:
-        branch_rules:
-          description: Branch patterns for matching (e.g., ['feature/*'], ['develop'])
-          items:
-            type: string
-          minItems: 1
-          title: Branch Rules
-          type: array
-        name:
-          description: Environment name (lowercase alphanumeric and hyphens only)
-          maxLength: 100
-          minLength: 1
-          pattern: ^[a-z0-9-]+$
-          title: Name
-          type: string
-      required:
-      - name
-      - branch_rules
-      title: CreateEnvRequest
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

@@ -69,31 +69,6 @@ paths:
         disabled: true
 components:
   schemas:
-    PublishRawEventResponse:
-      description: Response after publishing a raw event.
-      properties:
-        published_count:
-          description: Number of stream parts published to Redis
-          title: Published Count
-          type: integer
-        stored:
-          description: Whether the message was persisted to storage
-          title: Stored
-          type: boolean
-      required:
-      - published_count
-      - stored
-      title: PublishRawEventResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     ValidationError:
       properties:
         loc:
@@ -114,6 +89,31 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    PublishRawEventResponse:
+      description: Response after publishing a raw event.
+      properties:
+        published_count:
+          description: Number of stream parts published to Redis
+          title: Published Count
+          type: integer
+        stored:
+          description: Whether the message was persisted to storage
+          title: Stored
+          type: boolean
+      required:
+      - published_count
+      - stored
+      title: PublishRawEventResponse
       type: object
     RawEventPayload:
       description: Request payload for publishing a raw SDK event.

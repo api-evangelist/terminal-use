@@ -457,12 +457,6 @@ paths:
       x-fern-sdk-method-name: list
 components:
   schemas:
-    AgentInputType:
-      enum:
-      - text
-      - json
-      title: AgentInputType
-      type: string
     DeployResponse:
       description: 'Immediate response from deploy request.
 
@@ -502,195 +496,6 @@ components:
       - message
       title: DeployResponse
       type: object
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
-      type: object
-    VersionListResponse:
-      description: Response for listing versions of a branch.
-      properties:
-        branch_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Branch ID
-          title: Branch Id
-        total:
-          description: Total count
-          title: Total
-          type: integer
-        versions:
-          description: List of versions
-          items:
-            $ref: '#/components/schemas/VersionResponse'
-          title: Versions
-          type: array
-      required:
-      - versions
-      - total
-      title: VersionListResponse
-      type: object
-    AgentMetricsResponse:
-      description: Aggregated metrics for an agent.
-      properties:
-        avg_task_duration_seconds:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Average duration of completed/failed tasks in seconds. None if no tasks have finished in the time window.
-          examples:
-          - 12.5
-          title: Avg Task Duration Seconds
-        error_log_count_24h:
-          description: Number of ERROR/CRITICAL level logs in the last 24 hours
-          examples:
-          - 3
-          title: Error Log Count 24H
-          type: integer
-        task_count_24h:
-          description: Total number of tasks created in the last 24 hours
-          examples:
-          - 142
-          title: Task Count 24H
-          type: integer
-        task_success_rate_pct:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Percentage of successful tasks (COMPLETED) vs failed tasks. None if no tasks have finished in the time window.
-          examples:
-          - 95.5
-          title: Task Success Rate Pct
-      required:
-      - task_count_24h
-      - error_log_count_24h
-      title: AgentMetricsResponse
-      type: object
-    Agent:
-      properties:
-        agent_input_type:
-          anyOf:
-          - $ref: '#/components/schemas/AgentInputType'
-          - type: 'null'
-          description: The type of input the agent expects.
-        created_at:
-          description: The timestamp when the agent was created
-          format: date-time
-          title: Created At
-          type: string
-        description:
-          description: The description of the action.
-          title: Description
-          type: string
-        id:
-          description: The unique identifier of the agent.
-          title: Id
-          type: string
-        name:
-          description: The agent name (unique within namespace).
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace ID this agent belongs to.
-          title: Namespace Id
-          type: string
-        registered_at:
-          anyOf:
-          - format: date-time
-            type: string
-          - type: 'null'
-          description: The timestamp when the agent was last registered
-          title: Registered At
-        registration_metadata:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: The metadata for the agent's registration.
-          title: Registration Metadata
-        status:
-          $ref: '#/components/schemas/AgentStatus'
-          default: ACTIVE
-          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-        status_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: The reason for the status of the action.
-          title: Status Reason
-        updated_at:
-          description: The timestamp when the agent was last updated
-          format: date-time
-          title: Updated At
-          type: string
-      required:
-      - id
-      - namespace_id
-      - name
-      - description
-      - created_at
-      - updated_at
-      title: Agent
-      type: object
-    AgentStatus:
-      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
-      enum:
-      - ACTIVE
-      - DELETED
-      title: AgentStatus
-      type: string
-    AgentListItem:
-      description: 'Minimal agent shape for discovery/listing.
-
-
-        The /agents list endpoint is authorized via `discover` and must not leak
-
-        read-level fields (e.g. description, registration metadata).'
-      properties:
-        id:
-          description: The unique identifier of the agent.
-          title: Id
-          type: string
-        name:
-          description: The agent name (unique within namespace).
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace ID this agent belongs to.
-          title: Namespace Id
-          type: string
-        status:
-          $ref: '#/components/schemas/AgentStatus'
-          default: ACTIVE
-          description: Agent status (ACTIVE/DELETED).
-      required:
-      - id
-      - namespace_id
-      - name
-      title: AgentListItem
-      type: object
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
     DeployRequest:
       description: 'Request model for deploying an agent.
 
@@ -786,6 +591,229 @@ components:
       - author_email
       title: DeployRequest
       type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    Agent:
+      properties:
+        agent_input_type:
+          anyOf:
+          - $ref: '#/components/schemas/AgentInputType'
+          - type: 'null'
+          description: The type of input the agent expects.
+        created_at:
+          description: The timestamp when the agent was created
+          format: date-time
+          title: Created At
+          type: string
+        description:
+          description: The description of the action.
+          title: Description
+          type: string
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        registered_at:
+          anyOf:
+          - format: date-time
+            type: string
+          - type: 'null'
+          description: The timestamp when the agent was last registered
+          title: Registered At
+        registration_metadata:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: The metadata for the agent's registration.
+          title: Registration Metadata
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status. Runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
+        status_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: The reason for the status of the action.
+          title: Status Reason
+        updated_at:
+          description: The timestamp when the agent was last updated
+          format: date-time
+          title: Updated At
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      - description
+      - created_at
+      - updated_at
+      title: Agent
+      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
+    AgentInputType:
+      enum:
+      - text
+      - json
+      title: AgentInputType
+      type: string
+    AgentMetricsResponse:
+      description: Aggregated metrics for an agent.
+      properties:
+        avg_task_duration_seconds:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Average duration of completed/failed tasks in seconds. None if no tasks have finished in the time window.
+          examples:
+          - 12.5
+          title: Avg Task Duration Seconds
+        error_log_count_24h:
+          description: Number of ERROR/CRITICAL level logs in the last 24 hours
+          examples:
+          - 3
+          title: Error Log Count 24H
+          type: integer
+        task_count_24h:
+          description: Total number of tasks created in the last 24 hours
+          examples:
+          - 142
+          title: Task Count 24H
+          type: integer
+        task_success_rate_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Percentage of successful tasks (COMPLETED) vs failed tasks. None if no tasks have finished in the time window.
+          examples:
+          - 95.5
+          title: Task Success Rate Pct
+      required:
+      - task_count_24h
+      - error_log_count_24h
+      title: AgentMetricsResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
+    AgentListItem:
+      description: 'Minimal agent shape for discovery/listing.
+
+
+        The /agents list endpoint is authorized via `discover` and must not leak
+
+        read-level fields (e.g. description, registration metadata).'
+      properties:
+        id:
+          description: The unique identifier of the agent.
+          title: Id
+          type: string
+        name:
+          description: The agent name (unique within namespace).
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace ID this agent belongs to.
+          title: Namespace Id
+          type: string
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          default: ACTIVE
+          description: Agent status (ACTIVE/DELETED).
+      required:
+      - id
+      - namespace_id
+      - name
+      title: AgentListItem
+      type: object
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    VersionListResponse:
+      description: Response for listing versions of a branch.
+      properties:
+        branch_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Branch ID
+          title: Branch Id
+        total:
+          description: Total count
+          title: Total
+          type: integer
+        versions:
+          description: List of versions
+          items:
+            $ref: '#/components/schemas/VersionResponse'
+          title: Versions
+          type: array
+      required:
+      - versions
+      - total
+      title: VersionListResponse
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -795,13 +823,6 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    ACPType:
-      description: Type of ACP server.
-      enum:
-      - sync
-      - async
-      title: ACPType
-      type: string
     VersionResponse:
       description: Full version details.
       properties:
@@ -943,33 +964,12 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    SDKType:
-      description: SDK type for agent runtime.
+    AgentStatus:
+      description: Agent status - runtime statuses (Ready/Failed/Unhealthy) now live on Deployment.
       enum:
-      - claude_agent_sdk
-      - codex_agent_sdk
-      title: SDKType
+      - ACTIVE
+      - DELETED
+      title: AgentStatus
       type: string
 x-fern-idempotency-headers:
 - header: Idempotency-Key
