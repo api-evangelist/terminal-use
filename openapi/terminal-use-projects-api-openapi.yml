@@ -309,21 +309,63 @@ components:
       - created_by
       title: Project
       type: object
-    UpsertProjectCollaboratorRequest:
-      description: Request model for setting/updating a project collaborator role.
+    ProjectCollaboratorsResponse:
+      description: Response model for project collaborators list.
       properties:
-        role:
-          description: Role to assign.
-          enum:
-          - discoverer
-          - viewer
-          - editor
-          - owner
-          title: Role
+        can_manage:
+          description: Whether the current user can manage collaborators.
+          title: Can Manage
+          type: boolean
+        collaborators:
+          description: Project collaborators with explicit direct roles.
+          items:
+            $ref: '#/components/schemas/ProjectCollaboratorResponse'
+          title: Collaborators
+          type: array
+      required:
+      - can_manage
+      title: ProjectCollaboratorsResponse
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
           type: string
       required:
-      - role
-      title: UpsertProjectCollaboratorRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    UpdateProjectRequest:
+      description: Request model for updating a project.
+      properties:
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        name:
+          anyOf:
+          - maxLength: 255
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Project name.
+          title: Name
+      title: UpdateProjectRequest
       type: object
     ProjectListItem:
       description: 'Minimal project shape for discovery/listing.
@@ -350,31 +392,6 @@ components:
       - namespace_id
       - name
       title: ProjectListItem
-      type: object
-    CreateProjectRequest:
-      description: Request model for creating a project.
-      properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional project description.
-          title: Description
-        name:
-          description: Project name (unique within namespace).
-          maxLength: 255
-          minLength: 1
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace this project belongs to.
-          title: Namespace Id
-          type: string
-      required:
-      - namespace_id
-      - name
-      title: CreateProjectRequest
       type: object
     DeleteResponse:
       properties:
@@ -410,46 +427,17 @@ components:
       - role
       title: ProjectCollaboratorResponse
       type: object
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
           type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
       type: object
-    ProjectCollaboratorsResponse:
-      description: Response model for project collaborators list.
-      properties:
-        can_manage:
-          description: Whether the current user can manage collaborators.
-          title: Can Manage
-          type: boolean
-        collaborators:
-          description: Project collaborators with explicit direct roles.
-          items:
-            $ref: '#/components/schemas/ProjectCollaboratorResponse'
-          title: Collaborators
-          type: array
-      required:
-      - can_manage
-      title: ProjectCollaboratorsResponse
-      type: object
-    UpdateProjectRequest:
-      description: Request model for updating a project.
+    CreateProjectRequest:
+      description: Request model for creating a project.
       properties:
         description:
           anyOf:
@@ -459,23 +447,35 @@ components:
           description: Optional project description.
           title: Description
         name:
-          anyOf:
-          - maxLength: 255
-            minLength: 1
-            type: string
-          - type: 'null'
-          description: Project name.
+          description: Project name (unique within namespace).
+          maxLength: 255
+          minLength: 1
           title: Name
-      title: UpdateProjectRequest
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - namespace_id
+      - name
+      title: CreateProjectRequest
       type: object
-    HTTPValidationError:
+    UpsertProjectCollaboratorRequest:
+      description: Request model for setting/updating a project collaborator role.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        role:
+          description: Role to assign.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - role
+      title: UpsertProjectCollaboratorRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

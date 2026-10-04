@@ -146,28 +146,6 @@ paths:
       - Messages v2
 components:
   schemas:
-    Usage:
-      description: Token usage statistics.
-      properties:
-        inputTokens:
-          description: Input tokens used
-          title: Inputtokens
-          type: integer
-        outputTokens:
-          description: Output tokens used
-          title: Outputtokens
-          type: integer
-        totalTokens:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Total tokens (input + output)
-          title: Totaltokens
-      required:
-      - inputTokens
-      - outputTokens
-      title: Usage
-      type: object
     ListMessagesV2Response:
       description: Response for list messages v2 endpoint.
       properties:
@@ -192,6 +170,90 @@ components:
       - data
       title: ListMessagesV2Response
       type: object
+    TextPart:
+      description: Text content part.
+      properties:
+        text:
+          description: The text content
+          title: Text
+          type: string
+        type:
+          const: text
+          default: text
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: TextPart
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    Usage:
+      description: Token usage statistics.
+      properties:
+        inputTokens:
+          description: Input tokens used
+          title: Inputtokens
+          type: integer
+        outputTokens:
+          description: Output tokens used
+          title: Outputtokens
+          type: integer
+        totalTokens:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Total tokens (input + output)
+          title: Totaltokens
+      required:
+      - inputTokens
+      - outputTokens
+      title: Usage
+      type: object
+    ReasoningPart:
+      description: Reasoning/thinking content part (Claude's extended thinking).
+      properties:
+        providerMetadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Provider-specific metadata (e.g., Claude's thinking.signature)
+          title: Providermetadata
+        text:
+          description: The reasoning text content
+          title: Text
+          type: string
+        type:
+          const: reasoning
+          default: reasoning
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: ReasoningPart
+      type: object
     ToolPartState:
       description: State of a tool part.
       enum:
@@ -201,42 +263,6 @@ components:
       - output-error
       title: ToolPartState
       type: string
-    UIMessageRole:
-      description: Role of the message author.
-      enum:
-      - system
-      - user
-      - assistant
-      title: UIMessageRole
-      type: string
-    SourceUrlPart:
-      description: Source URL reference part.
-      properties:
-        sourceId:
-          description: Unique source ID
-          title: Sourceid
-          type: string
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Title of the source
-          title: Title
-        type:
-          const: source-url
-          default: source-url
-          description: Part type discriminator
-          title: Type
-          type: string
-        url:
-          description: URL of the source
-          title: Url
-          type: string
-      required:
-      - sourceId
-      - url
-      title: SourceUrlPart
-      type: object
     UIMessagePartWrapper:
       description: Wrapper for UIMessagePart union for proper serialization.
       discriminator:
@@ -302,62 +328,42 @@ components:
       - input
       title: ToolPart
       type: object
-    UIMessageMetadata:
-      description: Metadata for a UIMessage.
+    SourceUrlPart:
+      description: Source URL reference part.
       properties:
-        costUsd:
-          anyOf:
-          - type: number
-          - type: 'null'
-          description: Cost in USD for this message
-          title: Costusd
-        durationMs:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Duration in milliseconds
-          title: Durationms
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Model used to generate message
-          title: Model
-        parentToolUseId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Parent tool use ID for subagent context
-          title: Parenttooluseid
-        usage:
-          anyOf:
-          - $ref: '#/components/schemas/Usage'
-          - type: 'null'
-          description: Token usage for this message
-      title: UIMessageMetadata
-      type: object
-    FilePart:
-      description: File attachment part.
-      properties:
-        mediaType:
-          description: MIME type of the file
-          title: Mediatype
+        sourceId:
+          description: Unique source ID
+          title: Sourceid
           type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Title of the source
+          title: Title
         type:
-          const: file
-          default: file
+          const: source-url
+          default: source-url
           description: Part type discriminator
           title: Type
           type: string
         url:
-          description: URL to the file
+          description: URL of the source
           title: Url
           type: string
       required:
+      - sourceId
       - url
-      - mediaType
-      title: FilePart
+      title: SourceUrlPart
       type: object
+    UIMessageRole:
+      description: Role of the message author.
+      enum:
+      - system
+      - user
+      - assistant
+      title: UIMessageRole
+      type: string
     ErrorPart:
       description: Error part for transformation failures.
       properties:
@@ -380,60 +386,6 @@ components:
       required:
       - error
       title: ErrorPart
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    TextPart:
-      description: Text content part.
-      properties:
-        text:
-          description: The text content
-          title: Text
-          type: string
-        type:
-          const: text
-          default: text
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - text
-      title: TextPart
-      type: object
-    DataPart:
-      description: Generic data part for unknown/passthrough content.
-      properties:
-        data:
-          description: Arbitrary data content
-          title: Data
-        type:
-          const: data
-          default: data
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - data
-      title: DataPart
       type: object
     UIMessage:
       description: 'Vercel AI SDK compatible message format.
@@ -481,29 +433,43 @@ components:
       - parts
       title: UIMessage
       type: object
-    ReasoningPart:
-      description: Reasoning/thinking content part (Claude's extended thinking).
+    FilePart:
+      description: File attachment part.
       properties:
-        providerMetadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Provider-specific metadata (e.g., Claude's thinking.signature)
-          title: Providermetadata
-        text:
-          description: The reasoning text content
-          title: Text
+        mediaType:
+          description: MIME type of the file
+          title: Mediatype
           type: string
         type:
-          const: reasoning
-          default: reasoning
+          const: file
+          default: file
+          description: Part type discriminator
+          title: Type
+          type: string
+        url:
+          description: URL to the file
+          title: Url
+          type: string
+      required:
+      - url
+      - mediaType
+      title: FilePart
+      type: object
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
+      properties:
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
           description: Part type discriminator
           title: Type
           type: string
       required:
-      - text
-      title: ReasoningPart
+      - data
+      title: DataPart
       type: object
     HTTPValidationError:
       properties:
@@ -513,6 +479,40 @@ components:
           title: Detail
           type: array
       title: HTTPValidationError
+      type: object
+    UIMessageMetadata:
+      description: Metadata for a UIMessage.
+      properties:
+        costUsd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          description: Cost in USD for this message
+          title: Costusd
+        durationMs:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Duration in milliseconds
+          title: Durationms
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Model used to generate message
+          title: Model
+        parentToolUseId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Parent tool use ID for subagent context
+          title: Parenttooluseid
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/Usage'
+          - type: 'null'
+          description: Token usage for this message
+      title: UIMessageMetadata
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

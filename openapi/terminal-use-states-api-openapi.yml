@@ -197,24 +197,6 @@ paths:
       - States
 components:
   schemas:
-    CreateStateRequest:
-      properties:
-        agent_id:
-          title: The unique id of the agent to send the state to
-          type: string
-        state:
-          additionalProperties: true
-          title: The state to send to the task.
-          type: object
-        task_id:
-          title: The unique id of the task to send the state to
-          type: string
-      required:
-      - task_id
-      - agent_id
-      - state
-      title: CreateStateRequest
-      type: object
     State:
       description: 'Represents a state in the agent system. A state is associated uniquely with a task and an agent.
 
@@ -281,14 +263,23 @@ components:
       - type
       title: ValidationError
       type: object
-    HTTPValidationError:
+    CreateStateRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        agent_id:
+          title: The unique id of the agent to send the state to
+          type: string
+        state:
+          additionalProperties: true
+          title: The state to send to the task.
+          type: object
+        task_id:
+          title: The unique id of the task to send the state to
+          type: string
+      required:
+      - task_id
+      - agent_id
+      - state
+      title: CreateStateRequest
       type: object
     UpdateStateRequest:
       properties:
@@ -307,6 +298,15 @@ components:
       - agent_id
       - state
       title: UpdateStateRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

@@ -126,23 +126,6 @@ components:
       - type
       title: ValidationError
       type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    SearchResultType:
-      description: Types of resources that can be returned in search results.
-      enum:
-      - agent
-      - task
-      - workspace
-      title: SearchResultType
-      type: string
     SearchResponse:
       description: Response from the search endpoint.
       properties:
@@ -165,6 +148,23 @@ components:
       - query
       title: SearchResponse
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    SearchResultType:
+      description: Types of resources that can be returned in search results.
+      enum:
+      - agent
+      - task
+      - workspace
+      title: SearchResultType
+      type: string
 x-fern-idempotency-headers:
 - header: Idempotency-Key
   name: idempotency_key
