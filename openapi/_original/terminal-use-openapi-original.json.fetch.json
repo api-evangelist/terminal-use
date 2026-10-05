@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.terminaluse.com/openapi.json",
+ "requested_url": "https://docs.terminaluse.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 533695,
+ "sha256": "e36a6a8c55098cd44696506cee781c650e79b00e2779c3605e02f22f25be299f",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
