@@ -1,0 +1,105 @@
+slug: terminal-use
+provider: Terminal Use
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Secrets
+  spec_file: terminal-use-secrets-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.88
+  evidence: PUT /agents/{namespace_slug}/{agent_name}/environments/{env_name}/secrets  agents_environments_secrets_set  Set
+    Secrets; GET .../secrets/deployed  agents_environments_secrets_list_deployed  List Deployed Secrets
+    for Environment
+  reason: Set, list (pending and deployed) and delete per-environment secret values and environment variables
+    (SetEnvVarRequest, DeployedSecretKey) — runtime configuration and secrets management for product services.
+- tag: Logs
+  spec_file: terminal-use-logs-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.8
+  evidence: GET /logs  logs_list  List Agent Logs; POST /logs/otlp  logs_ingest_otlp  Ingest Agent Logs
+    (OTLP Format); GET /logs/stream  logs_stream  Stream Agent Logs
+  reason: OTLP log ingestion, query and live streaming for deployed workloads (LogLevel, OTLPResourceLogs,
+    LogStreamEvent) — telemetry that makes the running service understandable in production, i.e. observability
+    management.
+- tag: Agents
+  spec_file: terminal-use-agents-api-openapi.yml
+  capability_id: BC-4210.40
+  capability_id_l1: BC-4210
+  capability_name: Deployment Orchestration
+  confidence: 0.75
+  evidence: POST /agents/deploy  deploy  Deploy Agent; GET /agents/{namespace_slug}/{agent_name}/versions  agents_list_versions  List
+    Versions for Agent
+  reason: Operations deploy, retrieve, delete and version deployable agent workloads on an orchestration
+    platform ('Vercel for background agents'), with DeployRequest/DeployResponse and VersionStatus schemas
+    — this is software deployment orchestration, not an AI model lifecycle registry.
+- tag: Builds
+  spec_file: terminal-use-builds-api-openapi.yml
+  capability_id: BC-4210.10
+  capability_id_l1: BC-4210
+  capability_name: Continuous Integration Management
+  confidence: 0.75
+  evidence: POST /builds/prepare  builds_prepare  Prepare Remote Build Upload; POST /builds/submit  builds_submit  Submit
+    Remote Build; GET /builds/{build_id}  builds_retrieve  Get Remote Build Status
+  reason: Remote build submission and build-status polling with BuildStatusResponse — build/artefact production
+    for the deployment pipeline, i.e. continuous integration management.
+- tag: API Keys
+  spec_file: terminal-use-api-keys-api-openapi.yml
+  capability_id: BC-4270.40
+  capability_id_l1: BC-4270
+  capability_name: Developer Identity & Credential Management
+  confidence: 0.7
+  evidence: POST /api_keys  api_keys_create  Create API Key; DELETE /api_keys/{api_key_id}  api_keys_delete  Revoke
+    API Key; PATCH .../api_keys/{api_key_id}  api_keys_update_scopes  Update API Key Scopes
+  reason: Issuance, scoping and revocation of programmatic credentials used by developers to call the
+    platform API — i.e. developer credential lifecycle on a developer platform (ApiKeyScope, ApiKeyScopeRole).
+    Some ambiguity with generic Identity & Access Management, but the surface is developer-facing platform
+    credentials.
+- tag: Branches
+  spec_file: terminal-use-branches-api-openapi.yml
+  capability_id: BC-4210.40
+  capability_id_l1: BC-4210
+  capability_name: Deployment Orchestration
+  confidence: 0.7
+  evidence: POST /agents/{namespace_slug}/{agent_name}/branches/{branch}/rollback  agents_branches_rollback  Rollback
+    Branch by Git Branch Name; POST /branches/{branch_id}/redeploy  branches_redeploy  Redeploy with Updated
+    Secrets
+  reason: Branches here are git-branch-to-deployment mappings; the operations deploy, redeploy and roll
+    back versions, which is controlled release to production (deployment orchestration). Overlaps with
+    release engineering/branching, hence moderate confidence on the sub-capability.
+- tag: Environments
+  spec_file: terminal-use-environments-api-openapi.yml
+  capability_id: BC-4210.20
+  capability_id_l1: BC-4210
+  capability_name: Environment Management
+  confidence: 0.7
+  evidence: POST /agents/{namespace_slug}/{agent_name}/environments  agents_environments_create  Create
+    Environment; GET /agents/{namespace_slug}/{agent_name}/resolve-env  agents_resolve_env  Resolve Environment
+    for Branch
+  reason: CRUD over named deployment environments and resolution of which environment a branch maps to
+    (CreateEnvRequest, EnvResponse) — environment provisioning and stewardship within the release/deploy
+    pipeline.
+- tag: Groups
+  spec_file: terminal-use-groups-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: 'PUT /groups/{group_id}/members/{member_id}  groups_members_upsert  Add Group Member; schemas:
+    AccessGroup, AccessGroupManager, AccessGroupVisibleOrg'
+  reason: 'Groups are access groups: membership, managers and visible organisations determine who can
+    see/do what on the platform (also referenced by API key sharing groups). That is access-rights administration,
+    i.e. identity and access management rather than any HR or customer grouping.'
