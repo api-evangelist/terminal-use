@@ -86,27 +86,124 @@ paths:
       - Builds
 components:
   schemas:
-    BuildSubmitResponse:
-      description: Response after submitting a Cloud Build build.
+    BuildStatusResponse:
+      description: Build status response (proxied from Cloud Build).
       properties:
         build_id:
-          description: Cloud Build build ID (use for status polling).
+          description: Cloud Build build ID.
           title: Build Id
           type: string
+        cloud_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Raw Cloud Build status value.
+          title: Cloud Status
+        failure_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Failure message if build failed (best-effort).
+          title: Failure Message
         image_url:
-          description: Full Artifact Registry image URL that the build will push.
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Image URL for this build (if encoded in build).
           title: Image Url
-          type: string
         log_url:
           anyOf:
           - type: string
           - type: 'null'
           description: Cloud Build log URL (if available).
           title: Log Url
+        status:
+          description: Normalized status (queued|building|succeeded|failed|canceled|timed_out|unknown).
+          title: Status
+          type: string
       required:
       - build_id
+      - status
+      title: BuildStatusResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    BuildPrepareResponse:
+      description: Response containing a presigned URL for uploading build context.
+      properties:
+        bucket:
+          description: GCS bucket where the context will be stored.
+          title: Bucket
+          type: string
+        content_type:
+          description: Content-Type header that must be used for the upload.
+          examples:
+          - application/gzip
+          title: Content Type
+          type: string
+        expires_at:
+          description: When the presigned URL expires.
+          format: date-time
+          title: Expires At
+          type: string
+        image_url:
+          description: Full Artifact Registry image URL that the build will push.
+          title: Image Url
+          type: string
+        instructions:
+          description: Human instructions for how to upload the context archive.
+          title: Instructions
+          type: string
+        method:
+          default: PUT
+          description: HTTP method to use for the upload.
+          title: Method
+          type: string
+        object_key:
+          description: GCS object key where the context will be stored.
+          title: Object Key
+          type: string
+        upload_url:
+          description: Presigned PUT URL for uploading the build context archive.
+          title: Upload Url
+          type: string
+      required:
+      - upload_url
+      - expires_at
+      - content_type
+      - instructions
+      - bucket
+      - object_key
       - image_url
-      title: BuildSubmitResponse
+      title: BuildPrepareResponse
       type: object
     BuildSubmitRequest:
       description: Submit a Cloud Build build for a previously uploaded build context.
@@ -160,125 +257,6 @@ components:
       - object_key
       title: BuildSubmitRequest
       type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    BuildStatusResponse:
-      description: Build status response (proxied from Cloud Build).
-      properties:
-        build_id:
-          description: Cloud Build build ID.
-          title: Build Id
-          type: string
-        cloud_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Raw Cloud Build status value.
-          title: Cloud Status
-        failure_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Failure message if build failed (best-effort).
-          title: Failure Message
-        image_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Image URL for this build (if encoded in build).
-          title: Image Url
-        log_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Cloud Build log URL (if available).
-          title: Log Url
-        status:
-          description: Normalized status (queued|building|succeeded|failed|canceled|timed_out|unknown).
-          title: Status
-          type: string
-      required:
-      - build_id
-      - status
-      title: BuildStatusResponse
-      type: object
-    BuildPrepareResponse:
-      description: Response containing a presigned URL for uploading build context.
-      properties:
-        bucket:
-          description: GCS bucket where the context will be stored.
-          title: Bucket
-          type: string
-        content_type:
-          description: Content-Type header that must be used for the upload.
-          examples:
-          - application/gzip
-          title: Content Type
-          type: string
-        expires_at:
-          description: When the presigned URL expires.
-          format: date-time
-          title: Expires At
-          type: string
-        image_url:
-          description: Full Artifact Registry image URL that the build will push.
-          title: Image Url
-          type: string
-        instructions:
-          description: Human instructions for how to upload the context archive.
-          title: Instructions
-          type: string
-        method:
-          default: PUT
-          description: HTTP method to use for the upload.
-          title: Method
-          type: string
-        object_key:
-          description: GCS object key where the context will be stored.
-          title: Object Key
-          type: string
-        upload_url:
-          description: Presigned PUT URL for uploading the build context archive.
-          title: Upload Url
-          type: string
-      required:
-      - upload_url
-      - expires_at
-      - content_type
-      - instructions
-      - bucket
-      - object_key
-      - image_url
-      title: BuildPrepareResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     BuildPrepareRequest:
       description: Prepare a remote build by issuing a presigned upload URL for build context.
       properties:
@@ -312,6 +290,28 @@ components:
       - agent_name
       - tag
       title: BuildPrepareRequest
+      type: object
+    BuildSubmitResponse:
+      description: Response after submitting a Cloud Build build.
+      properties:
+        build_id:
+          description: Cloud Build build ID (use for status polling).
+          title: Build Id
+          type: string
+        image_url:
+          description: Full Artifact Registry image URL that the build will push.
+          title: Image Url
+          type: string
+        log_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cloud Build log URL (if available).
+          title: Log Url
+      required:
+      - build_id
+      - image_url
+      title: BuildSubmitResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

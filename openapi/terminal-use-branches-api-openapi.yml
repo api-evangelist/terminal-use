@@ -465,113 +465,6 @@ paths:
       x-fern-sdk-method-name: retrieve
 components:
   schemas:
-    VersionStatus:
-      description: Status of a version in its lifecycle.
-      enum:
-      - DEPLOYING
-      - ACTIVE
-      - FAILED
-      - UNHEALTHY
-      - DRAINING
-      - RETIRED
-      - ROLLED_BACK
-      title: VersionStatus
-      type: string
-    DeployRequest:
-      description: 'Request model for deploying an agent.
-
-
-        Called by CLI after pushing the container image to the registry.'
-      properties:
-        acp_type:
-          $ref: '#/components/schemas/ACPType'
-          default: async
-          description: ACP server type (sync or async)
-        agent_name:
-          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
-          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
-          title: Agent Name
-          type: string
-        are_tasks_sticky:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
-          title: Are Tasks Sticky
-        author_email:
-          description: Git commit author email
-          title: Author Email
-          type: string
-        author_name:
-          description: Git commit author name
-          title: Author Name
-          type: string
-        branch:
-          description: Git branch name (e.g., 'main', 'feature/new-tool')
-          title: Branch
-          type: string
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Agent description (used when creating new agent)
-          title: Description
-        git_hash:
-          description: Git commit hash (short or full)
-          maxLength: 40
-          minLength: 7
-          title: Git Hash
-          type: string
-        git_message:
-          anyOf:
-          - maxLength: 500
-            type: string
-          - type: 'null'
-          description: Git commit message (truncated if too long)
-          title: Git Message
-        image_url:
-          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
-          title: Image Url
-          type: string
-        is_dirty:
-          default: false
-          description: Whether the working directory had uncommitted changes at deploy time
-          title: Is Dirty
-          type: boolean
-        replicas:
-          default: 1
-          description: Desired replica count (1-10)
-          maximum: 10
-          minimum: 1
-          title: Replicas
-          type: integer
-        resources:
-          additionalProperties: true
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
-          title: Resources
-        sdk_type:
-          $ref: '#/components/schemas/SDKType'
-          default: claude_agent_sdk
-          description: SDK type for agent runtime
-        source_filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Filesystem snapshot containing the deploy source for Builder reopenability
-          title: Source Filesystem Id
-      required:
-      - agent_name
-      - branch
-      - git_hash
-      - image_url
-      - author_name
-      - author_email
-      title: DeployRequest
-      type: object
     VersionListResponse:
       description: Response for listing versions of a branch.
       properties:
@@ -596,81 +489,36 @@ components:
       - total
       title: VersionListResponse
       type: object
-    RollbackRequest:
-      description: Request model for rolling back a branch.
+    BranchListResponse:
+      description: Response for listing branches.
       properties:
-        target_version_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Version ID to rollback to (defaults to previous version if not specified)
-          title: Target Version Id
-      title: RollbackRequest
-      type: object
-    RedeployResponse:
-      description: Response from a redeploy operation.
-      properties:
-        branch_id:
-          description: Branch ID
-          title: Branch Id
-          type: string
-        message:
-          description: Human-readable status message
-          title: Message
-          type: string
-        version_id:
-          description: New version ID created for redeploy
-          title: Version Id
-          type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version status after redeploy
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
       required:
-      - branch_id
-      - version_id
-      - version_status
-      - message
-      title: RedeployResponse
+      - branches
+      - total
+      title: BranchListResponse
       type: object
-    DeployResponse:
-      description: 'Immediate response from deploy request.
-
-
-        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
-      properties:
-        agent_id:
-          description: Agent ID (created or existing)
-          title: Agent Id
-          type: string
-        branch_id:
-          description: Branch ID for this git branch
-          title: Branch Id
-          type: string
-        message:
-          description: Human-readable status message
-          title: Message
-          type: string
-        tasks_migrated:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Number of tasks migrated from old version (if any)
-          title: Tasks Migrated
-        version_id:
-          description: New version ID
-          title: Version Id
-          type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Initial version status
-      required:
-      - agent_id
-      - branch_id
-      - version_id
-      - version_status
-      - message
-      title: DeployResponse
-      type: object
+    VersionStatus:
+      description: Status of a version in its lifecycle.
+      enum:
+      - DEPLOYING
+      - ACTIVE
+      - FAILED
+      - UNHEALTHY
+      - DRAINING
+      - RETIRED
+      - ROLLED_BACK
+      title: VersionStatus
+      type: string
     BranchResponse:
       description: Full branch details including current version.
       properties:
@@ -734,89 +582,15 @@ components:
       - replicas
       title: BranchResponse
       type: object
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
           type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
       type: object
-    BranchListResponse:
-      description: Response for listing branches.
-      properties:
-        branches:
-          description: List of branches
-          items:
-            $ref: '#/components/schemas/BranchResponse'
-          title: Branches
-          type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
-      required:
-      - branches
-      - total
-      title: BranchListResponse
-      type: object
-    VersionSummary:
-      description: Abbreviated version info for embedding in branch responses.
-      properties:
-        deployed_at:
-          description: When this version was deployed
-          format: date-time
-          title: Deployed At
-          type: string
-        git_hash:
-          description: Git commit hash
-          title: Git Hash
-          type: string
-        git_message:
-          default: ''
-          description: Git commit message
-          title: Git Message
-          type: string
-        id:
-          description: Version ID
-          title: Id
-          type: string
-        source_filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Filesystem snapshot that can reopen this version in Agent Builder
-          title: Source Filesystem Id
-        status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version lifecycle status
-      required:
-      - id
-      - git_hash
-      - status
-      - deployed_at
-      title: VersionSummary
-      type: object
-    SDKType:
-      description: SDK type for agent runtime.
-      enum:
-      - claude_agent_sdk
-      - codex_agent_sdk
-      title: SDKType
-      type: string
     RollbackResponse:
       description: Response from a rollback operation.
       properties:
@@ -857,15 +631,45 @@ components:
       - message
       title: RollbackResponse
       type: object
-    HTTPValidationError:
+    RollbackRequest:
+      description: Request model for rolling back a branch.
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        target_version_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Version ID to rollback to (defaults to previous version if not specified)
+          title: Target Version Id
+      title: RollbackRequest
       type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    SDKType:
+      description: SDK type for agent runtime.
+      enum:
+      - claude_agent_sdk
+      - codex_agent_sdk
+      title: SDKType
+      type: string
     VersionResponse:
       description: Full version details.
       properties:
@@ -1014,6 +818,202 @@ components:
       - async
       title: ACPType
       type: string
+    VersionSummary:
+      description: Abbreviated version info for embedding in branch responses.
+      properties:
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+      required:
+      - id
+      - git_hash
+      - status
+      - deployed_at
+      title: VersionSummary
+      type: object
+    DeployRequest:
+      description: 'Request model for deploying an agent.
+
+
+        Called by CLI after pushing the container image to the registry.'
+      properties:
+        acp_type:
+          $ref: '#/components/schemas/ACPType'
+          default: async
+          description: ACP server type (sync or async)
+        agent_name:
+          description: Agent name in 'namespace_slug/agent_name' format (lowercase alphanumeric, hyphens, underscores)
+          pattern: ^[a-z0-9][a-z0-9_-]*/[a-z0-9][a-z0-9_-]*$
+          title: Agent Name
+          type: string
+        are_tasks_sticky:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: If true, running tasks stay on their original version until completion during this deploy. If false or None, tasks are migrated to the new version immediately.
+          title: Are Tasks Sticky
+        author_email:
+          description: Git commit author email
+          title: Author Email
+          type: string
+        author_name:
+          description: Git commit author name
+          title: Author Name
+          type: string
+        branch:
+          description: Git branch name (e.g., 'main', 'feature/new-tool')
+          title: Branch
+          type: string
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent description (used when creating new agent)
+          title: Description
+        git_hash:
+          description: Git commit hash (short or full)
+          maxLength: 40
+          minLength: 7
+          title: Git Hash
+          type: string
+        git_message:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Git commit message (truncated if too long)
+          title: Git Message
+        image_url:
+          description: Full container image URL (e.g., 'us-east4-docker.pkg.dev/proj/repo/agent:hash')
+          title: Image Url
+          type: string
+        is_dirty:
+          default: false
+          description: Whether the working directory had uncommitted changes at deploy time
+          title: Is Dirty
+          type: boolean
+        replicas:
+          default: 1
+          description: Desired replica count (1-10)
+          maximum: 10
+          minimum: 1
+          title: Replicas
+          type: integer
+        resources:
+          additionalProperties: true
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: 'Resource requests and limits (e.g., {''requests'': {''cpu'': ''100m'', ''memory'': ''256Mi''}, ''limits'': {''cpu'': ''1000m'', ''memory'': ''1Gi''}})'
+          title: Resources
+        sdk_type:
+          $ref: '#/components/schemas/SDKType'
+          default: claude_agent_sdk
+          description: SDK type for agent runtime
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot containing the deploy source for Builder reopenability
+          title: Source Filesystem Id
+      required:
+      - agent_name
+      - branch
+      - git_hash
+      - image_url
+      - author_name
+      - author_email
+      title: DeployRequest
+      type: object
+    RedeployResponse:
+      description: Response from a redeploy operation.
+      properties:
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        version_id:
+          description: New version ID created for redeploy
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version status after redeploy
+      required:
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: RedeployResponse
+      type: object
+    DeployResponse:
+      description: 'Immediate response from deploy request.
+
+
+        CLI polls GET /branches/{branch_id} or GET /versions/{version_id} for status updates.'
+      properties:
+        agent_id:
+          description: Agent ID (created or existing)
+          title: Agent Id
+          type: string
+        branch_id:
+          description: Branch ID for this git branch
+          title: Branch Id
+          type: string
+        message:
+          description: Human-readable status message
+          title: Message
+          type: string
+        tasks_migrated:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Number of tasks migrated from old version (if any)
+          title: Tasks Migrated
+        version_id:
+          description: New version ID
+          title: Version Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Initial version status
+      required:
+      - agent_id
+      - branch_id
+      - version_id
+      - version_status
+      - message
+      title: DeployResponse
+      type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key
   name: idempotency_key

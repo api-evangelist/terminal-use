@@ -270,6 +270,112 @@ paths:
       - Projects
 components:
   schemas:
+    ProjectCollaboratorResponse:
+      description: Response model for project collaborator.
+      properties:
+        member_id:
+          description: The WorkOS user ID of the collaborator.
+          title: Member Id
+          type: string
+        role:
+          description: Collaborator role.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - member_id
+      - role
+      title: ProjectCollaboratorResponse
+      type: object
+    UpsertProjectCollaboratorRequest:
+      description: Request model for setting/updating a project collaborator role.
+      properties:
+        role:
+          description: Role to assign.
+          enum:
+          - discoverer
+          - viewer
+          - editor
+          - owner
+          title: Role
+          type: string
+      required:
+      - role
+      title: UpsertProjectCollaboratorRequest
+      type: object
+    ProjectListItem:
+      description: 'Minimal project shape for discovery/listing.
+
+
+        The /projects list endpoint is authorized via `discover` and must not leak
+
+        read-level fields (e.g. description).'
+      properties:
+        id:
+          description: The unique identifier of the project.
+          title: Id
+          type: string
+        name:
+          description: Project name.
+          title: Name
+          type: string
+        namespace_id:
+          description: The namespace this project belongs to.
+          title: Namespace Id
+          type: string
+      required:
+      - id
+      - namespace_id
+      - name
+      title: ProjectListItem
+      type: object
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
     Project:
       description: Response model for project.
       properties:
@@ -326,116 +432,6 @@ components:
       - can_manage
       title: ProjectCollaboratorsResponse
       type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    UpdateProjectRequest:
-      description: Request model for updating a project.
-      properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional project description.
-          title: Description
-        name:
-          anyOf:
-          - maxLength: 255
-            minLength: 1
-            type: string
-          - type: 'null'
-          description: Project name.
-          title: Name
-      title: UpdateProjectRequest
-      type: object
-    ProjectListItem:
-      description: 'Minimal project shape for discovery/listing.
-
-
-        The /projects list endpoint is authorized via `discover` and must not leak
-
-        read-level fields (e.g. description).'
-      properties:
-        id:
-          description: The unique identifier of the project.
-          title: Id
-          type: string
-        name:
-          description: Project name.
-          title: Name
-          type: string
-        namespace_id:
-          description: The namespace this project belongs to.
-          title: Namespace Id
-          type: string
-      required:
-      - id
-      - namespace_id
-      - name
-      title: ProjectListItem
-      type: object
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
-      type: object
-    ProjectCollaboratorResponse:
-      description: Response model for project collaborator.
-      properties:
-        member_id:
-          description: The WorkOS user ID of the collaborator.
-          title: Member Id
-          type: string
-        role:
-          description: Collaborator role.
-          enum:
-          - discoverer
-          - viewer
-          - editor
-          - owner
-          title: Role
-          type: string
-      required:
-      - member_id
-      - role
-      title: ProjectCollaboratorResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     CreateProjectRequest:
       description: Request model for creating a project.
       properties:
@@ -461,21 +457,25 @@ components:
       - name
       title: CreateProjectRequest
       type: object
-    UpsertProjectCollaboratorRequest:
-      description: Request model for setting/updating a project collaborator role.
+    UpdateProjectRequest:
+      description: Request model for updating a project.
       properties:
-        role:
-          description: Role to assign.
-          enum:
-          - discoverer
-          - viewer
-          - editor
-          - owner
-          title: Role
-          type: string
-      required:
-      - role
-      title: UpsertProjectCollaboratorRequest
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional project description.
+          title: Description
+        name:
+          anyOf:
+          - maxLength: 255
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: Project name.
+          title: Name
+      title: UpdateProjectRequest
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

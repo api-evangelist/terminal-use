@@ -178,41 +178,84 @@ paths:
       - API Keys
 components:
   schemas:
-    ApiKeyCreateRequest:
-      description: Request model for creating an API key.
+    ApiKeyScopesUpdateRequest:
+      description: Request model for updating API key scopes.
       properties:
-        description:
-          anyOf:
-          - maxLength: 1000
-            type: string
-          - type: 'null'
-          description: Optional description.
-          title: Description
-        name:
-          description: Human-readable name for the API key.
-          maxLength: 256
-          minLength: 1
-          title: Name
-          type: string
         scopes:
-          description: List of resource scopes. At least one scope is required.
+          description: Updated list of resource scopes.
           items:
             $ref: '#/components/schemas/ApiKeyScope'
           minItems: 1
           title: Scopes
           type: array
-        sharing_group_ids:
-          description: IDs of groups that receive default admin grants on key-created resources.
-          items:
-            type: string
-          minItems: 1
-          title: Sharing Group Ids
-          type: array
       required:
-      - name
       - scopes
-      - sharing_group_ids
-      title: ApiKeyCreateRequest
+      title: ApiKeyScopesUpdateRequest
+      type: object
+    ApiKeyListResponse:
+      description: Response model for listing API keys.
+      properties:
+        api_keys:
+          description: List of API keys.
+          items:
+            $ref: '#/components/schemas/ApiKeyResponse'
+          title: Api Keys
+          type: array
+      title: ApiKeyListResponse
+      type: object
+    ApiKeyScopeRole:
+      description: Role that can be assigned to an API key for a scoped resource.
+      enum:
+      - discoverer
+      - viewer
+      - editor
+      - admin
+      - owner
+      - member
+      - executor
+      title: ApiKeyScopeRole
+      type: string
+    DeleteResponse:
+      properties:
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ApiKeyScope:
+      description: Scope definition for an API key - defines resource and role access.
+      properties:
+        resource_id:
+          description: ID of the resource.
+          title: Resource Id
+          type: string
+        resource_type:
+          description: Type of resource (namespace, project, agent).
+          title: Resource Type
+          type: string
+        role:
+          $ref: '#/components/schemas/ApiKeyScopeRole'
+          description: Role for this resource.
+      required:
+      - resource_type
+      - resource_id
+      - role
+      title: ApiKeyScope
       type: object
     ValidationError:
       properties:
@@ -253,50 +296,41 @@ components:
       - key
       title: ApiKeyCreateResponse
       type: object
-    ApiKeyScope:
-      description: Scope definition for an API key - defines resource and role access.
+    ApiKeyCreateRequest:
+      description: Request model for creating an API key.
       properties:
-        resource_id:
-          description: ID of the resource.
-          title: Resource Id
+        description:
+          anyOf:
+          - maxLength: 1000
+            type: string
+          - type: 'null'
+          description: Optional description.
+          title: Description
+        name:
+          description: Human-readable name for the API key.
+          maxLength: 256
+          minLength: 1
+          title: Name
           type: string
-        resource_type:
-          description: Type of resource (namespace, project, agent).
-          title: Resource Type
-          type: string
-        role:
-          $ref: '#/components/schemas/ApiKeyScopeRole'
-          description: Role for this resource.
+        scopes:
+          description: List of resource scopes. At least one scope is required.
+          items:
+            $ref: '#/components/schemas/ApiKeyScope'
+          minItems: 1
+          title: Scopes
+          type: array
+        sharing_group_ids:
+          description: IDs of groups that receive default admin grants on key-created resources.
+          items:
+            type: string
+          minItems: 1
+          title: Sharing Group Ids
+          type: array
       required:
-      - resource_type
-      - resource_id
-      - role
-      title: ApiKeyScope
-      type: object
-    ApiKeyScopeRole:
-      description: Role that can be assigned to an API key for a scoped resource.
-      enum:
-      - discoverer
-      - viewer
-      - editor
-      - admin
-      - owner
-      - member
-      - executor
-      title: ApiKeyScopeRole
-      type: string
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
+      - name
+      - scopes
+      - sharing_group_ids
+      title: ApiKeyCreateRequest
       type: object
     ApiKeyResponse:
       description: Response model for API key (excludes sensitive data).
@@ -367,40 +401,6 @@ components:
       - name
       - created_by
       title: ApiKeyResponse
-      type: object
-    ApiKeyListResponse:
-      description: Response model for listing API keys.
-      properties:
-        api_keys:
-          description: List of API keys.
-          items:
-            $ref: '#/components/schemas/ApiKeyResponse'
-          title: Api Keys
-          type: array
-      title: ApiKeyListResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    ApiKeyScopesUpdateRequest:
-      description: Request model for updating API key scopes.
-      properties:
-        scopes:
-          description: Updated list of resource scopes.
-          items:
-            $ref: '#/components/schemas/ApiKeyScope'
-          minItems: 1
-          title: Scopes
-          type: array
-      required:
-      - scopes
-      title: ApiKeyScopesUpdateRequest
       type: object
     ApiKeySharingGroupsUpdateRequest:
       description: Request model for updating API key sharing groups.

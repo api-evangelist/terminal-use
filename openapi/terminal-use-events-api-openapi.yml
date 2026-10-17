@@ -117,6 +117,31 @@ components:
       - text
       title: TextPart
       type: object
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
+      properties:
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - data
+      title: DataPart
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     ValidationError:
       properties:
         loc:
@@ -188,31 +213,6 @@ components:
       - task_id
       - agent_id
       title: Event
-      type: object
-    DataPart:
-      description: Generic data part for unknown/passthrough content.
-      properties:
-        data:
-          description: Arbitrary data content
-          title: Data
-        type:
-          const: data
-          default: data
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - data
-      title: DataPart
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

@@ -146,30 +146,6 @@ paths:
       - Messages v2
 components:
   schemas:
-    ListMessagesV2Response:
-      description: Response for list messages v2 endpoint.
-      properties:
-        data:
-          description: List of UIMessages
-          items:
-            $ref: '#/components/schemas/UIMessage'
-          title: Data
-          type: array
-        hasMore:
-          default: false
-          description: Whether there are more messages to fetch
-          title: Hasmore
-          type: boolean
-        nextCursor:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Cursor for fetching the next page
-          title: Nextcursor
-      required:
-      - data
-      title: ListMessagesV2Response
-      type: object
     TextPart:
       description: Text content part.
       properties:
@@ -186,6 +162,75 @@ components:
       required:
       - text
       title: TextPart
+      type: object
+    UIMessagePartWrapper:
+      description: Wrapper for UIMessagePart union for proper serialization.
+      discriminator:
+        mapping:
+          data: '#/components/schemas/DataPart'
+          error: '#/components/schemas/ErrorPart'
+          file: '#/components/schemas/FilePart'
+          reasoning: '#/components/schemas/ReasoningPart'
+          source-url: '#/components/schemas/SourceUrlPart'
+          text: '#/components/schemas/TextPart'
+          tool: '#/components/schemas/ToolPart'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/TextPart'
+      - $ref: '#/components/schemas/ReasoningPart'
+      - $ref: '#/components/schemas/ToolPart'
+      - $ref: '#/components/schemas/SourceUrlPart'
+      - $ref: '#/components/schemas/FilePart'
+      - $ref: '#/components/schemas/DataPart'
+      - $ref: '#/components/schemas/ErrorPart'
+      title: UIMessagePartWrapper
+    ErrorPart:
+      description: Error part for transformation failures.
+      properties:
+        error:
+          description: Error message
+          title: Error
+          type: string
+        rawContent:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Original content that failed to transform
+          title: Rawcontent
+        type:
+          const: error
+          default: error
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - error
+      title: ErrorPart
+      type: object
+    DataPart:
+      description: Generic data part for unknown/passthrough content.
+      properties:
+        data:
+          description: Arbitrary data content
+          title: Data
+        type:
+          const: data
+          default: data
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - data
+      title: DataPart
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     ValidationError:
       properties:
@@ -229,163 +274,6 @@ components:
       - inputTokens
       - outputTokens
       title: Usage
-      type: object
-    ReasoningPart:
-      description: Reasoning/thinking content part (Claude's extended thinking).
-      properties:
-        providerMetadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Provider-specific metadata (e.g., Claude's thinking.signature)
-          title: Providermetadata
-        text:
-          description: The reasoning text content
-          title: Text
-          type: string
-        type:
-          const: reasoning
-          default: reasoning
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - text
-      title: ReasoningPart
-      type: object
-    ToolPartState:
-      description: State of a tool part.
-      enum:
-      - input-streaming
-      - input-available
-      - output-available
-      - output-error
-      title: ToolPartState
-      type: string
-    UIMessagePartWrapper:
-      description: Wrapper for UIMessagePart union for proper serialization.
-      discriminator:
-        mapping:
-          data: '#/components/schemas/DataPart'
-          error: '#/components/schemas/ErrorPart'
-          file: '#/components/schemas/FilePart'
-          reasoning: '#/components/schemas/ReasoningPart'
-          source-url: '#/components/schemas/SourceUrlPart'
-          text: '#/components/schemas/TextPart'
-          tool: '#/components/schemas/ToolPart'
-        propertyName: type
-      oneOf:
-      - $ref: '#/components/schemas/TextPart'
-      - $ref: '#/components/schemas/ReasoningPart'
-      - $ref: '#/components/schemas/ToolPart'
-      - $ref: '#/components/schemas/SourceUrlPart'
-      - $ref: '#/components/schemas/FilePart'
-      - $ref: '#/components/schemas/DataPart'
-      - $ref: '#/components/schemas/ErrorPart'
-      title: UIMessagePartWrapper
-    ToolPart:
-      description: Tool invocation and result part.
-      properties:
-        errorText:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Error message if tool failed
-          title: Errortext
-        input:
-          additionalProperties: true
-          description: Input arguments for the tool
-          title: Input
-          type: object
-        output:
-          anyOf:
-          - {}
-          - type: 'null'
-          description: Output from the tool
-          title: Output
-        state:
-          $ref: '#/components/schemas/ToolPartState'
-          description: Current state of the tool execution
-        toolCallId:
-          description: Unique ID for this tool call
-          title: Toolcallid
-          type: string
-        toolName:
-          description: Name of the tool
-          title: Toolname
-          type: string
-        type:
-          const: tool
-          default: tool
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - toolCallId
-      - toolName
-      - state
-      - input
-      title: ToolPart
-      type: object
-    SourceUrlPart:
-      description: Source URL reference part.
-      properties:
-        sourceId:
-          description: Unique source ID
-          title: Sourceid
-          type: string
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Title of the source
-          title: Title
-        type:
-          const: source-url
-          default: source-url
-          description: Part type discriminator
-          title: Type
-          type: string
-        url:
-          description: URL of the source
-          title: Url
-          type: string
-      required:
-      - sourceId
-      - url
-      title: SourceUrlPart
-      type: object
-    UIMessageRole:
-      description: Role of the message author.
-      enum:
-      - system
-      - user
-      - assistant
-      title: UIMessageRole
-      type: string
-    ErrorPart:
-      description: Error part for transformation failures.
-      properties:
-        error:
-          description: Error message
-          title: Error
-          type: string
-        rawContent:
-          anyOf:
-          - {}
-          - type: 'null'
-          description: Original content that failed to transform
-          title: Rawcontent
-        type:
-          const: error
-          default: error
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - error
-      title: ErrorPart
       type: object
     UIMessage:
       description: 'Vercel AI SDK compatible message format.
@@ -433,53 +321,6 @@ components:
       - parts
       title: UIMessage
       type: object
-    FilePart:
-      description: File attachment part.
-      properties:
-        mediaType:
-          description: MIME type of the file
-          title: Mediatype
-          type: string
-        type:
-          const: file
-          default: file
-          description: Part type discriminator
-          title: Type
-          type: string
-        url:
-          description: URL to the file
-          title: Url
-          type: string
-      required:
-      - url
-      - mediaType
-      title: FilePart
-      type: object
-    DataPart:
-      description: Generic data part for unknown/passthrough content.
-      properties:
-        data:
-          description: Arbitrary data content
-          title: Data
-        type:
-          const: data
-          default: data
-          description: Part type discriminator
-          title: Type
-          type: string
-      required:
-      - data
-      title: DataPart
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     UIMessageMetadata:
       description: Metadata for a UIMessage.
       properties:
@@ -513,6 +354,165 @@ components:
           - type: 'null'
           description: Token usage for this message
       title: UIMessageMetadata
+      type: object
+    ListMessagesV2Response:
+      description: Response for list messages v2 endpoint.
+      properties:
+        data:
+          description: List of UIMessages
+          items:
+            $ref: '#/components/schemas/UIMessage'
+          title: Data
+          type: array
+        hasMore:
+          default: false
+          description: Whether there are more messages to fetch
+          title: Hasmore
+          type: boolean
+        nextCursor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Cursor for fetching the next page
+          title: Nextcursor
+      required:
+      - data
+      title: ListMessagesV2Response
+      type: object
+    ToolPartState:
+      description: State of a tool part.
+      enum:
+      - input-streaming
+      - input-available
+      - output-available
+      - output-error
+      title: ToolPartState
+      type: string
+    ToolPart:
+      description: Tool invocation and result part.
+      properties:
+        errorText:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message if tool failed
+          title: Errortext
+        input:
+          additionalProperties: true
+          description: Input arguments for the tool
+          title: Input
+          type: object
+        output:
+          anyOf:
+          - {}
+          - type: 'null'
+          description: Output from the tool
+          title: Output
+        state:
+          $ref: '#/components/schemas/ToolPartState'
+          description: Current state of the tool execution
+        toolCallId:
+          description: Unique ID for this tool call
+          title: Toolcallid
+          type: string
+        toolName:
+          description: Name of the tool
+          title: Toolname
+          type: string
+        type:
+          const: tool
+          default: tool
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - toolCallId
+      - toolName
+      - state
+      - input
+      title: ToolPart
+      type: object
+    FilePart:
+      description: File attachment part.
+      properties:
+        mediaType:
+          description: MIME type of the file
+          title: Mediatype
+          type: string
+        type:
+          const: file
+          default: file
+          description: Part type discriminator
+          title: Type
+          type: string
+        url:
+          description: URL to the file
+          title: Url
+          type: string
+      required:
+      - url
+      - mediaType
+      title: FilePart
+      type: object
+    ReasoningPart:
+      description: Reasoning/thinking content part (Claude's extended thinking).
+      properties:
+        providerMetadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Provider-specific metadata (e.g., Claude's thinking.signature)
+          title: Providermetadata
+        text:
+          description: The reasoning text content
+          title: Text
+          type: string
+        type:
+          const: reasoning
+          default: reasoning
+          description: Part type discriminator
+          title: Type
+          type: string
+      required:
+      - text
+      title: ReasoningPart
+      type: object
+    UIMessageRole:
+      description: Role of the message author.
+      enum:
+      - system
+      - user
+      - assistant
+      title: UIMessageRole
+      type: string
+    SourceUrlPart:
+      description: Source URL reference part.
+      properties:
+        sourceId:
+          description: Unique source ID
+          title: Sourceid
+          type: string
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Title of the source
+          title: Title
+        type:
+          const: source-url
+          default: source-url
+          description: Part type discriminator
+          title: Type
+          type: string
+        url:
+          description: URL of the source
+          title: Url
+          type: string
+      required:
+      - sourceId
+      - url
+      title: SourceUrlPart
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

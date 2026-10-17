@@ -270,6 +270,15 @@ components:
       - api_key_type
       title: AgentAPIKey
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     ValidationError:
       properties:
         loc:
@@ -291,6 +300,14 @@ components:
       - type
       title: ValidationError
       type: object
+    AgentAPIKeyType:
+      enum:
+      - internal
+      - external
+      - github
+      - slack
+      title: AgentAPIKeyType
+      type: string
     CreateAPIKeyRequest:
       properties:
         agent_id:
@@ -360,23 +377,6 @@ components:
       - api_key
       title: CreateAPIKeyResponse
       type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    AgentAPIKeyType:
-      enum:
-      - internal
-      - external
-      - github
-      - slack
-      title: AgentAPIKeyType
-      type: string
 x-fern-idempotency-headers:
 - header: Idempotency-Key
   name: idempotency_key

@@ -256,6 +256,89 @@ paths:
         format: sse
 components:
   schemas:
+    LogSource:
+      description: Source of the log entry.
+      enum:
+      - stdout
+      - stderr
+      - server
+      title: LogSource
+      type: string
+    OTLPAttributeValue:
+      description: 'OTLP attribute value supporting multiple types.
+
+
+        Per OTLP JSON spec, intValue is transmitted as a string to avoid JSON number
+
+        precision issues with int64 values. We validate that the string represents
+
+        a valid integer and provide a helper property to get the actual int value.
+
+
+        String values are limited to MAX_ATTRIBUTE_VALUE_LENGTH (4KB) to prevent
+
+        memory exhaustion and ClickHouse insert failures.'
+      properties:
+        arrayValue:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Arrayvalue
+        boolValue:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Boolvalue
+        bytesValue:
+          anyOf:
+          - maxLength: 4096
+            type: string
+          - type: 'null'
+          title: Bytesvalue
+        doubleValue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Doublevalue
+        intValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intvalue
+        stringValue:
+          anyOf:
+          - maxLength: 4096
+            type: string
+          - type: 'null'
+          title: Stringvalue
+      title: OTLPAttributeValue
+      type: object
+    OTLPResource:
+      description: OTLP resource with attributes.
+      properties:
+        attributes:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPAttribute'
+          maxItems: 32
+          title: Attributes
+          type: array
+      title: OTLPResource
+      type: object
+    OTLPScope:
+      description: OTLP instrumentation scope.
+      properties:
+        name:
+          default: ''
+          title: Name
+          type: string
+        version:
+          default: ''
+          title: Version
+          type: string
+      title: OTLPScope
+      type: object
     LogLevel:
       description: Log level for entries.
       enum:
@@ -331,109 +414,25 @@ components:
       - message
       title: LogQueryEntry
       type: object
-    HTTPValidationError:
+    LogListResponse:
+      description: Response from logs list endpoint.
       properties:
-        detail:
+        has_more:
+          title: Whether there are more logs available beyond the current page
+          type: boolean
+        logs:
           items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
+            $ref: '#/components/schemas/LogQueryEntry'
+          title: List of log entries
           type: array
-      title: HTTPValidationError
-      type: object
-    OTLPLogRecord:
-      description: 'OTLP log record.
-
-
-        The body field (message content) is limited to MAX_MESSAGE_LENGTH (64KB).
-
-        Messages exceeding this limit are truncated with a "[TRUNCATED]" indicator.
-
-        Attributes are limited to MAX_ATTRIBUTES_PER_LOG (32) per log record.'
-      properties:
-        attributes:
-          default: []
-          items:
-            $ref: '#/components/schemas/OTLPAttribute'
-          maxItems: 32
-          title: Attributes
-          type: array
-        body:
-          anyOf:
-          - $ref: '#/components/schemas/OTLPBodyValue'
-          - type: 'null'
-        severityNumber:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Severitynumber
-        severityText:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Severitytext
-        spanId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Spanid
-        timeUnixNano:
-          default: ''
-          title: Timeunixnano
-          type: string
-        traceId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Traceid
-      title: OTLPLogRecord
-      type: object
-    OTLPBodyValue:
-      description: 'OTLP body value for log record messages.
-
-
-        Unlike OTLPAttributeValue, this class does NOT have max_length constraints
-
-        on stringValue. This allows the OTLPLogRecord.validate_body_size validator
-
-        to handle truncation for messages between 4KB and 64KB, rather than having
-
-        Pydantic reject them outright due to the 4KB attribute limit.
-
-
-        Messages exceeding MAX_MESSAGE_LENGTH (64KB) are truncated with a marker.'
-      properties:
-        arrayValue:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Arrayvalue
-        boolValue:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Boolvalue
-        bytesValue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bytesvalue
-        doubleValue:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Doublevalue
-        intValue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intvalue
-        stringValue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stringvalue
-      title: OTLPBodyValue
+        total:
+          title: Total number of logs matching the query
+          type: integer
+      required:
+      - logs
+      - total
+      - has_more
+      title: LogListResponse
       type: object
     LogStreamLogEvent:
       description: 'A log entry in the SSE stream.
@@ -498,6 +497,68 @@ components:
       - message
       title: LogStreamLogEvent
       type: object
+    OTLPLogRecord:
+      description: 'OTLP log record.
+
+
+        The body field (message content) is limited to MAX_MESSAGE_LENGTH (64KB).
+
+        Messages exceeding this limit are truncated with a "[TRUNCATED]" indicator.
+
+        Attributes are limited to MAX_ATTRIBUTES_PER_LOG (32) per log record.'
+      properties:
+        attributes:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPAttribute'
+          maxItems: 32
+          title: Attributes
+          type: array
+        body:
+          anyOf:
+          - $ref: '#/components/schemas/OTLPBodyValue'
+          - type: 'null'
+        severityNumber:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Severitynumber
+        severityText:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severitytext
+        spanId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Spanid
+        timeUnixNano:
+          default: ''
+          title: Timeunixnano
+          type: string
+        traceId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Traceid
+      title: OTLPLogRecord
+      type: object
+    OTLPLogIngestionResponse:
+      description: Response from OTLP log ingestion endpoint.
+      properties:
+        logs_count:
+          description: Number of log records ingested
+          title: Logs Count
+          type: integer
+        status:
+          default: accepted
+          title: Status
+          type: string
+      required:
+      - logs_count
+      title: OTLPLogIngestionResponse
+      type: object
     OTLPScopeLogs:
       description: OTLP scope logs containing log records.
       properties:
@@ -513,76 +574,6 @@ components:
           - $ref: '#/components/schemas/OTLPScope'
           - type: 'null'
       title: OTLPScopeLogs
-      type: object
-    OTLPScope:
-      description: OTLP instrumentation scope.
-      properties:
-        name:
-          default: ''
-          title: Name
-          type: string
-        version:
-          default: ''
-          title: Version
-          type: string
-      title: OTLPScope
-      type: object
-    LogSource:
-      description: Source of the log entry.
-      enum:
-      - stdout
-      - stderr
-      - server
-      title: LogSource
-      type: string
-    LogStreamConnectedEvent:
-      description: 'Sent when SSE log stream connection is established.
-
-
-        Indicates the client is now subscribed and will receive new logs.
-
-        Only logs generated AFTER this event will be streamed (tail -f behavior).'
-      properties:
-        agent_id:
-          description: Agent ID this stream is subscribed to
-          title: Agent Id
-          type: string
-        type:
-          const: connected
-          default: connected
-          title: Type
-          type: string
-      required:
-      - agent_id
-      title: LogStreamConnectedEvent
-      type: object
-    OTLPAttribute:
-      description: OTLP key-value attribute.
-      properties:
-        key:
-          maxLength: 256
-          title: Key
-          type: string
-        value:
-          $ref: '#/components/schemas/OTLPAttributeValue'
-      required:
-      - key
-      - value
-      title: OTLPAttribute
-      type: object
-    OTLPLogIngestionRequest:
-      description: OTLP log data in JSON format.
-      properties:
-        resourceLogs:
-          description: Array of ResourceLogs per OTLP spec
-          items:
-            $ref: '#/components/schemas/OTLPResourceLogs'
-          maxItems: 100
-          title: Resourcelogs
-          type: array
-      required:
-      - resourceLogs
-      title: OTLPLogIngestionRequest
       type: object
     ValidationError:
       properties:
@@ -605,32 +596,146 @@ components:
       - type
       title: ValidationError
       type: object
-    OTLPResource:
-      description: OTLP resource with attributes.
+    OTLPBodyValue:
+      description: 'OTLP body value for log record messages.
+
+
+        Unlike OTLPAttributeValue, this class does NOT have max_length constraints
+
+        on stringValue. This allows the OTLPLogRecord.validate_body_size validator
+
+        to handle truncation for messages between 4KB and 64KB, rather than having
+
+        Pydantic reject them outright due to the 4KB attribute limit.
+
+
+        Messages exceeding MAX_MESSAGE_LENGTH (64KB) are truncated with a marker.'
       properties:
-        attributes:
-          default: []
-          items:
-            $ref: '#/components/schemas/OTLPAttribute'
-          maxItems: 32
-          title: Attributes
-          type: array
-      title: OTLPResource
+        arrayValue:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Arrayvalue
+        boolValue:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Boolvalue
+        bytesValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bytesvalue
+        doubleValue:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Doublevalue
+        intValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Intvalue
+        stringValue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stringvalue
+      title: OTLPBodyValue
       type: object
-    OTLPLogIngestionResponse:
-      description: Response from OTLP log ingestion endpoint.
+    LogStreamConnectedEvent:
+      description: 'Sent when SSE log stream connection is established.
+
+
+        Indicates the client is now subscribed and will receive new logs.
+
+        Only logs generated AFTER this event will be streamed (tail -f behavior).'
       properties:
-        logs_count:
-          description: Number of log records ingested
-          title: Logs Count
-          type: integer
-        status:
-          default: accepted
-          title: Status
+        agent_id:
+          description: Agent ID this stream is subscribed to
+          title: Agent Id
+          type: string
+        type:
+          const: connected
+          default: connected
+          title: Type
           type: string
       required:
-      - logs_count
-      title: OTLPLogIngestionResponse
+      - agent_id
+      title: LogStreamConnectedEvent
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OTLPResourceLogs:
+      description: OTLP resource logs container.
+      properties:
+        resource:
+          anyOf:
+          - $ref: '#/components/schemas/OTLPResource'
+          - type: 'null'
+        scopeLogs:
+          default: []
+          items:
+            $ref: '#/components/schemas/OTLPScopeLogs'
+          maxItems: 100
+          title: Scopelogs
+          type: array
+      title: OTLPResourceLogs
+      type: object
+    OTLPAttribute:
+      description: OTLP key-value attribute.
+      properties:
+        key:
+          maxLength: 256
+          title: Key
+          type: string
+        value:
+          $ref: '#/components/schemas/OTLPAttributeValue'
+      required:
+      - key
+      - value
+      title: OTLPAttribute
+      type: object
+    LogStreamErrorEvent:
+      description: 'Sent when an error occurs in the log stream.
+
+
+        After this event, the stream may close or attempt recovery.'
+      properties:
+        message:
+          description: Error description
+          title: Message
+          type: string
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - message
+      title: LogStreamErrorEvent
+      type: object
+    OTLPLogIngestionRequest:
+      description: OTLP log data in JSON format.
+      properties:
+        resourceLogs:
+          description: Array of ResourceLogs per OTLP spec
+          items:
+            $ref: '#/components/schemas/OTLPResourceLogs'
+          maxItems: 100
+          title: Resourcelogs
+          type: array
+      required:
+      - resourceLogs
+      title: OTLPLogIngestionRequest
       type: object
     LogStreamEvent:
       description: 'Union of all possible log stream SSE events.
@@ -654,111 +759,6 @@ components:
       - $ref: '#/components/schemas/LogStreamLogEvent'
       - $ref: '#/components/schemas/LogStreamErrorEvent'
       title: LogStreamEvent
-    OTLPResourceLogs:
-      description: OTLP resource logs container.
-      properties:
-        resource:
-          anyOf:
-          - $ref: '#/components/schemas/OTLPResource'
-          - type: 'null'
-        scopeLogs:
-          default: []
-          items:
-            $ref: '#/components/schemas/OTLPScopeLogs'
-          maxItems: 100
-          title: Scopelogs
-          type: array
-      title: OTLPResourceLogs
-      type: object
-    LogListResponse:
-      description: Response from logs list endpoint.
-      properties:
-        has_more:
-          title: Whether there are more logs available beyond the current page
-          type: boolean
-        logs:
-          items:
-            $ref: '#/components/schemas/LogQueryEntry'
-          title: List of log entries
-          type: array
-        total:
-          title: Total number of logs matching the query
-          type: integer
-      required:
-      - logs
-      - total
-      - has_more
-      title: LogListResponse
-      type: object
-    OTLPAttributeValue:
-      description: 'OTLP attribute value supporting multiple types.
-
-
-        Per OTLP JSON spec, intValue is transmitted as a string to avoid JSON number
-
-        precision issues with int64 values. We validate that the string represents
-
-        a valid integer and provide a helper property to get the actual int value.
-
-
-        String values are limited to MAX_ATTRIBUTE_VALUE_LENGTH (4KB) to prevent
-
-        memory exhaustion and ClickHouse insert failures.'
-      properties:
-        arrayValue:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Arrayvalue
-        boolValue:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Boolvalue
-        bytesValue:
-          anyOf:
-          - maxLength: 4096
-            type: string
-          - type: 'null'
-          title: Bytesvalue
-        doubleValue:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Doublevalue
-        intValue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Intvalue
-        stringValue:
-          anyOf:
-          - maxLength: 4096
-            type: string
-          - type: 'null'
-          title: Stringvalue
-      title: OTLPAttributeValue
-      type: object
-    LogStreamErrorEvent:
-      description: 'Sent when an error occurs in the log stream.
-
-
-        After this event, the stream may close or attempt recovery.'
-      properties:
-        message:
-          description: Error description
-          title: Message
-          type: string
-        type:
-          const: error
-          default: error
-          title: Type
-          type: string
-      required:
-      - message
-      title: LogStreamErrorEvent
-      type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key
   name: idempotency_key

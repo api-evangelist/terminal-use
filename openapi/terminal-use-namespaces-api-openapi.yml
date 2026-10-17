@@ -262,41 +262,53 @@ paths:
       - Namespaces
 components:
   schemas:
-    SlugAvailabilityResponse:
-      description: Response for slug availability check.
+    CreateNamespaceRequest:
+      description: Request model for creating a namespace.
       properties:
-        available:
-          description: Whether the slug is available for use.
-          title: Available
-          type: boolean
+        name:
+          description: Human-readable name.
+          maxLength: 255
+          minLength: 1
+          title: Name
+          type: string
+        owner_org_id:
+          description: WorkOS organization ID that owns this namespace.
+          title: Owner Org Id
+          type: string
         slug:
-          description: The slug that was checked.
+          description: URL-friendly unique identifier (lowercase alphanumeric and hyphens).
+          maxLength: 63
+          minLength: 3
+          pattern: ^[a-z0-9][a-z0-9-]*[a-z0-9]$
           title: Slug
           type: string
       required:
-      - available
       - slug
-      title: SlugAvailabilityResponse
+      - name
+      - owner_org_id
+      title: CreateNamespaceRequest
       type: object
-    UpdateNamespaceRequest:
-      description: 'Request model for updating a namespace.
-
-
-        Infrastructure fields (k8s_namespace, gcs_bucket, gcp_sa_email) are NOT
-
-        exposed here — they are set exclusively by the provisioning workflow via
-
-        the repository layer.'
+    DeleteResponse:
       properties:
-        name:
-          anyOf:
-          - maxLength: 255
-            minLength: 1
-            type: string
-          - type: 'null'
-          description: Human-readable name.
-          title: Name
-      title: UpdateNamespaceRequest
+        id:
+          title: Id
+          type: string
+        message:
+          title: Message
+          type: string
+      required:
+      - id
+      - message
+      title: DeleteResponse
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     NamespaceStatus:
       description: Status of namespace infrastructure provisioning.
@@ -327,53 +339,25 @@ components:
       - type
       title: ValidationError
       type: object
-    DeleteResponse:
-      properties:
-        id:
-          title: Id
-          type: string
-        message:
-          title: Message
-          type: string
-      required:
-      - id
-      - message
-      title: DeleteResponse
-      type: object
-    CreateNamespaceRequest:
-      description: Request model for creating a namespace.
+    UpdateNamespaceRequest:
+      description: 'Request model for updating a namespace.
+
+
+        Infrastructure fields (k8s_namespace, gcs_bucket, gcp_sa_email) are NOT
+
+        exposed here — they are set exclusively by the provisioning workflow via
+
+        the repository layer.'
       properties:
         name:
+          anyOf:
+          - maxLength: 255
+            minLength: 1
+            type: string
+          - type: 'null'
           description: Human-readable name.
-          maxLength: 255
-          minLength: 1
           title: Name
-          type: string
-        owner_org_id:
-          description: WorkOS organization ID that owns this namespace.
-          title: Owner Org Id
-          type: string
-        slug:
-          description: URL-friendly unique identifier (lowercase alphanumeric and hyphens).
-          maxLength: 63
-          minLength: 3
-          pattern: ^[a-z0-9][a-z0-9-]*[a-z0-9]$
-          title: Slug
-          type: string
-      required:
-      - slug
-      - name
-      - owner_org_id
-      title: CreateNamespaceRequest
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+      title: UpdateNamespaceRequest
       type: object
     Namespace:
       description: Response model for namespace.
@@ -458,6 +442,22 @@ components:
       - owner_org_id
       - created_by
       title: Namespace
+      type: object
+    SlugAvailabilityResponse:
+      description: Response for slug availability check.
+      properties:
+        available:
+          description: Whether the slug is available for use.
+          title: Available
+          type: boolean
+        slug:
+          description: The slug that was checked.
+          title: Slug
+          type: string
+      required:
+      - available
+      - slug
+      title: SlugAvailabilityResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

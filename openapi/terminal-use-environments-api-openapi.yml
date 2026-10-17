@@ -361,6 +361,42 @@ paths:
       x-fern-sdk-method-name: resolve_env
 components:
   schemas:
+    EnvListResponse:
+      description: Response for listing environments.
+      properties:
+        environments:
+          description: List of environments
+          items:
+            $ref: '#/components/schemas/EnvResponse'
+          title: Environments
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - environments
+      - total
+      title: EnvListResponse
+      type: object
+    BranchListResponse:
+      description: Response for listing branches.
+      properties:
+        branches:
+          description: List of branches
+          items:
+            $ref: '#/components/schemas/BranchResponse'
+          title: Branches
+          type: array
+        total:
+          description: Total count
+          title: Total
+          type: integer
+      required:
+      - branches
+      - total
+      title: BranchListResponse
+      type: object
     VersionStatus:
       description: Status of a version in its lifecycle.
       enum:
@@ -373,35 +409,6 @@ components:
       - ROLLED_BACK
       title: VersionStatus
       type: string
-    UpdateEnvRequest:
-      description: Request to update an environment (partial update).
-      properties:
-        branch_rules:
-          anyOf:
-          - items:
-              type: string
-            minItems: 1
-            type: array
-          - type: 'null'
-          description: Branch patterns for matching
-          title: Branch Rules
-      title: UpdateEnvRequest
-      type: object
-    ResolveEnvResponse:
-      description: Response for resolving which environment matches a branch.
-      properties:
-        branch:
-          description: The branch that was resolved
-          title: Branch
-          type: string
-        environment:
-          $ref: '#/components/schemas/EnvResponse'
-          description: The environment that matches the branch
-      required:
-      - environment
-      - branch
-      title: ResolveEnvResponse
-      type: object
     BranchResponse:
       description: Full branch details including current version.
       properties:
@@ -465,23 +472,28 @@ components:
       - replicas
       title: BranchResponse
       type: object
-    EnvListResponse:
-      description: Response for listing environments.
+    UpdateEnvRequest:
+      description: Request to update an environment (partial update).
       properties:
-        environments:
-          description: List of environments
+        branch_rules:
+          anyOf:
+          - items:
+              type: string
+            minItems: 1
+            type: array
+          - type: 'null'
+          description: Branch patterns for matching
+          title: Branch Rules
+      title: UpdateEnvRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
           items:
-            $ref: '#/components/schemas/EnvResponse'
-          title: Environments
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
           type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
-      required:
-      - environments
-      - total
-      title: EnvListResponse
+      title: HTTPValidationError
       type: object
     ValidationError:
       properties:
@@ -504,23 +516,80 @@ components:
       - type
       title: ValidationError
       type: object
-    BranchListResponse:
-      description: Response for listing branches.
+    CreateEnvRequest:
+      description: Request to create a new environment.
       properties:
-        branches:
-          description: List of branches
+        branch_rules:
+          description: Branch patterns for matching (e.g., ['feature/*'], ['develop'])
           items:
-            $ref: '#/components/schemas/BranchResponse'
-          title: Branches
+            type: string
+          minItems: 1
+          title: Branch Rules
           type: array
-        total:
-          description: Total count
-          title: Total
-          type: integer
+        name:
+          description: Environment name (lowercase alphanumeric and hyphens only)
+          maxLength: 100
+          minLength: 1
+          pattern: ^[a-z0-9-]+$
+          title: Name
+          type: string
       required:
-      - branches
-      - total
-      title: BranchListResponse
+      - name
+      - branch_rules
+      title: CreateEnvRequest
+      type: object
+    DeleteEnvResponse:
+      description: Response after deleting an environment.
+      properties:
+        deleted:
+          description: Whether the environment was deleted
+          title: Deleted
+          type: boolean
+        name:
+          description: The name of the deleted environment
+          title: Name
+          type: string
+      required:
+      - deleted
+      - name
+      title: DeleteEnvResponse
+      type: object
+    VersionSummary:
+      description: Abbreviated version info for embedding in branch responses.
+      properties:
+        deployed_at:
+          description: When this version was deployed
+          format: date-time
+          title: Deployed At
+          type: string
+        git_hash:
+          description: Git commit hash
+          title: Git Hash
+          type: string
+        git_message:
+          default: ''
+          description: Git commit message
+          title: Git Message
+          type: string
+        id:
+          description: Version ID
+          title: Id
+          type: string
+        source_filesystem_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filesystem snapshot that can reopen this version in Agent Builder
+          title: Source Filesystem Id
+        status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version lifecycle status
+      required:
+      - id
+      - git_hash
+      - status
+      - deployed_at
+      title: VersionSummary
       type: object
     EnvResponse:
       description: Full environment details.
@@ -569,89 +638,20 @@ components:
       - is_prod
       title: EnvResponse
       type: object
-    CreateEnvRequest:
-      description: Request to create a new environment.
+    ResolveEnvResponse:
+      description: Response for resolving which environment matches a branch.
       properties:
-        branch_rules:
-          description: Branch patterns for matching (e.g., ['feature/*'], ['develop'])
-          items:
-            type: string
-          minItems: 1
-          title: Branch Rules
-          type: array
-        name:
-          description: Environment name (lowercase alphanumeric and hyphens only)
-          maxLength: 100
-          minLength: 1
-          pattern: ^[a-z0-9-]+$
-          title: Name
+        branch:
+          description: The branch that was resolved
+          title: Branch
           type: string
+        environment:
+          $ref: '#/components/schemas/EnvResponse'
+          description: The environment that matches the branch
       required:
-      - name
-      - branch_rules
-      title: CreateEnvRequest
-      type: object
-    VersionSummary:
-      description: Abbreviated version info for embedding in branch responses.
-      properties:
-        deployed_at:
-          description: When this version was deployed
-          format: date-time
-          title: Deployed At
-          type: string
-        git_hash:
-          description: Git commit hash
-          title: Git Hash
-          type: string
-        git_message:
-          default: ''
-          description: Git commit message
-          title: Git Message
-          type: string
-        id:
-          description: Version ID
-          title: Id
-          type: string
-        source_filesystem_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Filesystem snapshot that can reopen this version in Agent Builder
-          title: Source Filesystem Id
-        status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version lifecycle status
-      required:
-      - id
-      - git_hash
-      - status
-      - deployed_at
-      title: VersionSummary
-      type: object
-    DeleteEnvResponse:
-      description: Response after deleting an environment.
-      properties:
-        deleted:
-          description: Whether the environment was deleted
-          title: Deleted
-          type: boolean
-        name:
-          description: The name of the deleted environment
-          title: Name
-          type: string
-      required:
-      - deleted
-      - name
-      title: DeleteEnvResponse
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+      - environment
+      - branch
+      title: ResolveEnvResponse
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

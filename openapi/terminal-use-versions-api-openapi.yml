@@ -312,6 +312,33 @@ paths:
       x-fern-sdk-method-name: pod_metrics
 components:
   schemas:
+    DeployStreamQueuedEvent:
+      description: Deployment has been queued for processing.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: queued
+          default: queued
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamQueuedEvent
+      type: object
     VersionStatus:
       description: Status of a version in its lifecycle.
       enum:
@@ -324,28 +351,29 @@ components:
       - ROLLED_BACK
       title: VersionStatus
       type: string
-    DeployStreamFailedEvent:
-      description: Deployment failed.
+    ACPType:
+      description: Type of ACP server.
+      enum:
+      - sync
+      - async
+      title: ACPType
+      type: string
+    DeployStreamReadyEvent:
+      description: Deployment completed successfully.
       properties:
-        failure_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Detailed failure reason
-          title: Failure Reason
         message:
           anyOf:
           - type: string
           - type: 'null'
-          description: Error message
+          description: Optional status message
           title: Message
         timestamp:
           description: ISO 8601 timestamp
           title: Timestamp
           type: string
         type:
-          const: failed
-          default: failed
+          const: ready
+          default: ready
           title: Type
           type: string
         version_id:
@@ -355,7 +383,34 @@ components:
       required:
       - version_id
       - timestamp
-      title: DeployStreamFailedEvent
+      title: DeployStreamReadyEvent
+      type: object
+    DeployStreamHelmWaitingEvent:
+      description: Waiting for Helm deployment to complete (pods becoming ready).
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: helm_waiting
+          default: helm_waiting
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamHelmWaitingEvent
       type: object
     RegisterContainerRequest:
       description: 'Request model for container registration.
@@ -396,14 +451,122 @@ components:
       - codex_agent_sdk
       title: SDKType
       type: string
-    HTTPValidationError:
+    DeployStreamErrorEvent:
+      description: 'Sent when an error occurs in the deploy stream.
+
+
+        After this event, the stream may close.'
       properties:
-        detail:
+        message:
+          description: Error description
+          title: Message
+          type: string
+        type:
+          const: error
+          default: error
+          title: Type
+          type: string
+      required:
+      - message
+      title: DeployStreamErrorEvent
+      type: object
+    VersionMetricsResponse:
+      description: Response model for version deployment metrics.
+      properties:
+        deployment_duration_p95_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: P95 deployment duration in seconds for this version
+          title: Deployment Duration P95 Seconds
+        deployment_duration_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Average deployment duration in seconds for this version
+          title: Deployment Duration Seconds
+      title: VersionMetricsResponse
+      type: object
+    DeployStreamRollingBackEvent:
+      description: Deployment is being rolled back.
+      properties:
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional status message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: rolling_back
+          default: rolling_back
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being rolled back
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamRollingBackEvent
+      type: object
+    DeployStreamFailedEvent:
+      description: Deployment failed.
+      properties:
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Detailed failure reason
+          title: Failure Reason
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Error message
+          title: Message
+        timestamp:
+          description: ISO 8601 timestamp
+          title: Timestamp
+          type: string
+        type:
+          const: failed
+          default: failed
+          title: Type
+          type: string
+        version_id:
+          description: Version ID being deployed
+          title: Version Id
+          type: string
+      required:
+      - version_id
+      - timestamp
+      title: DeployStreamFailedEvent
+      type: object
+    ValidationError:
+      properties:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
           type: array
-      title: HTTPValidationError
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
       type: object
     VersionResponse:
       description: Full version details.
@@ -546,78 +709,25 @@ components:
       - acp_type
       title: VersionResponse
       type: object
-    ACPType:
-      description: Type of ACP server.
-      enum:
-      - sync
-      - async
-      title: ACPType
-      type: string
-    DeployStreamEvent:
-      description: 'Union of all possible deploy stream SSE events.
-
-
-        Use the ''type'' field to discriminate between event types:
-
-        - "connected": Stream connection established
-
-        - "queued": Deployment queued
-
-        - "helm_started": Helm deployment started
-
-        - "helm_waiting": Waiting for pods to be ready
-
-        - "ready": Deployment successful
-
-        - "failed": Deployment failed
-
-        - "rolling_back": Rolling back deployment
-
-        - "complete": Stream complete, terminal state reached
-
-        - "error": An error occurred in the stream'
-      discriminator:
-        mapping:
-          complete: '#/components/schemas/DeployStreamCompleteEvent'
-          connected: '#/components/schemas/DeployStreamConnectedEvent'
-          error: '#/components/schemas/DeployStreamErrorEvent'
-          failed: '#/components/schemas/DeployStreamFailedEvent'
-          helm_started: '#/components/schemas/DeployStreamHelmStartedEvent'
-          helm_waiting: '#/components/schemas/DeployStreamHelmWaitingEvent'
-          queued: '#/components/schemas/DeployStreamQueuedEvent'
-          ready: '#/components/schemas/DeployStreamReadyEvent'
-          rolling_back: '#/components/schemas/DeployStreamRollingBackEvent'
-        propertyName: type
-      oneOf:
-      - $ref: '#/components/schemas/DeployStreamConnectedEvent'
-      - $ref: '#/components/schemas/DeployStreamQueuedEvent'
-      - $ref: '#/components/schemas/DeployStreamHelmStartedEvent'
-      - $ref: '#/components/schemas/DeployStreamHelmWaitingEvent'
-      - $ref: '#/components/schemas/DeployStreamReadyEvent'
-      - $ref: '#/components/schemas/DeployStreamFailedEvent'
-      - $ref: '#/components/schemas/DeployStreamRollingBackEvent'
-      - $ref: '#/components/schemas/DeployStreamCompleteEvent'
-      - $ref: '#/components/schemas/DeployStreamErrorEvent'
-      title: DeployStreamEvent
-    VersionMetricsResponse:
-      description: Response model for version deployment metrics.
+    TimeSeriesPoint:
+      description: A single time series data point.
       properties:
-        deployment_duration_p95_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: P95 deployment duration in seconds for this version
-          title: Deployment Duration P95 Seconds
-        deployment_duration_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Average deployment duration in seconds for this version
-          title: Deployment Duration Seconds
-      title: VersionMetricsResponse
+        ts:
+          description: Timestamp for the data point
+          format: date-time
+          title: Ts
+          type: string
+        value:
+          description: Metric value at timestamp
+          title: Value
+          type: number
+      required:
+      - ts
+      - value
+      title: TimeSeriesPoint
       type: object
-    DeployStreamHelmWaitingEvent:
-      description: Waiting for Helm deployment to complete (pods becoming ready).
+    DeployStreamHelmStartedEvent:
+      description: Helm deployment has started.
       properties:
         message:
           anyOf:
@@ -630,8 +740,8 @@ components:
           title: Timestamp
           type: string
         type:
-          const: helm_waiting
-          default: helm_waiting
+          const: helm_started
+          default: helm_started
           title: Type
           type: string
         version_id:
@@ -641,26 +751,7 @@ components:
       required:
       - version_id
       - timestamp
-      title: DeployStreamHelmWaitingEvent
-      type: object
-    DeployStreamConnectedEvent:
-      description: 'Sent when SSE deploy stream connection is established.
-
-
-        Indicates the client is now subscribed and will receive deployment progress events.'
-      properties:
-        type:
-          const: connected
-          default: connected
-          title: Type
-          type: string
-        version_id:
-          description: Version ID this stream is subscribed to
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      title: DeployStreamConnectedEvent
+      title: DeployStreamHelmStartedEvent
       type: object
     VersionPodLogEntry:
       description: A single pod log entry returned for a deployment version.
@@ -729,124 +820,6 @@ components:
       - message
       title: VersionPodLogEntry
       type: object
-    DeployStreamHelmStartedEvent:
-      description: Helm deployment has started.
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: helm_started
-          default: helm_started
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamHelmStartedEvent
-      type: object
-    VersionPodLogsResponse:
-      description: Paginated pod logs for a deployed version.
-      properties:
-        has_more:
-          description: Whether more matching logs exist beyond this page
-          title: Has More
-          type: boolean
-        logs:
-          items:
-            $ref: '#/components/schemas/VersionPodLogEntry'
-          title: Logs
-          type: array
-        total:
-          description: Total number of matching logs
-          title: Total
-          type: integer
-      required:
-      - total
-      - has_more
-      title: VersionPodLogsResponse
-      type: object
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    RegisterContainerResponse:
-      description: Response from container registration.
-      properties:
-        agent_api_key:
-          description: API key for the agent
-          title: Agent Api Key
-          type: string
-        agent_id:
-          description: Agent ID
-          title: Agent Id
-          type: string
-        agent_name:
-          description: Agent name
-          title: Agent Name
-          type: string
-        branch_id:
-          description: Branch ID
-          title: Branch Id
-          type: string
-        version_status:
-          $ref: '#/components/schemas/VersionStatus'
-          description: Version status after registration
-      required:
-      - agent_id
-      - agent_name
-      - agent_api_key
-      - branch_id
-      - version_status
-      title: RegisterContainerResponse
-      type: object
-    DeployStreamCompleteEvent:
-      description: 'Stream is complete - deployment has reached a terminal state.
-
-
-        Sent by the SSE endpoint when the version status is terminal (ACTIVE, FAILED, etc.).'
-      properties:
-        status:
-          description: Final version status (e.g., 'active', 'failed')
-          title: Status
-          type: string
-        type:
-          const: complete
-          default: complete
-          title: Type
-          type: string
-      required:
-      - status
-      title: DeployStreamCompleteEvent
-      type: object
     VersionPodMetricsResponse:
       description: Pod-level CPU + memory metrics for a deployed version (last N minutes).
       properties:
@@ -893,122 +866,149 @@ components:
       - step_seconds
       title: VersionPodMetricsResponse
       type: object
-    TimeSeriesPoint:
-      description: A single time series data point.
-      properties:
-        ts:
-          description: Timestamp for the data point
-          format: date-time
-          title: Ts
-          type: string
-        value:
-          description: Metric value at timestamp
-          title: Value
-          type: number
-      required:
-      - ts
-      - value
-      title: TimeSeriesPoint
-      type: object
-    DeployStreamErrorEvent:
-      description: 'Sent when an error occurs in the deploy stream.
+    DeployStreamCompleteEvent:
+      description: 'Stream is complete - deployment has reached a terminal state.
 
 
-        After this event, the stream may close.'
+        Sent by the SSE endpoint when the version status is terminal (ACTIVE, FAILED, etc.).'
       properties:
-        message:
-          description: Error description
-          title: Message
+        status:
+          description: Final version status (e.g., 'active', 'failed')
+          title: Status
           type: string
         type:
-          const: error
-          default: error
+          const: complete
+          default: complete
           title: Type
           type: string
       required:
-      - message
-      title: DeployStreamErrorEvent
+      - status
+      title: DeployStreamCompleteEvent
       type: object
-    DeployStreamRollingBackEvent:
-      description: Deployment is being rolled back.
+    RegisterContainerResponse:
+      description: Response from container registration.
       properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
+        agent_api_key:
+          description: API key for the agent
+          title: Agent Api Key
           type: string
+        agent_id:
+          description: Agent ID
+          title: Agent Id
+          type: string
+        agent_name:
+          description: Agent name
+          title: Agent Name
+          type: string
+        branch_id:
+          description: Branch ID
+          title: Branch Id
+          type: string
+        version_status:
+          $ref: '#/components/schemas/VersionStatus'
+          description: Version status after registration
+      required:
+      - agent_id
+      - agent_name
+      - agent_api_key
+      - branch_id
+      - version_status
+      title: RegisterContainerResponse
+      type: object
+    DeployStreamEvent:
+      description: 'Union of all possible deploy stream SSE events.
+
+
+        Use the ''type'' field to discriminate between event types:
+
+        - "connected": Stream connection established
+
+        - "queued": Deployment queued
+
+        - "helm_started": Helm deployment started
+
+        - "helm_waiting": Waiting for pods to be ready
+
+        - "ready": Deployment successful
+
+        - "failed": Deployment failed
+
+        - "rolling_back": Rolling back deployment
+
+        - "complete": Stream complete, terminal state reached
+
+        - "error": An error occurred in the stream'
+      discriminator:
+        mapping:
+          complete: '#/components/schemas/DeployStreamCompleteEvent'
+          connected: '#/components/schemas/DeployStreamConnectedEvent'
+          error: '#/components/schemas/DeployStreamErrorEvent'
+          failed: '#/components/schemas/DeployStreamFailedEvent'
+          helm_started: '#/components/schemas/DeployStreamHelmStartedEvent'
+          helm_waiting: '#/components/schemas/DeployStreamHelmWaitingEvent'
+          queued: '#/components/schemas/DeployStreamQueuedEvent'
+          ready: '#/components/schemas/DeployStreamReadyEvent'
+          rolling_back: '#/components/schemas/DeployStreamRollingBackEvent'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/DeployStreamConnectedEvent'
+      - $ref: '#/components/schemas/DeployStreamQueuedEvent'
+      - $ref: '#/components/schemas/DeployStreamHelmStartedEvent'
+      - $ref: '#/components/schemas/DeployStreamHelmWaitingEvent'
+      - $ref: '#/components/schemas/DeployStreamReadyEvent'
+      - $ref: '#/components/schemas/DeployStreamFailedEvent'
+      - $ref: '#/components/schemas/DeployStreamRollingBackEvent'
+      - $ref: '#/components/schemas/DeployStreamCompleteEvent'
+      - $ref: '#/components/schemas/DeployStreamErrorEvent'
+      title: DeployStreamEvent
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    VersionPodLogsResponse:
+      description: Paginated pod logs for a deployed version.
+      properties:
+        has_more:
+          description: Whether more matching logs exist beyond this page
+          title: Has More
+          type: boolean
+        logs:
+          items:
+            $ref: '#/components/schemas/VersionPodLogEntry'
+          title: Logs
+          type: array
+        total:
+          description: Total number of matching logs
+          title: Total
+          type: integer
+      required:
+      - total
+      - has_more
+      title: VersionPodLogsResponse
+      type: object
+    DeployStreamConnectedEvent:
+      description: 'Sent when SSE deploy stream connection is established.
+
+
+        Indicates the client is now subscribed and will receive deployment progress events.'
+      properties:
         type:
-          const: rolling_back
-          default: rolling_back
+          const: connected
+          default: connected
           title: Type
           type: string
         version_id:
-          description: Version ID being rolled back
+          description: Version ID this stream is subscribed to
           title: Version Id
           type: string
       required:
       - version_id
-      - timestamp
-      title: DeployStreamRollingBackEvent
-      type: object
-    DeployStreamQueuedEvent:
-      description: Deployment has been queued for processing.
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: queued
-          default: queued
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamQueuedEvent
-      type: object
-    DeployStreamReadyEvent:
-      description: Deployment completed successfully.
-      properties:
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Optional status message
-          title: Message
-        timestamp:
-          description: ISO 8601 timestamp
-          title: Timestamp
-          type: string
-        type:
-          const: ready
-          default: ready
-          title: Type
-          type: string
-        version_id:
-          description: Version ID being deployed
-          title: Version Id
-          type: string
-      required:
-      - version_id
-      - timestamp
-      title: DeployStreamReadyEvent
+      title: DeployStreamConnectedEvent
       type: object
 x-fern-idempotency-headers:
 - header: Idempotency-Key

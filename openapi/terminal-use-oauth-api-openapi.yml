@@ -122,6 +122,15 @@ components:
       - expires_in
       title: OAuthTokenResponse
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
     ValidationError:
       properties:
         loc:
@@ -142,15 +151,6 @@ components:
       - msg
       - type
       title: ValidationError
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
       type: object
     OAuthInitiateResponse:
       description: Response for OAuth initiation.
